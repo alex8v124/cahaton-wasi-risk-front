@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WASI-RISK AI | Centro de Comando Ejecutivo & Paquete de Ingesta — Cajathón 2026 (Caja Trujillo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-canvas: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-code: #F1F5F9;
+      --border-crisp: #E2E8F0;
+      --text-navy: #0F172A;
+      --text-slate: #334155;
+      --text-muted: #64748B;
+      --blue-royal: #2563EB;
+      --emerald-sbs: #059669;
+      --amber-warn: #D97706;
+      --rose-fraud: #E11D48;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-navy);
+      background-image:
+        linear-gradient(to right, rgba(226, 232, 240, 0.55) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(226, 232, 240, 0.55) 1px, transparent 1px);
+      background-size: 32px 32px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-daylight {
+      background-color: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+    }
+
+    .code-light {
+      background-color: #F1F5F9;
+      color: #0F172A;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    input[type="range"] {
+      accent-color: #2563EB;
+      cursor: pointer;
+    }
+
+    .tab-btn-active {
+      background-color: #2563EB;
+      color: #FFFFFF;
+      border-color: #1D4ED8;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+    }
+
+    .tab-btn-inactive {
+      background-color: #FFFFFF;
+      color: #0F172A;
+      border-color: #CBD5E1;
+    }
+
+    .tab-btn-inactive:hover {
+      background-color: #F1F5F9;
+      border-color: #94A3B8;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- TOP INSTITUTIONAL BAR (HIGH CONTRAST DAYLIGHT) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
+          W
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+              Cajathón 2026 — Caja Trujillo
+            </span>
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Track de Riesgos • Spec-Driven v2.4
+            </span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mt-0.5">
+            WASI-RISK AI <span class="font-semibold text-slate-500 text-base sm:text-lg">| Centro de Comando de Ingesta, Scoring & P&L</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- KPI PILLS HEADER -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-right">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Cartera Caja Trujillo</div>
+          <div class="text-sm font-extrabold font-mono-code text-slate-900">S/ 3,000,000,000</div>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-right">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Ahorro Provisiones (-50 bps)</div>
+          <div class="text-sm font-extrabold font-mono-code text-emerald-700">S/ 15,000,000 / año</div>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-right">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Auditoría Pre-Desembolso</div>
+          <div class="text-sm font-extrabold font-mono-code text-blue-700">10% → 100% (8 min)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS (4 VISTAS OBLIGATORIAS) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 bg-slate-50/90 border-t border-slate-200 flex flex-wrap gap-2">
+      <button id="tab-btn-1" onclick="switchView(1)" class="tab-btn-active px-4 py-2 rounded-lg text-sm font-extrabold border transition-all flex items-center gap-2">
+        <span>1. Ingesta & Prompts VPS (Soe Macero)</span>
+      </button>
+      <button id="tab-btn-2" onclick="switchView(2)" class="tab-btn-inactive px-4 py-2 rounded-lg text-sm font-extrabold border transition-all flex items-center gap-2">
+        <span>2. Simulador Matemático & Contrato JSON (Alejandro & Alexander)</span>
+      </button>
+      <button id="tab-btn-3" onclick="switchView(3)" class="tab-btn-inactive px-4 py-2 rounded-lg text-sm font-extrabold border transition-all flex items-center gap-2">
+        <span>3. P&L Bancario Harvard Business Case (Nicolás López)</span>
+      </button>
+      <button id="tab-btn-4" onclick="switchView(4)" class="tab-btn-inactive px-4 py-2 rounded-lg text-sm font-extrabold border transition-all flex items-center gap-2">
+        <span>4. Gobernanza EARS & Checklist del Squad</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- TOAST NOTIFICATION FOR 1-CLICK COPY -->
+  <div id="copy-toast" class="fixed bottom-6 right-6 z-50 hidden bg-emerald-700 text-white px-5 py-3 rounded-xl shadow-lg border border-emerald-500 font-bold text-sm flex items-center gap-2.5">
+    <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+    <span id="copy-toast-text">Artefacto copiado al portapapeles con éxito</span>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- =====================================================================
+         VISTA 1: ARQUITECTURA DE INGESTA PARA SOE MACERO (CERO ENTRENAMIENTO)
+         ===================================================================== -->
+    <section id="view-1" class="space-y-6">
+      <div class="card-daylight p-6">
+        <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Módulo de Soe Macero • Ex-BanBif & Ex-Caja Sipán
+            </span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-2">
+              Pipeline de Ingesta Soberana: In-Context Learning + RAG Paramétrico + Sanitizador PII
+            </h2>
+            <p class="text-slate-600 font-medium mt-1 max-w-4xl">
+              Por qué <strong>NO entrenamos un modelo desde cero</strong>: en banca regulada por la SBS, el Fine-Tuning de caja negra destruye la trazabilidad normativa. WASI-RISK AI inyecta determinísticamente las reglas de Caja Trujillo en el VPS a <code class="font-mono-code bg-slate-100 px-1.5 py-0.5 rounded text-slate-900 font-bold">temperature = 0.0</code>.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+              <div class="text-xs font-bold text-emerald-800 uppercase">Modo Híbrido Sanitizado</div>
+              <div class="text-xl font-extrabold font-mono-code text-emerald-700">&lt; 0.8 seg / exp</div>
+              <div class="text-[11px] font-semibold text-emerald-700">PII Tokenizado (Art. 140 Ley 26702)</div>
+            </div>
+            <div class="px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-300">
+              <div class="text-xs font-bold text-slate-700 uppercase">Modo 100% On-Premise CPU</div>
+              <div class="text-xl font-extrabold font-mono-code text-slate-900">~ 18.0 seg / exp</div>
+              <div class="text-[11px] font-semibold text-slate-600">Air-Gapped dentro de Caja Trujillo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIAGRAMA DE FLUJO DE 4 ETAPAS EN EL VPS DE SOE -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-xs font-extrabold text-blue-700 uppercase tracking-wider">Paso 1 • Perímetro Local</div>
+            <div class="text-base font-extrabold text-slate-900 mt-1">Sanitizador PII (UUID)</div>
+            <p class="text-xs text-slate-600 font-medium mt-1.5 leading-relaxed">
+              Reemplaza RUC, DNI, Razón Social y celulares Yape/Plin por tokens efímeros (<code class="font-mono-code font-bold">UUID-EXP-XXXX</code>) en RAM local antes de procesar.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-xs font-extrabold text-blue-700 uppercase tracking-wider">Paso 2 • Léxico Norteño</div>
+            <div class="text-base font-extrabold text-slate-900 mt-1">Normalización & Poka-Yoke</div>
+            <p class="text-xs text-slate-600 font-medium mt-1.5 leading-relaxed">
+              Traduce <em>"doc", "tarea", "plancha", "saco"</em> a unidades estándar y bloquea notas con <code class="font-mono-code font-bold">OCR &lt; 0.85</code> o múltiplos redondos de S/ 1,000.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-xs font-extrabold text-blue-700 uppercase tracking-wider">Paso 3 • Cruce CIIU</div>
+            <div class="text-base font-extrabold text-slate-900 mt-1">Filtro de Insumos por Giro</div>
+            <p class="text-xs text-slate-600 font-medium mt-1.5 leading-relaxed">
+              Valida que un taller de calzado (<code class="font-mono-code font-bold">1520</code>) compre cuero/suela y rechaza boletas cruzadas de cemento o abarrotes.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+            <div class="text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Paso 4 • Dictamen SBS</div>
+            <div class="text-base font-extrabold text-slate-900 mt-1">Sustentación Res. 11356</div>
+            <p class="text-xs text-slate-700 font-medium mt-1.5 leading-relaxed">
+              Recibe el vector del motor Python de Alejandro y redacta <code class="font-mono-code font-bold">explicacion_agente_sbs</code> con cero alucinación.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTONES DE 1 CLIC PARA COPIAR LOS 4 ARTEFACTOS DEL PAQUETE DE SOE -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Artefacto 1: AGENT_SKILL_SOE.md -->
+        <div class="card-daylight p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono-code">
+                wasi-risk-core/AGENT_SKILL_SOE.md
+              </span>
+              <button onclick="copyArtifact('skill_soe', 'AGENT_SKILL_SOE.md copiado al portapapeles')" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs shadow-sm transition">
+                Copiar System Prompt (1-Clic)
+              </button>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-3">1. System Prompt Maestro & Plantilla SBS (Temp 0.0)</h3>
+            <p class="text-xs text-slate-600 font-medium mt-1">
+              Instrucciones listas para pegar en el orquestador Python/FastAPI del VPS de Soe Macero.
+            </p>
+            <pre id="preview-skill-soe" class="code-light p-3.5 mt-3 text-xs overflow-x-auto max-h-60 leading-relaxed"></pre>
+          </div>
+        </div>
+
+        <!-- Artefacto 2: reglas_parametricas_trujillo.json -->
+        <div class="card-daylight p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono-code">
+                data/reglas_parametricas_trujillo.json
+              </span>
+              <button onclick="copyArtifact('reglas_trujillo', 'reglas_parametricas_trujillo.json copiado')" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm transition">
+                Copiar Reglas CIIU (1-Clic)
+              </button>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-3">2. Reglas Paramétricas CIIU Trujillo & Matriz AAA–C</h3>
+            <p class="text-xs text-slate-600 font-medium mt-1">
+              6 Giros MYPE (El Porvenir, La Hermelinda, Gamarrita), tasas de provisión SBS 11356 y umbrales de recorte.
+            </p>
+            <pre id="preview-reglas-trujillo" class="code-light p-3.5 mt-3 text-xs overflow-x-auto max-h-60 leading-relaxed"></pre>
+          </div>
+        </div>
+
+        <!-- Artefacto 3: lexico_unidades_mype.json -->
+        <div class="card-daylight p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-amber-50 text-amber-800 border border-amber-200 font-mono-code">
+                data/lexico_unidades_mype.json
+              </span>
+              <button onclick="copyArtifact('lexico_mype', 'lexico_unidades_mype.json copiado')" class="px-3.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs shadow-sm transition">
+                Copiar Léxico & Poka-Yoke (1-Clic)
+              </button>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-3">3. Diccionario Semántico MYPE & Reglas Poka-Yoke</h3>
+            <p class="text-xs text-slate-600 font-medium mt-1">
+              Mapeo de abreviaturas informales norteñas y bloqueo automático de notas ilegibles o montos redondos.
+            </p>
+            <pre id="preview-lexico-mype" class="code-light p-3.5 mt-3 text-xs overflow-x-auto max-h-60 leading-relaxed"></pre>
+          </div>
+        </div>
+
+        <!-- Artefacto 4: few_shot_golden_cases.json -->
+        <div class="card-daylight p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-rose-50 text-rose-700 border border-rose-200 font-mono-code">
+                data/few_shot_golden_cases.json
+              </span>
+              <button onclick="copyArtifact('golden_cases', 'few_shot_golden_cases.json copiado')" class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-sm transition">
+                Copiar 4 Golden Cases (1-Clic)
+              </button>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-3">4. Los 4 Casos Testigo Oficiales (Few-Shot Anchors)</h3>
+            <p class="text-xs text-slate-600 font-medium mt-1">
+              Calzado El Porvenir (AAA), Mayorista Hermelinda (A), Maquillado Viernes 6pm (C) y Caso Poka-Yoke (C).
+            </p>
+            <pre id="preview-golden-cases" class="code-light p-3.5 mt-3 text-xs overflow-x-auto max-h-60 leading-relaxed"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         VISTA 2: SIMULADOR MATEMÁTICO EN VIVO & CONTRATO JSON (ALEJANDRO & ALEXANDER)
+         ===================================================================== -->
+    <section id="view-2" class="hidden space-y-6">
+      <!-- BOTONES RÁPIDOS DE CASOS TESTIGO -->
+      <div class="card-daylight p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700">
+              Motor Determinista de Alejandro Flores + Contrato Inmutable de Alexander Miranda
+            </span>
+            <h2 class="text-xl font-extrabold text-slate-900 mt-0.5">
+              Cargar Caso Testigo Oficial en el Simulador (1-Clic):
+            </h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="loadPresetCase(0)" class="px-3.5 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-extrabold transition">
+              Caso 1: Calzado El Porvenir (AAA)
+            </button>
+            <button onclick="loadPresetCase(1)" class="px-3.5 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 text-xs font-extrabold transition">
+              Caso 2: Mayorista Hermelinda (A - Recorte)
+            </button>
+            <button onclick="loadPresetCase(2)" class="px-3.5 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 text-xs font-extrabold transition">
+              Caso 3: Maquillado Viernes 6pm (C - Alerta Roja)
+            </button>
+            <button onclick="loadPresetCase(3)" class="px-3.5 py-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold transition">
+              Caso 4: Bodega Incoherente / OCR 0.74 (Poka-Yoke)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- PANEL IZQUIERDO: SLIDERS DE CONTROL CUANTITATIVO (5 COLUMNAS) -->
+        <div class="lg:col-span-5 card-daylight p-6 space-y-5">
+          <div class="border-b border-slate-200 pb-3">
+            <h3 class="text-lg font-extrabold text-slate-900">Parámetros de Entrada del Expediente</h3>
+            <p class="text-xs text-slate-600 font-medium">Mueve los controles para auditar en tiempo real la triangulación microfinanciera.</p>
+          </div>
+
+          <!-- Giro CIIU -->
+          <div>
+            <label class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Giro CIIU Declarado (Polos Trujillo)</label>
+            <select id="sim-ciiu" onchange="recalculateSimulator()" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600">
+              <option value="1520">1520 — Fabricación de Calzado (El Porvenir) | Margen 32% | Rot 1.0x</option>
+              <option value="5211">5211 — Bodegas y Abarrotes (La Hermelinda) | Margen 18% | Rot 1.8x</option>
+              <option value="5234">5234 — Ferretería y Construcción | Margen 25% | Rot 1.0x</option>
+              <option value="1810">1810 — Confección Textil (Gamarrita Norteña) | Margen 35% | Rot 1.2x</option>
+              <option value="5520">5520 — Restaurantes y Picanterías | Margen 45% | Rot 2.5x</option>
+              <option value="5122">5122 — Mayorista Agroalimentario | Margen 14% | Rot 2.8x</option>
+            </select>
+          </div>
+
+          <!-- Ventas Declaradas Asesor -->
+          <div>
+            <div class="flex justify-between text-xs font-extrabold">
+              <span class="text-slate-700 uppercase">Ventas Declaradas por Asesor (V_decl)</span>
+              <span id="lbl-vdecl" class="font-mono-code text-blue-700 text-sm">S/ 7,200.00</span>
+            </div>
+            <input id="sim-vdecl" type="range" min="2000" max="30000" step="100" value="7200" oninput="recalculateSimulator()" class="w-full mt-1.5" />
+          </div>
+
+          <!-- Compras Comprobadas -->
+          <div>
+            <div class="flex justify-between text-xs font-extrabold">
+              <span class="text-slate-700 uppercase">Compras Comprobadas Boletas/Yape (C_comp)</span>
+              <span id="lbl-ccomp" class="font-mono-code text-emerald-700 text-sm">S/ 5,000.00</span>
+            </div>
+            <input id="sim-ccomp" type="range" min="500" max="20000" step="100" value="5000" oninput="recalculateSimulator()" class="w-full mt-1.5" />
+          </div>
+
+          <!-- Gastos Operativos + Deuda SBS -->
+          <div>
+            <div class="flex justify-between text-xs font-extrabold">
+              <span class="text-slate-700 uppercase">Gastos Familiares + Deuda SBS Vigente</span>
+              <span id="lbl-gastos" class="font-mono-code text-slate-900 text-sm">S/ 624.00</span>
+            </div>
+            <input id="sim-gastos" type="range" min="200" max="4000" step="10" value="624" oninput="recalculateSimulator()" class="w-full mt-1.5" />
+          </div>
+
+          <!-- Cuota Mensual Propuesta -->
+          <div>
+            <div class="flex justify-between text-xs font-extrabold">
+              <span class="text-slate-700 uppercase">Cuota Mensual Propuesta</span>
+              <span id="lbl-cuota" class="font-mono-code text-slate-900 text-sm">S/ 980.00</span>
+            </div>
+            <input id="sim-cuota" type="range" min="300" max="3500" step="10" value="980" oninput="recalculateSimulator()" class="w-full mt-1.5" />
+          </div>
+
+          <!-- Monto Solicitado Original -->
+          <div>
+            <div class="flex justify-between text-xs font-extrabold">
+              <span class="text-slate-700 uppercase">Monto Solicitado Original</span>
+              <span id="lbl-monto" class="font-mono-code text-slate-900 text-sm">S/ 8,000.00</span>
+            </div>
+            <input id="sim-monto" type="range" min="2000" max="30000" step="500" value="8000" oninput="recalculateSimulator()" class="w-full mt-1.5" />
+          </div>
+
+          <!-- Controles Poka-Yoke (Confianza OCR & Coherencia Giro) -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="flex justify-between text-xs font-extrabold">
+              <span class="text-slate-700 uppercase">Certeza OCR IA (Umbral Mínimo 0.85)</span>
+              <span id="lbl-ocr" class="font-mono-code text-emerald-700 text-sm">0.95 (95%)</span>
+            </div>
+            <input id="sim-ocr" type="range" min="0.50" max="0.99" step="0.01" value="0.95" oninput="recalculateSimulator()" class="w-full" />
+
+            <label class="flex items-center gap-2.5 pt-1 cursor-pointer">
+              <input id="sim-coherencia" type="checkbox" checked onchange="recalculateSimulator()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500" />
+              <span class="text-xs font-extrabold text-slate-800">Insumos Coherentes con Giro CIIU Declarado</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- PANEL DERECHO: RESULTADOS MATEMÁTICOS & CONTRATO JSON (7 COLUMNAS) -->
+        <div class="lg:col-span-7 space-y-5">
+          <!-- TARJETAS DE FÓRMULAS EN TIEMPO REAL -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div class="card-daylight p-4">
+              <div class="text-[11px] font-extrabold uppercase text-slate-500">Ventas Implícitas (V_imp)</div>
+              <div id="kpi-vimp" class="text-lg font-extrabold font-mono-code text-slate-900 mt-1">S/ 7,352.94</div>
+              <div class="text-[11px] font-semibold text-slate-500 mt-0.5">(C_comp / (1 - μ)) × ρ</div>
+            </div>
+            <div id="card-delta" class="card-daylight p-4">
+              <div class="text-[11px] font-extrabold uppercase text-slate-500">Delta Maquillaje (Δ)</div>
+              <div id="kpi-delta" class="text-lg font-extrabold font-mono-code text-emerald-700 mt-1">-2.1%</div>
+              <div id="kpi-delta-sub" class="text-[11px] font-bold text-emerald-700 mt-0.5">Sin Inflación (&le;30%)</div>
+            </div>
+            <div class="card-daylight p-4">
+              <div class="text-[11px] font-extrabold uppercase text-slate-500">Flujo Neto (FND) & RCC</div>
+              <div id="kpi-rcc" class="text-lg font-extrabold font-mono-code text-blue-700 mt-1">1.71x</div>
+              <div id="kpi-fnd" class="text-[11px] font-semibold text-slate-600 mt-0.5">FND: S/ 1,680.00</div>
+            </div>
+            <div id="card-escala" class="card-daylight p-4 bg-emerald-50 border-emerald-300">
+              <div class="text-[11px] font-extrabold uppercase text-emerald-800">Escala Caja Trujillo</div>
+              <div id="kpi-escala" class="text-2xl font-black font-mono-code text-emerald-700 mt-0.5">AAA</div>
+              <div id="kpi-sbs" class="text-[11px] font-extrabold text-emerald-800">SBS: NORMAL (1%)</div>
+            </div>
+          </div>
+
+          <!-- BANNER DE DICTAMEN Y EXPLICACIÓN NORMATIVA SBS -->
+          <div id="banner-dictamen" class="card-daylight p-5 border-l-4 border-l-emerald-600">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span id="badge-accion" class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 font-mono-code">
+                FAST_TRACK_DESEMBOLSO_INMEDIATO
+              </span>
+              <div class="text-sm font-extrabold text-slate-900 font-mono-code">
+                Solicitado: <span id="lbl-sol-out">S/ 8,000.00</span> → Recomendado: <span id="lbl-rec-out" class="text-emerald-700">S/ 8,000.00</span>
+              </div>
+            </div>
+            <p id="txt-explicacion-sbs" class="text-xs text-slate-700 font-medium mt-3 leading-relaxed bg-slate-50 p-3.5 rounded-lg border border-slate-200"></p>
+          </div>
+
+          <!-- CONTRATO JSON INMUTABLE DE 4 BLOQUES -->
+          <div class="card-daylight p-5">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <div>
+                <h4 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                  Contrato JSON Inmutable de 4 Bloques (Plano 1 → VPS Soe → Motor Alejandro → Plano 2)
+                </h4>
+              </div>
+              <button onclick="copyLiveJson()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs shadow-sm transition">
+                Copiar Payload JSON (1-Clic)
+              </button>
+            </div>
+            <pre id="live-json-output" class="code-light p-4 text-xs overflow-x-auto max-h-80 leading-relaxed"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         VISTA 3: P&L BANCARIO HARVARD BUSINESS PUBLISHING (NICOLÁS LÓPEZ)
+         ===================================================================== -->
+    <section id="view-3" class="hidden space-y-6">
+      <div class="card-daylight p-6">
+        <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+              Caso de Negocio Oficial • Nicolás López (Product Owner & P&L Lead)
+            </span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-2">
+              Impacto Auditado en el Estado de Resultados (P&L) de Caja Trujillo
+            </h2>
+            <p class="text-slate-600 font-medium mt-1 max-w-3xl">
+              Modelamiento financiero bajo estándar <em>Harvard Business Publishing</em> sobre una cartera bruta de <strong>S/ 3,000 Millones</strong> (~80% MYPE en polos como El Porvenir y La Hermelinda) y <strong>15.1% de Cartera de Alto Riesgo Ajustada</strong>.
+            </p>
+          </div>
+          <div class="px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-300 text-right">
+            <div class="text-xs font-extrabold uppercase text-emerald-800">Impacto Total Neto Año 1</div>
+            <div id="pnl-total-savings" class="text-2xl font-black font-mono-code text-emerald-700">S/ 20,112,000</div>
+            <div class="text-[11px] font-bold text-emerald-800">Provisiones SBS + Ahorro OPEX Auditoría</div>
+          </div>
+        </div>
+
+        <!-- CONTROLES INTERACTIVOS DEL P&L -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+          <div class="lg:col-span-5 space-y-5 bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <h3 class="text-base font-extrabold text-slate-900 border-b border-slate-200 pb-2">
+              Palancas Sensibles del Comité de Directorio
+            </h3>
+
+            <div>
+              <div class="flex justify-between text-xs font-extrabold">
+                <span class="text-slate-700 uppercase">Cartera Bruta Caja Trujillo (Millones S/)</span>
+                <span id="lbl-pnl-cartera" class="font-mono-code text-slate-900">S/ 3,000 M</span>
+              </div>
+              <input id="pnl-cartera" type="range" min="1500" max="5000" step="100" value="3000" oninput="recalculatePnL()" class="w-full mt-1.5" />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-extrabold">
+                <span class="text-slate-700 uppercase">Reducción de Mora / Transición SBS (bps)</span>
+                <span id="lbl-pnl-bps" class="font-mono-code text-emerald-700">50 bps (0.50%)</span>
+              </div>
+              <input id="pnl-bps" type="range" min="10" max="150" step="5" value="50" oninput="recalculatePnL()" class="w-full mt-1.5" />
+              <p class="text-[11px] text-slate-500 font-medium mt-1">
+                50 bps (0.50%) de contención de deterioro equivale exactamente a S/ 15,000,000 en provisiones directas ahorradas.
+              </p>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-extrabold">
+                <span class="text-slate-700 uppercase">Expedientes MYPE Auditados / Año</span>
+                <span id="lbl-pnl-exps" class="font-mono-code text-blue-700">36,000 exp/año</span>
+              </div>
+              <input id="pnl-exps" type="range" min="10000" max="80000" step="2000" value="36000" oninput="recalculatePnL()" class="w-full mt-1.5" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Tramo de Contrato Anual B2B (WASI-RISK AI)</label>
+              <select id="pnl-contrato" onchange="recalculatePnL()" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-bold text-slate-900">
+                <option value="142000">Plan Piloto Regional (El Porvenir + Hermelinda) — S/ 142,000 / año</option>
+                <option value="225000" selected>Plan Corporativo Red Trujillo — S/ 225,000 / año</option>
+                <option value="320000">Plan Enterprise Nacional Full-Portfolio — S/ 320,000 / año</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- RESULTADOS DEL CASO DE NEGOCIO (7 COLUMNAS) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="card-daylight p-4 border-t-4 border-t-emerald-600">
+                <div class="text-xs font-extrabold uppercase text-slate-500">1. Ahorro en Provisiones SBS</div>
+                <div id="out-pnl-prov" class="text-xl font-black font-mono-code text-emerald-700 mt-1">S/ 15,000,000</div>
+                <div class="text-xs font-semibold text-slate-600 mt-1">
+                  Bloqueo temprano de expedientes maquillados (Categoría C).
+                </div>
+              </div>
+
+              <div class="card-daylight p-4 border-t-4 border-t-blue-600">
+                <div class="text-xs font-extrabold uppercase text-slate-500">2. Eficiencia Operativa (OPEX)</div>
+                <div id="out-pnl-opex" class="text-xl font-black font-mono-code text-blue-700 mt-1">S/ 5,112,000</div>
+                <div class="text-xs font-semibold text-slate-600 mt-1">
+                  Caída de costo unitario de <strong>S/ 160.00 a S/ 18.00</strong> (-S/ 142/exp).
+                </div>
+              </div>
+
+              <div class="card-daylight p-4 border-t-4 border-t-slate-800">
+                <div class="text-xs font-extrabold uppercase text-slate-500">3. ROI Neto sobre Contrato</div>
+                <div id="out-pnl-roi" class="text-xl font-black font-mono-code text-slate-900 mt-1">89.4x (Payback &lt; 5 días)</div>
+                <div id="out-pnl-fee" class="text-xs font-semibold text-slate-600 mt-1">
+                  Inversión SaaS Soberano: S/ 225,000 / año.
+                </div>
+              </div>
+            </div>
+
+            <!-- TABLA COMPARATIVA AS-IS VS TO-BE (BPMN 2.0 ALEJANDRO + P&L NICOLÁS) -->
+            <div class="card-daylight overflow-hidden">
+              <div class="px-5 py-3 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-800">
+                  Comparativa Auditada: Flujo Tradicional (AS-IS) vs. WASI-RISK AI (TO-BE)
+                </span>
+                <span class="text-xs font-bold text-blue-700 font-mono-code">Homologado en Bizagi BPMN 2.0</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 font-extrabold uppercase">
+                      <th class="py-3 px-4">Dimensión Operativa / Financiera</th>
+                      <th class="py-3 px-4 text-rose-700">Flujo AS-IS (Actual)</th>
+                      <th class="py-3 px-4 text-emerald-700">Flujo TO-BE (WASI-RISK AI)</th>
+                      <th class="py-3 px-4">Impacto Directo</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200 font-medium text-slate-800">
+                    <tr>
+                      <td class="py-3 px-4 font-bold">Cobertura de Opinión de Riesgos</td>
+                      <td class="py-3 px-4 font-mono-code text-rose-700 font-bold">8% – 10% (Muestreo Aleatorio)</td>
+                      <td class="py-3 px-4 font-mono-code text-emerald-700 font-bold">100.0% Pre-Desembolso</td>
+                      <td class="py-3 px-4 font-bold">Elimina punto ciego del 90%</td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-4 font-bold">Tiempo de Ciclo (Time-to-Yes)</td>
+                      <td class="py-3 px-4 font-mono-code text-rose-700 font-bold">72 horas (3 días hábiles)</td>
+                      <td class="py-3 px-4 font-mono-code text-emerald-700 font-bold">8 minutos (End-to-End)</td>
+                      <td class="py-3 px-4 font-bold">-99.8% tiempo de espera MYPE</td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-4 font-bold">Costo Operativo por Evaluación</td>
+                      <td class="py-3 px-4 font-mono-code text-rose-700 font-bold">S/ 160.00 / expediente</td>
+                      <td class="py-3 px-4 font-mono-code text-emerald-700 font-bold">S/ 18.00 / expediente</td>
+                      <td class="py-3 px-4 font-bold">Ahorro de S/ 142.00 unitario</td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-4 font-bold">Detección de Maquillaje (Viernes 6pm)</td>
+                      <td class="py-3 px-4 text-rose-700 font-bold">Reactiva (Post-mora a los 90 días)</td>
+                      <td class="py-3 px-4 text-emerald-700 font-bold">Preventiva en tiempo real (Δ &gt; 30%)</td>
+                      <td class="py-3 px-4 font-bold">S/ 15M ahorro en provisiones</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         VISTA 4: MATRIZ DE GOBERNANZA DEL SQUAD & CHECKLIST DE INTEGRACIÓN
+         ===================================================================== -->
+    <section id="view-4" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Tarjeta 1: Nicolás López -->
+        <div class="card-daylight p-6 border-t-4 border-t-blue-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200">
+              Product Owner, P&L & Pitch Lead
+            </span>
+            <span class="text-xs font-extrabold text-emerald-700 font-mono-code">● SINCRONIZADO</span>
+          </div>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-2">Nicolás López</h3>
+          <p class="text-xs text-slate-600 font-medium mt-1">
+            Dueño del Business Case Harvard Business Publishing y administrador del repositorio paramétrico <code class="font-mono-code font-bold">reglas_parametricas_trujillo.json</code>.
+          </p>
+          <ul class="mt-4 space-y-2 text-xs font-semibold text-slate-800">
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Cartera Caja Trujillo S/ 3,000M (~80% MYPE) y 15.1% CARA documentada.</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Ahorro de S/ 15,000,000 en provisiones SBS (-50 bps de mora).</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Reducción de OPEX de S/ 160 a S/ 18 por expediente y contrato B2B Año 1.</li>
+          </ul>
+        </div>
+
+        <!-- Tarjeta 2: Soe Macero -->
+        <div class="card-daylight p-6 border-t-4 border-t-emerald-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Compliance SBS & IA Agéntica en VPS
+            </span>
+            <span class="text-xs font-extrabold text-emerald-700 font-mono-code">● SINCRONIZADO</span>
+          </div>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-2">Soe Macero</h3>
+          <p class="text-xs text-slate-600 font-medium mt-1">
+            Ex-Gerente Financiera en BanBif y ex-Jefa de Operaciones en Caja Sipán. Gobierna el VPS privado y el cumplimiento de Ley N.° 26702 Art. 140 y Res. SBS N.° 504-2021.
+          </p>
+          <ul class="mt-4 space-y-2 text-xs font-semibold text-slate-800">
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> <code class="font-mono-code">AGENT_SKILL_SOE.md</code> configurado a <code class="font-mono-code">temperature = 0.0</code>.</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Sanitizador PII con tokens UUID efímeros antes de inferencia híbrida (&lt;0.8s).</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Bloqueo Poka-Yoke activo cuando <code class="font-mono-code">confianza_extraccion_ia &lt; 0.85</code>.</li>
+          </ul>
+        </div>
+
+        <!-- Tarjeta 3: Alejandro Flores -->
+        <div class="card-daylight p-6 border-t-4 border-t-amber-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-amber-50 text-amber-800 border border-amber-200">
+              Scoring Cuantitativo & BPMN 2.0
+            </span>
+            <span class="text-xs font-extrabold text-emerald-700 font-mono-code">● SINCRONIZADO</span>
+          </div>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-2">Alejandro Flores</h3>
+          <p class="text-xs text-slate-600 font-medium mt-1">
+            Puesto 1 Ingeniería Industrial UTP. Propietario de <code class="font-mono-code font-bold">engine/motor_scoring_wasi.py</code> y del flujo Bizagi AS-IS (72h) vs. TO-BE (8 min).
+          </p>
+          <ul class="mt-4 space-y-2 text-xs font-semibold text-slate-800">
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> 4 Casos Testigo validados con precisión matemática al centavo.</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> <code class="font-mono-code">dataset_50_expedientes_trujillo.json</code> generado (35 AAA/AA, 8 A/B, 7 C).</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Homologación determinista a escalas <code class="font-mono-code">AAA, AA, A, B, C</code>.</li>
+          </ul>
+        </div>
+
+        <!-- Tarjeta 4: Alexander Miranda -->
+        <div class="card-daylight p-6 border-t-4 border-t-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-slate-100 text-slate-800 border border-slate-300">
+              CTO & Tech Lead — Rigor Bancario ZyTrust
+            </span>
+            <span class="text-xs font-extrabold text-emerald-700 font-mono-code">● SINCRONIZADO</span>
+          </div>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-2">Alexander Miranda</h3>
+          <p class="text-xs text-slate-600 font-medium mt-1">
+            Arquitecto de los Dos Planos Conectados: Plano 1 (<em>Nodux Flow PWA</em> &lt;150 KB offline-first) y Plano 2 (Consola Central de Riesgos "Opinión 100%").
+          </p>
+          <ul class="mt-4 space-y-2 text-xs font-semibold text-slate-800">
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Validación RUC SUNAT &lt;300 ms e integridad criptográfica SHA-256.</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Contrato JSON inmutable de 4 bloques integrado sin fricción.</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-600 font-black">✓</span> Bandeja de recorte automático de monto y bloqueo de alerta roja.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TABLA RESUMEN DE STEERING RULES (SINTAXIS EARS) -->
+      <div class="card-daylight p-6">
+        <h3 class="text-lg font-extrabold text-slate-900 mb-3">
+          Auditoría de Reglas de Gobernanza EARS (Easy Approach to Requirements Syntax)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="font-extrabold text-blue-700 uppercase">1. Ubiquitous</span>
+            <p class="font-medium text-slate-700 mt-1.5">
+              El sistema <strong>SIEMPRE</strong> expresa importes en Soles Peruanos (<code class="font-mono-code font-bold">PEN, S/</code>) con 2 decimales y respeta los 4 bloques del Contrato JSON.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-rose-50/60 border border-rose-200">
+            <span class="font-extrabold text-rose-700 uppercase">2. Event-Driven</span>
+            <p class="font-medium text-slate-700 mt-1.5">
+              <strong>CUANDO</strong> <code class="font-mono-code font-bold">delta_desviacion_declarativa &gt; 0.30</code>, el motor <strong>ACTIVA</strong> <code class="font-mono-code font-bold">alerta_fraude_maquillaje = true</code>.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200">
+            <span class="font-extrabold text-emerald-800 uppercase">3. State-Driven</span>
+            <p class="font-medium text-slate-700 mt-1.5">
+              <strong>MIENTRAS</strong> opere en Modo Híbrido, el perímetro de Soe <strong>ANONIMIZA</strong> todo PII con tokens UUID antes de salir del VPS.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+            <span class="font-extrabold text-amber-900 uppercase">4. Unwanted Behavior</span>
+            <p class="font-medium text-slate-700 mt-1.5">
+              <strong>SI</strong> <code class="font-mono-code font-bold">confianza_extraccion_ia &lt; 0.85</code> o hay incoherencia de giro, el agente <strong>NO</strong> interpola y exige revisión humana.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER EJECUTIVO -->
+  <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-slate-200 text-center text-xs font-semibold text-slate-500">
+    WASI-RISK AI • Repositorio Oficial Spec-Driven (<code class="font-mono-code text-slate-700">wasi-risk-core/</code>) • Cajathón 2026 — Caja Trujillo • Tema Claro Ejecutivo de Alto Contraste
+  </footer>
+
+  <!-- =====================================================================
+       JAVASCRIPT VANILLA AUTOCONTENIDO (MOTOR + ARTEFACTOS + P&L)
+       ===================================================================== -->
+  <script>
+    // 1. BASE DE CONOCIMIENTO PARAMÉTRICA EMBEBIDA
+    const GIROS_CIIU = {
+      "1520": { nombre: "Fabricacion de Calzado (Polo El Porvenir)", margen: 0.32, rotacion: 1.00, insumos: ["cuero", "badana", "suela", "crupon", "pegamento", "taco", "horma", "plantilla", "tarea de aparado"] },
+      "5211": { nombre: "Bodegas y Comercio de Abarrotes (Mercado La Hermelinda)", margen: 0.18, rotacion: 1.80, insumos: ["saco arroz", "saco azucar", "caja aceite", "fardo fideos", "plancha huevos", "bandeja", "leche"] },
+      "5234": { nombre: "Ferreteria y Materiales de Construccion", margen: 0.25, rotacion: 1.00, insumos: ["bolsa cemento", "varilla fierro", "tubo pvc", "codo", "pegamento pvc", "ladrillo", "alambre"] },
+      "1810": { nombre: "Confeccion de Prendas de Vestir (Gamarrita Nortena)", margen: 0.35, rotacion: 1.20, insumos: ["rollo tela", "algodon", "cono hilo", "elástico", "botones", "cierre", "remallado"] },
+      "5520": { nombre: "Restaurantes, Picanterias y Menus", margen: 0.45, rotacion: 2.50, insumos: ["pollo", "carne", "saco papa", "balon gas", "verduras", "aceite", "descartables"] },
+      "5122": { nombre: "Distribuidora Mayorista Agroalimentaria", margen: 0.14, rotacion: 2.80, insumos: ["tonelada", "saco 50kg", "jaba", "malla cebolla", "fertilizante", "flete"] }
+    };
+
+    const PRESET_CASES = [
+      {
+        exp_id: "EXP-TRUJ-2026-0101",
+        ruc: "10423189012",
+        agencia: "Agencia El Porvenir",
+        ciiu: "1520",
+        vdecl: 7200,
+        ccomp: 5000,
+        gastos: 624,
+        cuota: 980,
+        monto: 8000,
+        ocr: 0.95,
+        coherencia: true,
+        stock: 6400
+      },
+      {
+        exp_id: "EXP-TRUJ-2026-0415",
+        ruc: "10489120345",
+        agencia: "Agencia La Hermelinda",
+        ciiu: "5211",
+        vdecl: 16500,
+        ccomp: 6200,
+        gastos: 1269.76,
+        cuota: 1020,
+        monto: 12000,
+        ocr: 0.91,
+        coherencia: true,
+        stock: 7900
+      },
+      {
+        exp_id: "EXP-TRUJ-2026-0892",
+        ruc: "10456712390",
+        agencia: "Agencia San Nicolas / El Porvenir",
+        ciiu: "1520",
+        vdecl: 18500,
+        ccomp: 5200,
+        gastos: 1327.06,
+        cuota: 1450,
+        monto: 15000,
+        ocr: 0.91,
+        coherencia: true,
+        stock: 6800
+      },
+      {
+        exp_id: "EXP-TRUJ-2026-0910",
+        ruc: "10411298765",
+        agencia: "Agencia La Esperanza",
+        ciiu: "5211",
+        vdecl: 11000,
+        ccomp: 1400,
+        gastos: 960,
+        cuota: 890,
+        monto: 9000,
+        ocr: 0.74,
+        coherencia: false,
+        stock: 2100
+      }
+    ];
+
+    let currentPresetMeta = PRESET_CASES[0];
+
+    // 2. ARTEFACTOS PARA COPIADO DE 1 CLIC (VISTA 1)
+    const ARTIFACTS_CONTENT = {
+      skill_soe: `### ROL E IDENTIDAD NORMATIVA (WASI-RISK AI)
+Actúas exclusivamente como el Agente Extractor Estructurado y Auditor Normativo SBS de WASI-RISK AI para Caja Trujillo.
+Parámetros obligatorios: temperature = 0.0, response_format = {"type": "json_object"}.
+1. CERO CAJA NEGRA: No apruebas ni rechazas créditos subjetivamente.
+2. Normaliza unidades informales usando lexico_unidades_mype.json (DOCENA, TAREA, PLANCHA, SACO_50KG).
+3. POKA-YOKE: Si confianza_extraccion_ia < 0.85 o coherencia_insumos_giro == false, NO interpoles montos y activa requiere_revision_humana = true.
+4. PLANTILLA SBS OBLIGATORIA (explicacion_agente_sbs):
+"AUDITORÍA PRE-DESEMBOLSO SBS [CIIU {giro_ciiu} - {nombre_giro}]: Evidencia documental con certeza OCR de {confianza_ocr}% e insumos {estado_coherencia}. Compras comprobadas S/ {compras} sustentan Ventas Implícitas de S/ {v_imp} vs Ventas Declaradas S/ {v_decl} (Delta {delta}%). Conforme a Res. SBS N.° 11356-2008 (clasificación {sbs}, provisión {prov}%), el FND de S/ {fnd} genera un RCC de {rcc}x sobre la cuota de S/ {cuota}. Dictamen Escala Caja Trujillo [{escala}]: {accion}, recomendando S/ {monto_rec} sobre S/ {monto_sol}."`,
+
+      reglas_trujillo: JSON.stringify({
+        giros_ciiu_trujillo: GIROS_CIIU,
+        provisiones_sbs_11356: { NORMAL: 0.01, CPP: 0.05, DEFICIENTE: 0.25, DUDOSO: 0.60, PERDIDA: 1.00 },
+        matriz_homologacion_caja_trujillo: {
+          AAA: { delta_max: 0.10, rcc_min: 1.60, accion: "FAST_TRACK_DESEMBOLSO_INMEDIATO" },
+          AA:  { delta_max: 0.15, rcc_min: 1.35, accion: "APROBACION_ESTANDAR_SIN_RECORTE" },
+          A:   { delta_max: 0.25, rcc_min: 1.15, accion: "APROBACION_CON_RECORTE_AUTOMATICO_DE_MONTO" },
+          B:   { delta_max: 0.35, rcc_min: 1.00, accion: "OBSERVADO_RETENCION_EXIGE_GARANTIA" },
+          C:   { delta_max: 99.0, rcc_min: 0.00, accion: "BLOQUEO_PRE_DESEMBOLSO_ALERTA_ROJA_FRAUDE" }
+        }
+      }, null, 2),
+
+      lexico_mype: JSON.stringify({
+        unidades_estandar_permitidas: ["UNIDAD", "PAR", "DOCENA", "CIENTO", "MILLAR", "KILO", "SACO_50KG", "BOLSA", "CAJA", "FARDO", "PLANCHA", "ROLLO", "METRO", "TAREA", "GALON"],
+        mapeo_abreviaturas_informales: { "doc": "DOCENA", "cto": "CIENTO", "pl": "PLANCHA", "bls": "BOLSA", "fdo": "FARDO", "par": "PAR", "tira": "UNIDAD", "tarea": "TAREA" },
+        reglas_poka_yoke: {
+          umbral_minimo_ocr: 0.85,
+          rechazo_multiplos_1000_sin_desglose: true,
+          rechazo_fechas_futuras: true,
+          exige_coherencia_ciiu: true
+        }
+      }, null, 2),
+
+      golden_cases: JSON.stringify(PRESET_CASES, null, 2)
+    };
+
+    // 3. CAMBIO DE PESTAÑAS (4 VISTAS)
+    function switchView(viewIndex) {
+      for (let i = 1; i <= 4; i++) {
+        const sec = document.getElementById(`view-${i}`);
+        const btn = document.getElementById(`tab-btn-${i}`);
+        if (i === viewIndex) {
+          sec.classList.remove("hidden");
+          btn.classList.remove("tab-btn-inactive");
+          btn.classList.add("tab-btn-active");
+        } else {
+          sec.classList.add("hidden");
+          btn.classList.remove("tab-btn-active");
+          btn.classList.add("tab-btn-inactive");
+        }
+      }
+    }
+
+    // 4. UTILIDAD DE FORMATO MONEDA PERUANA
+    function formatPEN(val) {
+      return "S/ " + Number(val).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // 5. CARGAR CASO TESTIGO EN EL SIMULADOR
+    function loadPresetCase(idx) {
+      const c = PRESET_CASES[idx];
+      currentPresetMeta = c;
+      document.getElementById("sim-ciiu").value = c.ciiu;
+      document.getElementById("sim-vdecl").value = c.vdecl;
+      document.getElementById("sim-ccomp").value = c.ccomp;
+      document.getElementById("sim-gastos").value = c.gastos;
+      document.getElementById("sim-cuota").value = c.cuota;
+      document.getElementById("sim-monto").value = c.monto;
+      document.getElementById("sim-ocr").value = c.ocr;
+      document.getElementById("sim-coherencia").checked = c.coherencia;
+      recalculateSimulator();
+    }
+
+    // 6. MOTOR MATEMÁTICO EN TIEMPO REAL (IDÉNTICO A motor_scoring_wasi.py)
+    function recalculateSimulator() {
+      const ciiu = document.getElementById("sim-ciiu").value;
+      const giro = GIROS_CIIU[ciiu];
+      const vdecl = parseFloat(document.getElementById("sim-vdecl").value);
+      const ccomp = parseFloat(document.getElementById("sim-ccomp").value);
+      const gastos = parseFloat(document.getElementById("sim-gastos").value);
+      const cuota = parseFloat(document.getElementById("sim-cuota").value);
+      const montoSol = parseFloat(document.getElementById("sim-monto").value);
+      const ocr = parseFloat(document.getElementById("sim-ocr").value);
+      const coherencia = document.getElementById("sim-coherencia").checked;
+
+      // Actualizar etiquetas de sliders
+      document.getElementById("lbl-vdecl").textContent = formatPEN(vdecl);
+      document.getElementById("lbl-ccomp").textContent = formatPEN(ccomp);
+      document.getElementById("lbl-gastos").textContent = formatPEN(gastos);
+      document.getElementById("lbl-cuota").textContent = formatPEN(cuota);
+      document.getElementById("lbl-monto").textContent = formatPEN(montoSol);
+      document.getElementById("lbl-ocr").textContent = `${ocr.toFixed(2)} (${Math.round(ocr * 100)}%)`;
+
+      // Fórmulas deterministas de Alejandro Flores
+      const vimp = Number(((ccomp / (1.0 - giro.margen)) * giro.rotacion).toFixed(2));
+      const delta = Number(((vdecl - vimp) / vimp).toFixed(3));
+      const basePrudencial = Math.min(vdecl, vimp);
+      const fndRaw = (basePrudencial * giro.margen) - gastos;
+      const fnd = Number(Math.max(0.0, fndRaw).toFixed(2));
+      const rcc = Number((fnd / cuota).toFixed(2));
+
+      const alertaFraude = delta > 0.30;
+      const pokaYoke = (ocr < 0.85) || (!coherencia);
+
+      let escala = "C";
+      let sbs = "DUDOSO";
+      let prov = 0.60;
+      let accion = "BLOQUEO_PRE_DESEMBOLSO_ALERTA_ROJA_FRAUDE";
+      let montoRec = Math.round((montoSol * 0.4333) / 500) * 500;
+      let revHumana = true;
+
+      if (pokaYoke) {
+        escala = "C";
+        sbs = "PERDIDA";
+        prov = 1.00;
+        accion = "BLOQUEO_POKA_YOKE_DERIVACION_AUDITOR_HUMANO";
+        montoRec = 0.00;
+        revHumana = true;
+      } else if (delta <= 0.10 && rcc >= 1.60) {
+        escala = "AAA";
+        sbs = "NORMAL";
+        prov = 0.01;
+        accion = "FAST_TRACK_DESEMBOLSO_INMEDIATO";
+        montoRec = montoSol;
+        revHumana = false;
+      } else if (delta <= 0.15 && rcc >= 1.35) {
+        escala = "AA";
+        sbs = "NORMAL";
+        prov = 0.01;
+        accion = "APROBACION_ESTANDAR_SIN_RECORTE";
+        montoRec = montoSol;
+        revHumana = false;
+      } else if (delta <= 0.25 && rcc >= 1.15) {
+        escala = "A";
+        sbs = "CPP";
+        prov = 0.05;
+        accion = "APROBACION_CON_RECORTE_AUTOMATICO_DE_MONTO";
+        montoRec = Math.round((montoSol * 0.71) / 500) * 500;
+        revHumana = false;
+      } else if (delta <= 0.35 && rcc >= 1.00) {
+        escala = "B";
+        sbs = "DEFICIENTE";
+        prov = 0.25;
+        accion = "OBSERVADO_RETENCION_EXIGE_GARANTIA";
+        montoRec = Math.round((montoSol * 0.55) / 500) * 500;
+        revHumana = true;
+      }
+
+      // Pintar KPIs con Semáforo Financiero Nítido
+      document.getElementById("kpi-vimp").textContent = formatPEN(vimp);
+      const deltaPct = (delta * 100).toFixed(1);
+      const kpiDeltaEl = document.getElementById("kpi-delta");
+      const kpiDeltaSub = document.getElementById("kpi-delta-sub");
+      kpiDeltaEl.textContent = `${delta >= 0 ? "+" : ""}${deltaPct}%`;
+
+      if (alertaFraude) {
+        kpiDeltaEl.className = "text-lg font-extrabold font-mono-code text-rose-600 mt-1";
+        kpiDeltaSub.className = "text-[11px] font-extrabold text-rose-600 mt-0.5";
+        kpiDeltaSub.textContent = "ALERTA MAQUILLAJE (>30%)";
+      } else if (delta > 0.15) {
+        kpiDeltaEl.className = "text-lg font-extrabold font-mono-code text-amber-600 mt-1";
+        kpiDeltaSub.className = "text-[11px] font-bold text-amber-700 mt-0.5";
+        kpiDeltaSub.textContent = "Sobreestimación Moderada";
+      } else {
+        kpiDeltaEl.className = "text-lg font-extrabold font-mono-code text-emerald-700 mt-1";
+        kpiDeltaSub.className = "text-[11px] font-bold text-emerald-700 mt-0.5";
+        kpiDeltaSub.textContent = "Consistente con Compras";
+      }
+
+      document.getElementById("kpi-rcc").textContent = `${rcc.toFixed(2)}x`;
+      document.getElementById("kpi-fnd").textContent = `FND: ${formatPEN(fnd)}`;
+      document.getElementById("kpi-escala").textContent = escala;
+      document.getElementById("kpi-sbs").textContent = `SBS: ${sbs} (${Math.round(prov * 100)}%)`;
+
+      const cardEscala = document.getElementById("card-escala");
+      const bannerDictamen = document.getElementById("banner-dictamen");
+      const badgeAccion = document.getElementById("badge-accion");
+
+      if (escala === "AAA" || escala === "AA") {
+        cardEscala.className = "card-daylight p-4 bg-emerald-50 border-emerald-300";
+        document.getElementById("kpi-escala").className = "text-2xl font-black font-mono-code text-emerald-700 mt-0.5";
+        bannerDictamen.className = "card-daylight p-5 border-l-4 border-l-emerald-600";
+        badgeAccion.className = "text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 font-mono-code";
+      } else if (escala === "A" || escala === "B") {
+        cardEscala.className = "card-daylight p-4 bg-amber-50 border-amber-300";
+        document.getElementById("kpi-escala").className = "text-2xl font-black font-mono-code text-amber-700 mt-0.5";
+        bannerDictamen.className = "card-daylight p-5 border-l-4 border-l-amber-600";
+        badgeAccion.className = "text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-mono-code";
+      } else {
+        cardEscala.className = "card-daylight p-4 bg-rose-50 border-rose-300";
+        document.getElementById("kpi-escala").className = "text-2xl font-black font-mono-code text-rose-700 mt-0.5";
+        bannerDictamen.className = "card-daylight p-5 border-l-4 border-l-rose-600";
+        badgeAccion.className = "text-xs font-extrabold uppercase px-2.5 py-1 rounded bg-rose-100 text-rose-800 font-mono-code";
+      }
+
+      badgeAccion.textContent = accion;
+      document.getElementById("lbl-sol-out").textContent = formatPEN(montoSol);
+      document.getElementById("lbl-rec-out").textContent = formatPEN(montoRec);
+
+      // Redacción normativa automática de Soe Macero
+      let explicacion = "";
+      if (pokaYoke) {
+        explicacion = `AUDITORÍA PRE-DESEMBOLSO SBS [CIIU ${ciiu} - ${giro.nombre}]: BLOQUEO PREVENTIVO POKA-YOKE ACTIVADO. Se detecta certeza de extracción OCR de ${Math.round(ocr * 100)}% (umbral mínimo 85%) y coherencia de insumos con el giro = ${coherencia}. En cumplimiento de las reglas EARS de WASI-RISK AI y la Res. SBS N.° 11356-2008, el agente NO interpola montos borrosos ni admite boletas cruzadas de otro giro. Dictamen Escala Caja Trujillo [C]: ${accion}, recomendando S/ 0.00 de desembolso automático y derivación inmediata a auditor humano.`;
+      } else {
+        explicacion = `AUDITORÍA PRE-DESEMBOLSO SBS [CIIU ${ciiu} - ${giro.nombre}]: Evidencia documental con certeza OCR de ${Math.round(ocr * 100)}% e insumos 100% coherentes con el giro declarado. La triangulación microfinanciera registra compras comprobadas por ${formatPEN(ccomp)} (margen estándar ${Math.round(giro.margen * 100)}%, rotación ${giro.rotacion.toFixed(2)}x), sustentando Ventas Implícitas de ${formatPEN(vimp)} frente a las Ventas Declaradas por el asesor de ${formatPEN(vdecl)} (desviación declarativa Delta de ${delta >= 0 ? "+" : ""}${deltaPct}%). Conforme a la Res. SBS N.° 11356-2008 (evaluación de capacidad de pago real deudor MYPE, clasificación proyectada ${sbs} con provisión del ${Math.round(prov * 100)}%), el Flujo Neto Disponible conservador de ${formatPEN(fnd)} genera un RCC de ${rcc.toFixed(2)}x sobre la cuota de ${formatPEN(cuota)}. Dictamen Escala Caja Trujillo [${escala}]: ${accion}, recomendando un tope de ${formatPEN(montoRec)} sobre los ${formatPEN(montoSol)} solicitados.`;
+      }
+      document.getElementById("txt-explicacion-sbs").textContent = explicacion;
+
+      // Construir Contrato JSON Inmutable de 4 Bloques
+      const payload = {
+        expediente_id: currentPresetMeta.exp_id || "EXP-TRUJ-2026-LIVE",
+        timestamp_auditoria: new Date().toISOString(),
+        agencia_origen: currentPresetMeta.agencia || "Agencia El Porvenir",
+        modo_inferencia: "HIBRIDO_SANITIZADO_VPS_SOE",
+        validacion_fiscal: {
+          ruc: currentPresetMeta.ruc || "10423189012",
+          estado_sunat: "ACTIVO",
+          condicion_domicilio: "HABIDO",
+          giro_ciiu: ciiu,
+          nombre_giro: giro.nombre,
+          coherencia_insumos_giro: coherencia,
+          confianza_extraccion_ia: ocr
+        },
+        triangulacion_financiera: {
+          moneda: "PEN",
+          ventas_declaradas_asesor: vdecl,
+          compras_comprobadas_documentos: ccomp,
+          margen_bruto_ciiu: giro.margen,
+          factor_rotacion_mensual: giro.rotacion,
+          inventario_fisico_estimado: Number((ccomp * 1.28).toFixed(2)),
+          ventas_implicitas_calculadas: vimp,
+          delta_desviacion_declarativa: delta,
+          flujo_neto_disponible: fnd,
+          cuota_mensual_propuesta: cuota,
+          ratio_cobertura_cuota_rcc: rcc
+        },
+        dictamen_riesgos: {
+          alerta_fraude_maquillaje: alertaFraude,
+          requiere_revision_humana: revHumana,
+          clasificacion_sbs_proyectada: sbs,
+          tasa_provision_sbs: prov,
+          escala_interna_caja_trujillo: escala,
+          accion_operativa: accion,
+          monto_solicitado_original: montoSol,
+          monto_maximo_recomendado: montoRec,
+          explicacion_agente_sbs: explicacion
+        }
+      };
+
+      document.getElementById("live-json-output").textContent = JSON.stringify(payload, null, 2);
+    }
+
+    // 7. CALCULADORA P&L BANCARIO HARVARD BUSINESS CASE (NICOLÁS LÓPEZ)
+    function recalculatePnL() {
+      const carteraMillones = parseFloat(document.getElementById("pnl-cartera").value);
+      const bps = parseFloat(document.getElementById("pnl-bps").value);
+      const exps = parseFloat(document.getElementById("pnl-exps").value);
+      const contrato = parseFloat(document.getElementById("pnl-contrato").value);
+
+      document.getElementById("lbl-pnl-cartera").textContent = `S/ ${carteraMillones.toLocaleString("en-US")} M`;
+      document.getElementById("lbl-pnl-bps").textContent = `${bps} bps (${(bps / 100).toFixed(2)}%)`;
+      document.getElementById("lbl-pnl-exps").textContent = `${exps.toLocaleString("en-US")} exp/año`;
+
+      const ahorroProvisiones = (carteraMillones * 1000000) * (bps / 10000);
+      const ahorroOpex = exps * (160 - 18); // S/ 142 ahorrados por expediente auditado
+      const ahorroTotal = ahorroProvisiones + ahorroOpex;
+      const roiMultiple = ahorroTotal / contrato;
+
+      document.getElementById("out-pnl-prov").textContent = "S/ " + Math.round(ahorroProvisiones).toLocaleString("en-US");
+      document.getElementById("out-pnl-opex").textContent = "S/ " + Math.round(ahorroOpex).toLocaleString("en-US");
+      document.getElementById("pnl-total-savings").textContent = "S/ " + Math.round(ahorroTotal).toLocaleString("en-US");
+      document.getElementById("out-pnl-roi").textContent = `${roiMultiple.toFixed(1)}x (Payback < 5 días)`;
+      document.getElementById("out-pnl-fee").textContent = `Inversión SaaS Soberano: S/ ${contrato.toLocaleString("en-US")} / año.`;
+    }
+
+    // 8. COPIADO DE 1 CLIC CON NOTIFICACIÓN TOAST
+    function showToast(msg) {
+      const toast = document.getElementById("copy-toast");
+      document.getElementById("copy-toast-text").textContent = msg;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 2600);
+    }
+
+    function copyArtifact(key, label) {
+      navigator.clipboard.writeText(ARTIFACTS_CONTENT[key]);
+      showToast(label);
+    }
+
+    function copyLiveJson() {
+      const txt = document.getElementById("live-json-output").textContent;
+      navigator.clipboard.writeText(txt);
+      showToast("Payload JSON de 4 bloques copiado al portapapeles");
+    }
+
+    // INICIALIZACIÓN AL CARGAR DOM
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("preview-skill-soe").textContent = ARTIFACTS_CONTENT.skill_soe;
+      document.getElementById("preview-reglas-trujillo").textContent = ARTIFACTS_CONTENT.reglas_trujillo;
+      document.getElementById("preview-lexico-mype").textContent = ARTIFACTS_CONTENT.lexico_mype;
+      document.getElementById("preview-golden-cases").textContent = ARTIFACTS_CONTENT.golden_cases;
+      loadPresetCase(0);
+      recalculatePnL();
+    });
+  </script>
+</body>
+</html>

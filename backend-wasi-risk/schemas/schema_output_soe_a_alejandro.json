@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wasi-risk.cajatrujillo.pe/schemas/output_soe_a_alejandro.v2.5.json",
+  "title": "WASI-RISK AI — Contrato OUTPUT (VPS Soe Macero -> Motor Python Alejandro Flores)",
+  "description": "Esquema JSON estricto que devuelve el agente extractor de Soe Macero (temperature = 0.0) al motor cuantitativo determinista. Incluye regla Poka-Yoke: si confianza_extraccion_ia < 0.85, requiere_revision_humana DEBE ser true.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "expediente_id",
+    "modo_inferencia",
+    "validacion_fiscal_resultado",
+    "resumen_extraccion_compras",
+    "documentos_procesados",
+    "banderas_fraude_detectadas",
+    "requiere_revision_humana"
+  ],
+  "properties": {
+    "expediente_id": {
+      "type": "string",
+      "pattern": "^EXP-TRUJ-2026-[0-9]{4}$"
+    },
+    "modo_inferencia": {
+      "type": "string",
+      "enum": ["HIBRIDO_SANITIZADO_VPS_SOE", "ON_PREMISE_LOCAL_CPU"]
+    },
+    "validacion_fiscal_resultado": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "giro_ciiu",
+        "estado_sunat",
+        "condicion_domicilio",
+        "coherencia_insumos_giro",
+        "confianza_extraccion_ia"
+      ],
+      "properties": {
+        "giro_ciiu": {
+          "type": "string",
+          "enum": [
+            "1520", "5211", "5234", "1810", "5520", "5122",
+            "4923", "4922", "4520", "1071", "4771", "4772", "3100", "4752"
+          ]
+        },
+        "estado_sunat": {
+          "type": "string",
+          "enum": ["ACTIVO", "SUSPENSION TEMPORAL", "BAJA DE OFICIO", "BAJA DEFINITIVA"]
+        },
+        "condicion_domicilio": {
+          "type": "string",
+          "enum": ["HABIDO", "NO HABIDO", "NO HALLADO"]
+        },
+        "coherencia_insumos_giro": { "type": "boolean" },
+        "confianza_extraccion_ia": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      }
+    },
+    "resumen_extraccion_compras": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "moneda",
+        "compras_comprobadas_validas_pen",
+        "compras_rechazadas_pen",
+        "total_documentos_auditados",
+        "total_documentos_rechazados"
+      ],
+      "properties": {
+        "moneda": { "type": "string", "const": "PEN" },
+        "compras_comprobadas_validas_pen": { "type": "number", "minimum": 0 },
+        "compras_rechazadas_pen": { "type": "number", "minimum": 0 },
+        "total_documentos_auditados": { "type": "integer", "minimum": 1 },
+        "total_documentos_rechazados": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "documentos_procesados": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "doc_id",
+          "tipo_documento",
+          "confianza_extraccion_ia",
+          "coherencia_insumos_giro",
+          "es_documento_valido_computable",
+          "requiere_revision_humana",
+          "banderas_detectadas",
+          "items_extraidos",
+          "monto_declarado_documento_pen",
+          "monto_computable_valido_pen"
+        ],
+        "properties": {
+          "doc_id": { "type": "string" },
+          "tipo_documento": {
+            "type": "string",
+            "enum": [
+              "FACTURA_MAYORISTA",
+              "BOLETA_MAYORISTA",
+              "NOTA_MANUSCRITA",
+              "VOUCHER_YAPE",
+              "VOUCHER_PLIN",
+              "ACTA_INVENTARIO"
+            ]
+          },
+          "serie_correlativo": { "type": ["string", "null"] },
+          "fecha_emision": { "type": ["string", "null"] },
+          "proveedor_token": { "type": "string" },
+          "confianza_extraccion_ia": { "type": "number", "minimum": 0, "maximum": 1 },
+          "coherencia_insumos_giro": { "type": "boolean" },
+          "es_documento_valido_computable": { "type": "boolean" },
+          "requiere_revision_humana": { "type": "boolean" },
+          "banderas_detectadas": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "items_extraidos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "descripcion",
+                "cantidad",
+                "unidad_original",
+                "unidad_normalizada",
+                "insumo_coherente_ciiu"
+              ],
+              "properties": {
+                "descripcion": { "type": "string" },
+                "cantidad": { "type": "number", "minimum": 0 },
+                "unidad_original": { "type": "string" },
+                "unidad_normalizada": {
+                  "type": "string",
+                  "enum": [
+                    "UNIDAD", "PAR", "DOCENA", "CIENTO", "MILLAR", "KILO",
+                    "ARROBA", "QUINTAL", "SACO_50KG", "BOLSA", "CAJA",
+                    "FARDO", "PLANCHA", "ROLLO", "METRO", "PIE_CUADRADO",
+                    "TAREA", "GALON", "JABA", "PAQUETE", "ATADO", "VIAJE_FLETE"
+                  ]
+                },
+                "precio_unitario_pen": { "type": ["number", "null"], "minimum": 0 },
+                "subtotal_pen": { "type": ["number", "null"], "minimum": 0 },
+                "insumo_coherente_ciiu": { "type": "boolean" }
+              }
+            }
+          },
+          "monto_declarado_documento_pen": { "type": "number", "minimum": 0 },
+          "monto_computable_valido_pen": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "banderas_fraude_detectadas": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "FLAG_MAQUILLAJE_VENTAS_30",
+          "FLAG_INCOHERENCIA_GIRO_CIIU",
+          "FLAG_BAJA_CONFIANZA_OCR_POKA_YOKE",
+          "FLAG_MONTO_REDONDO_SIN_DESGLOSE",
+          "FLAG_MONTOS_REPETIDOS_O_DUPLICADOS",
+          "FLAG_FECHA_FUTURA_O_VENCIDA",
+          "FLAG_RUC_NO_HABIDO_O_BAJA",
+          "FLAG_PROVEEDOR_EN_BAJA_SUNAT",
+          "FLAG_ANTIGUEDAD_FISCAL_INSUFICIENTE",
+          "FLAG_STOCK_INCONSISTENTE"
+        ]
+      }
+    },
+    "requiere_revision_humana": { "type": "boolean" }
+  },
+  "if": {
+    "properties": {
+      "validacion_fiscal_resultado": {
+        "properties": {
+          "confianza_extraccion_ia": { "exclusiveMaximum": 0.85 }
+        }
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "requiere_revision_humana": { "const": true }
+    }
+  }
+}

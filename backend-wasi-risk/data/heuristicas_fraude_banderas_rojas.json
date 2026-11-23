@@ -1,0 +1,110 @@
+{
+  "metadata_heuristicas": {
+    "modulo": "Motor de Heurísticas de Fraude y Banderas Rojas MYPE (Trujillo)",
+    "version": "1.0.0-SOE-INGESTION-KIT",
+    "propietarios": "Soe Macero (Compliance SBS) & Alejandro Flores (Scoring Cuantitativo)",
+    "proposito": "Reglas deterministas y simbolicas para disparo automatico de banderas de riesgo sin caja negra."
+  },
+  "banderas_rojas": [
+    {
+      "codigo_bandera": "FLAG_MAQUILLAJE_VENTAS_30",
+      "severidad": "CRITICA",
+      "etapa_deteccion": "MOTOR_MATEMATICO_ALEJANDRO",
+      "condicion_logica": "delta_desviacion_declarativa > 0.30",
+      "umbral": 0.30,
+      "accion_automatica": "alerta_fraude_maquillaje = true; degradacion automatica a escala B/C y bloqueo de Fast-Track.",
+      "ejemplo_trujillo": "Asesor declara S/ 18,500 en taller de calzado El Porvenir, pero compras de cuero/suela solo sustentan S/ 7,647.06 (Delta = +141.9%).",
+      "base_normativa": "Res. SBS N.° 11356-2008 (Evaluacion de capacidad de pago real)"
+    },
+    {
+      "codigo_bandera": "FLAG_INCOHERENCIA_GIRO_CIIU",
+      "severidad": "CRITICA",
+      "etapa_deteccion": "AGENTE_EXTRACTOR_SOE",
+      "condicion_logica": "porcentaje_monto_insumos_fuera_de_ciiu > 0.20",
+      "umbral": 0.20,
+      "accion_automatica": "coherencia_insumos_giro = false; excluir montos ajenos; requiere_revision_humana = true.",
+      "ejemplo_trujillo": "RUC de Bodega de Abarrotes (CIIU 5211) adjuntando boletas de bolsas de cemento y varillas de fierro (CIIU 5234).",
+      "base_normativa": "Prevencion de prestamo de boletas entre familiares o terceros"
+    },
+    {
+      "codigo_bandera": "FLAG_BAJA_CONFIANZA_OCR_POKA_YOKE",
+      "severidad": "ALTA",
+      "etapa_deteccion": "AGENTE_EXTRACTOR_SOE",
+      "condicion_logica": "confianza_extraccion_ia < 0.85 OR nota_con_tachadura_en_total == true",
+      "umbral": 0.85,
+      "accion_automatica": "PROHIBIDO interpolar o adivinar cifras; monto_computable_doc = 0.00; requiere_revision_humana = true.",
+      "ejemplo_trujillo": "Nota de mostrador humedecida o borrosa con confianza OCR de 0.74.",
+      "base_normativa": "Steering Rule EARS UNWANTED-01 (Poka-Yoke Documental)"
+    },
+    {
+      "codigo_bandera": "FLAG_MONTO_REDONDO_SIN_DESGLOSE",
+      "severidad": "ALTA",
+      "etapa_deteccion": "AGENTE_EXTRACTOR_SOE",
+      "condicion_logica": "(monto_total_doc % 1000 == 0) AND (cantidad_items_desglosados <= 1) AND (tipo_documento == 'NOTA_MANUSCRITA')",
+      "umbral": 1000.00,
+      "accion_automatica": "Rechazar nota manuscrita del computo de compras validas y registrar bandera en payload.",
+      "ejemplo_trujillo": "Apunte en cuaderno 'Compras varios insumos S/ 5,000.00' sin cantidad ni precio unitario.",
+      "base_normativa": "Control antifraude de llenado ad-hoc de cuaderno"
+    },
+    {
+      "codigo_bandera": "FLAG_MONTOS_REPETIDOS_O_DUPLICADOS",
+      "severidad": "CRITICA",
+      "etapa_deteccion": "AGENTE_EXTRACTOR_SOE",
+      "condicion_logica": "(hash_sha256_repetido == true) OR (serie_correlativo_duplicado == true) OR (notas_mismo_monto_exacto_sin_serie >= 3)",
+      "umbral": 3,
+      "accion_automatica": "Descontar duplicados del total de compras; requiere_revision_humana = true.",
+      "ejemplo_trujillo": "Presentar la misma captura Yape de S/ 870.00 dos veces o 4 notas manuales seguidas por exactamente S/ 1,250.00.",
+      "base_normativa": "Integridad documental Res. SBS N.° 504-2021"
+    },
+    {
+      "codigo_bandera": "FLAG_FECHA_FUTURA_O_VENCIDA",
+      "severidad": "MEDIA",
+      "etapa_deteccion": "AGENTE_EXTRACTOR_SOE",
+      "condicion_logica": "(fecha_emision > fecha_auditoria) OR (dias_antiguedad_doc > 90)",
+      "umbral": 90,
+      "accion_automatica": "Excluir documento del flujo mensual actual; solicitar comprobante vigente.",
+      "ejemplo_trujillo": "Boleta de compra de hace 6 meses reciclada para justificar ventas del mes en curso.",
+      "base_normativa": "Consistencia temporal de capital de trabajo MYPE"
+    },
+    {
+      "codigo_bandera": "FLAG_RUC_NO_HABIDO_O_BAJA",
+      "severidad": "CRITICA",
+      "etapa_deteccion": "VALIDACION_FISCAL_SUNAT",
+      "condicion_logica": "(estado_contribuyente != 'ACTIVO') OR (condicion_domicilio != 'HABIDO')",
+      "umbral": 1,
+      "accion_automatica": "Bloqueo inmediato de Fast-Track; derivar a verificacion domiciliaria y legal.",
+      "ejemplo_trujillo": "RUC en estado BAJA DE OFICIO o condicion NO HABIDO / NO HALLADO en padron SUNAT.",
+      "base_normativa": "Debida diligencia fiscal y conocimiento del cliente (KYC)"
+    },
+    {
+      "codigo_bandera": "FLAG_PROVEEDOR_EN_BAJA_SUNAT",
+      "severidad": "CRITICA",
+      "etapa_deteccion": "VALIDACION_FISCAL_SUNAT",
+      "condicion_logica": "proveedor_estado_sunat IN ['BAJA DE OFICIO', 'BAJA DEFINITIVA']",
+      "umbral": 1,
+      "accion_automatica": "Anular comprobante del proveedor en baja; alerta de boleta clonada o inexistente.",
+      "ejemplo_trujillo": "Factura emitida por RUC 20601112229 con BAJA DEFINITIVA en SUNAT.",
+      "base_normativa": "Control de operaciones no reales (SUNAT / Riesgo Operacional SBS)"
+    },
+    {
+      "codigo_bandera": "FLAG_ANTIGUEDAD_FISCAL_INSUFICIENTE",
+      "severidad": "MEDIA",
+      "etapa_deteccion": "VALIDACION_FISCAL_SUNAT",
+      "condicion_logica": "meses_desde_fecha_inicio_actividades < 6",
+      "umbral": 6,
+      "accion_automatica": "Deshabilitar Fast-Track AAA; exige verificacion presencial de experiencia comercial minima.",
+      "ejemplo_trujillo": "RUC dado de alta hace 2 meses solicitando credito de capital de trabajo de S/ 15,000.",
+      "base_normativa": "Politica crediticia MYPE de continuidad minima de negocio"
+    },
+    {
+      "codigo_bandera": "FLAG_STOCK_INCONSISTENTE",
+      "severidad": "MEDIA",
+      "etapa_deteccion": "MOTOR_MATEMATICO_ALEJANDRO",
+      "condicion_logica": "(factor_rotacion_mensual <= 1.20) AND (inventario_fisico_estimado < 0.40 * ventas_declaradas_asesor)",
+      "umbral": 0.40,
+      "accion_automatica": "Agregar alerta de respaldo patrimonial insuficiente en explicacion_agente_sbs.",
+      "ejemplo_trujillo": "Taller declara S/ 18,500 en ventas mensuales pero solo exhibe S/ 6,800 en stock fisico (36.7%).",
+      "base_normativa": "Triangulacion patrimonial de campo (Compras + Stock + Ventas)"
+    }
+  ]
+}

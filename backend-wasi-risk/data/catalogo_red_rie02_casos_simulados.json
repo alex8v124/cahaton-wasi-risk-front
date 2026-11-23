@@ -1,0 +1,1432 @@
+{
+  "metadata_rie02": {
+    "desafio": "RIE-02 | Descubrir redes de riesgo ocultas (Cajathon Caja Trujillo 2026)",
+    "version": "2.0.0-RIE02-GRAPH",
+    "alineacion_documento": "Documento Tecnico de Especificacion de Requerimientos v2.0 (Alexander Miranda, Soe Macero, Alejandro Flores, Nicolas Lopez)",
+    "formula_puntaje_red": "Puntaje_red = round(100 * (0.50 * S_patrones + 0.30 * S_anomalia + 0.20 * S_comunidad) * F_contexto)",
+    "formula_rareza": "rareza = 1 / log2(1 + n)"
+  },
+  "catalogo_patrones_p01_p09": {
+    "P-01": {
+      "codigo": "P-01",
+      "nombre": "Telefono compartido",
+      "senal_observada": "El mismo telefono aparece en solicitudes de personas sin vinculo declarado.",
+      "peso_inicial": 0.3
+    },
+    "P-02": {
+      "codigo": "P-02",
+      "nombre": "Dispositivo compartido",
+      "senal_observada": "El mismo dispositivo de cliente envia solicitudes de varias personas.",
+      "peso_inicial": 0.35
+    },
+    "P-03": {
+      "codigo": "P-03",
+      "nombre": "Referencias circulares",
+      "senal_observada": "Los solicitantes se refieren entre si en cadena cerrada (A->B->C->A).",
+      "peso_inicial": 0.3
+    },
+    "P-04": {
+      "codigo": "P-04",
+      "nombre": "Direccion concentrada atipica",
+      "senal_observada": "Varias personas o negocios declaran una vivienda que no es zona comercial.",
+      "peso_inicial": 0.2
+    },
+    "P-05": {
+      "codigo": "P-05",
+      "nombre": "Rafaga temporal",
+      "senal_observada": "Solicitudes conectadas presentadas en una ventana corta y en agencias distintas.",
+      "peso_inicial": 0.2
+    },
+    "P-06": {
+      "codigo": "P-06",
+      "nombre": "Negocios recientes o irregulares",
+      "senal_observada": "RUC con poca antiguedad (<6 meses), NO HABIDO o BAJA conectados entre si.",
+      "peso_inicial": 0.15
+    },
+    "P-07": {
+      "codigo": "P-07",
+      "nombre": "Concentracion en asesor",
+      "senal_observada": "Un asesor origina muchas solicitudes de una misma comunidad con vinculos cruzados.",
+      "peso_inicial": 0.2
+    },
+    "P-08": {
+      "codigo": "P-08",
+      "nombre": "Ventas infladas en la red (Triangulacion CIIU)",
+      "senal_observada": "Varios nodos de la comunidad declaran ventas muy superiores a sus compras comprobadas (Delta > 30%).",
+      "peso_inicial": 0.25
+    },
+    "P-09": {
+      "codigo": "P-09",
+      "nombre": "Vinculo con casos confirmados",
+      "senal_observada": "La subred incluye clientes con fraude confirmado o mora temprana.",
+      "peso_inicial": 0.25
+    }
+  },
+  "reglas_contexto_legitimo_l01_l06": {
+    "L-01": {
+      "codigo": "L-01",
+      "contexto": "Familia en el mismo domicilio",
+      "reconocimiento": "Vinculo familiar declarado por el asesor o apellidos y domicilio coincidentes con compras reales verificadas.",
+      "factor_contexto": 0.4,
+      "anula_patron": null
+    },
+    "L-02": {
+      "codigo": "L-02",
+      "contexto": "Mercado o galeria comercial",
+      "reconocimiento": "Direccion catalogada como zona comercial densa (ej. Mercado La Hermelinda +300 puestos).",
+      "factor_contexto": 0.5,
+      "anula_patron": null
+    },
+    "L-03": {
+      "codigo": "L-03",
+      "contexto": "Negocio familiar",
+      "reconocimiento": "Telefono del negocio declarado y compartido por sus socios o familiares.",
+      "factor_contexto": 0.5,
+      "anula_patron": null
+    },
+    "L-04": {
+      "codigo": "L-04",
+      "contexto": "Referencias entre familiares",
+      "reconocimiento": "Referencias reciprocas entre familiares directos declarados.",
+      "factor_contexto": 0.6,
+      "anula_patron": "P-03"
+    },
+    "L-05": {
+      "codigo": "L-05",
+      "contexto": "Asociacion de comerciantes",
+      "reconocimiento": "Miembros de una misma asociacion o cooperativa registrada en Trujillo.",
+      "factor_contexto": 0.6,
+      "anula_patron": null
+    },
+    "L-06": {
+      "codigo": "L-06",
+      "contexto": "Dispositivo corporativo del asesor",
+      "reconocimiento": "Solicitudes capturadas en campo desde la tablet/equipo corporativo asignado al asesor.",
+      "factor_contexto": 0.85,
+      "anula_patron": "P-02"
+    }
+  },
+  "casos_simulados": [
+    {
+      "caso_id": "CS-01",
+      "solicitud_id": "SOL-TRUJ-2026-0412",
+      "titulo": "Anillo de 4 solicitudes en 4 agencias en 6 dias",
+      "request_entrada": {
+        "solicitud_id": "SOL-TRUJ-2026-0412",
+        "fecha_solicitud": "2026-11-18T10:42:00-05:00",
+        "agencia_origen": "Agencia Florencia de Mora",
+        "asesor_id": "ASE-017",
+        "canal": "CAMPO",
+        "monto_solicitado": 15000.0,
+        "solicitante": {
+          "documento": "PER-8841",
+          "telefonos": [
+            "TEL-948112233"
+          ],
+          "direccion": "Calle Los Cedros 240, Trujillo",
+          "geo": [
+            -8.1112,
+            -79.0285
+          ]
+        },
+        "negocio": {
+          "ruc": "10456712390",
+          "giro_ciiu": "1520",
+          "direccion": "Calle Los Cedros 240, El Porvenir"
+        },
+        "dispositivo": {
+          "fingerprint": "dev:7a1e99c2f0",
+          "tipo": "DISPOSITIVO_CLIENTE"
+        },
+        "referencias": [
+          {
+            "id": "REF-1107",
+            "telefono": "TEL-948998877",
+            "relacion": "AMIGO"
+          }
+        ],
+        "contexto_declarado": [],
+        "ventas_declaradas": 18500.0,
+        "compras_comprobadas": 5200.0
+      },
+      "response_analisis": {
+        "solicitud_id": "SOL-TRUJ-2026-0412",
+        "caso_simulado_id": "CS-01",
+        "latencia_ms": 4.8,
+        "hash_integridad_sha256": "c41b9e07a84f12d390e5b67c8a9012f345d678e901a234b567c890d123e456f7",
+        "modo": "GRAFO_SEUDONIMIZADO_VPS",
+        "calidad_datos": {
+          "confianza_resolucion": 0.93,
+          "requiere_verificacion_manual": false
+        },
+        "red": {
+          "nodos_subred": 14,
+          "aristas_subred": 22,
+          "comunidad_id": "COM-0087",
+          "tamano_comunidad": 9
+        },
+        "patrones_detectados": [
+          {
+            "codigo": "P-01",
+            "descripcion": "Telefono compartido con 3 solicitantes sin vinculo declarado",
+            "evidencia": [
+              "SOL-TRUJ-2026-0398",
+              "SOL-TRUJ-2026-0405",
+              "SOL-TRUJ-2026-0409"
+            ],
+            "peso": 0.3,
+            "rareza": 0.5,
+            "n_entidades_compartidas": 3,
+            "aporte_base_peso_x_rareza": 0.15,
+            "aporte_normalizado_subred": 0.23
+          },
+          {
+            "codigo": "P-02",
+            "descripcion": "Mismo dispositivo de cliente (dev:7a1e99c2f0) envio 4 solicitudes en 6 dias",
+            "evidencia": [
+              "DEV-7A1E",
+              "SOL-TRUJ-2026-0398",
+              "SOL-TRUJ-2026-0405"
+            ],
+            "peso": 0.35,
+            "rareza": 0.5,
+            "n_entidades_compartidas": 3,
+            "aporte_base_peso_x_rareza": 0.175,
+            "aporte_normalizado_subred": 0.27
+          },
+          {
+            "codigo": "P-03",
+            "descripcion": "Referencias circulares entre 4 solicitantes (A->B->C->D->A)",
+            "evidencia": [
+              "REF-1102",
+              "REF-1107",
+              "REF-1115",
+              "REF-1121"
+            ],
+            "peso": 0.3,
+            "rareza": 0.63,
+            "n_entidades_compartidas": 2,
+            "aporte_base_peso_x_rareza": 0.189,
+            "aporte_normalizado_subred": 0.29
+          },
+          {
+            "codigo": "P-05",
+            "descripcion": "Rafaga temporal: 4 solicitudes conectadas en 4 agencias distintas en 6 dias",
+            "evidencia": [
+              "AG-PORVENIR",
+              "AG-FLORENCIA",
+              "AG-ESPERANZA",
+              "AG-HUANCHACO"
+            ],
+            "peso": 0.2,
+            "rareza": 0.5,
+            "n_entidades_compartidas": 3,
+            "aporte_base_peso_x_rareza": 0.1,
+            "aporte_normalizado_subred": 0.15
+          }
+        ],
+        "contexto_legitimo": [],
+        "priorizacion": {
+          "puntaje_red": 86,
+          "componentes": {
+            "patrones": 0.94,
+            "anomalia": 0.84,
+            "comunidad": 0.69
+          },
+          "factor_contexto": 1.0,
+          "nivel": "REVISION_PRIORITARIA"
+        },
+        "expediente_agente": {
+          "resumen": "La solicitud SOL-TRUJ-2026-0412 forma parte de un anillo cerrado de 4 solicitudes ingresadas en 6 dias a traves de 4 agencias distintas (El Porvenir, Florencia, La Esperanza y Huanchaco) por un total acumulado de S/ 58,000.00.",
+          "evidencias_citadas": [
+            "Arista [PER-8841 -> usa -> TEL-948112233] compartida con SOL-TRUJ-2026-0398, 0405 y 0409 (Fuente: Captura Campo, 2026-11-18).",
+            "Arista [SOL-TRUJ-2026-0412 -> enviada_desde -> DEV-7A1E] repetida en 4 titulares sin parentesco (Fuente: Telemetria PWA, 2026-11-18).",
+            "Ciclo cerrado de referencias [REF-1102 -> REF-1107 -> REF-1115 -> REF-1121] (Fuente: Declaracion Vinculos, 2026-11-12 al 2026-11-18)."
+          ],
+          "explicaciones_alternativas": [
+            "Posible cooperativa o taller multifamiliar no declarado formalmente en el formulario de campo.",
+            "Uso de un tramitador o gestor externo que presta su telefono y equipo a varios comerciantes."
+          ],
+          "pasos_sugeridos": [
+            "Llamar simultaneamente a las referencias REF-1107 y REF-1115 para contrastar existencia de talleres independientes.",
+            "Verificar in-situ el inventario fisico en Calle Los Cedros 240 antes de liberar cualquier desembolso de la comunidad COM-0087."
+          ],
+          "aristas_evidencia_ids": [
+            "CS-01-E01",
+            "CS-01-E02",
+            "CS-01-E03",
+            "CS-01-E04",
+            "CS-01-E05",
+            "CS-01-E06",
+            "CS-01-E07",
+            "CS-01-E08",
+            "CS-01-E09"
+          ]
+        },
+        "impacto_financiero_sbs": {
+          "moneda": "PEN",
+          "ventas_declaradas_pen": 18500.0,
+          "compras_comprobadas_pen": 5200.0,
+          "ventas_implicitas_ciiu_pen": 7647.06,
+          "delta_maquillaje_p08": 1.419,
+          "exposicion_total_red_pen": 58000.0,
+          "provision_sbs_evitada_pen": 34800.0,
+          "escala_referencial_caja_trujillo": "C"
+        },
+        "accion_recomendada": "RETENER_HASTA_REVISION",
+        "vista_asesor_plano1": {
+          "estado_tramite": "En revisión por especialista",
+          "color": "ROJO",
+          "muestra_puntaje_o_red": false
+        },
+        "control_desembolso": {
+          "retencion_preventiva_activa": true,
+          "desembolso_habilitado": false,
+          "estado_aprobacion_humana": "PENDIENTE_DECISION_ESPECIALISTA",
+          "asesor_originador_id": "ASE-017"
+        }
+      },
+      "subred_2_saltos": {
+        "nodos": [
+          {
+            "id": "SOL-TRUJ-2026-0412",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Solicitud 1 (Ag. Florencia) S/ 15k",
+            "color": "#F59E0B",
+            "salto": 0
+          },
+          {
+            "id": "SOL-TRUJ-2026-0398",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Solicitud 2 (Ag. El Porvenir) S/ 14k",
+            "color": "#F59E0B",
+            "salto": 2
+          },
+          {
+            "id": "SOL-TRUJ-2026-0405",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Solicitud 3 (Ag. La Esperanza) S/ 15k",
+            "color": "#F59E0B",
+            "salto": 2
+          },
+          {
+            "id": "SOL-TRUJ-2026-0409",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Solicitud 4 (Ag. Huanchaco) S/ 14k",
+            "color": "#F59E0B",
+            "salto": 2
+          },
+          {
+            "id": "TEL-948112233",
+            "tipo": "TELEFONO",
+            "etiqueta": "Teléfono Compartido (TEL-948***)",
+            "color": "#64748B",
+            "salto": 1
+          },
+          {
+            "id": "DEV-7A1E",
+            "tipo": "DISPOSITIVO",
+            "etiqueta": "Mismo Dispositivo (dev:7a1e...)",
+            "color": "#64748B",
+            "salto": 1
+          },
+          {
+            "id": "REF-1107",
+            "tipo": "REFERENCIA",
+            "etiqueta": "Anillo Referencias (A->B->C->D->A)",
+            "color": "#E11D48",
+            "salto": 1
+          }
+        ],
+        "aristas": [
+          {
+            "origen": "SOL-TRUJ-2026-0412",
+            "destino": "TEL-948112233",
+            "relacion": "usa_telefono",
+            "es_evidencia": true,
+            "fuente": "Campo",
+            "fecha": "2026-11-18",
+            "id": "CS-01-E01",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0398",
+            "destino": "TEL-948112233",
+            "relacion": "usa_telefono",
+            "es_evidencia": true,
+            "fuente": "Campo",
+            "fecha": "2026-11-13",
+            "id": "CS-01-E02",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0405",
+            "destino": "TEL-948112233",
+            "relacion": "usa_telefono",
+            "es_evidencia": true,
+            "fuente": "Campo",
+            "fecha": "2026-11-15",
+            "id": "CS-01-E03",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0409",
+            "destino": "TEL-948112233",
+            "relacion": "usa_telefono",
+            "es_evidencia": true,
+            "fuente": "Campo",
+            "fecha": "2026-11-16",
+            "id": "CS-01-E04",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0412",
+            "destino": "DEV-7A1E",
+            "relacion": "enviada_desde",
+            "es_evidencia": true,
+            "fuente": "PWA",
+            "fecha": "2026-11-18",
+            "id": "CS-01-E05",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0398",
+            "destino": "DEV-7A1E",
+            "relacion": "enviada_desde",
+            "es_evidencia": true,
+            "fuente": "PWA",
+            "fecha": "2026-11-13",
+            "id": "CS-01-E06",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0405",
+            "destino": "DEV-7A1E",
+            "relacion": "enviada_desde",
+            "es_evidencia": true,
+            "fuente": "PWA",
+            "fecha": "2026-11-15",
+            "id": "CS-01-E07",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0412",
+            "destino": "REF-1107",
+            "relacion": "refiere_en_circulo",
+            "es_evidencia": true,
+            "fuente": "Declaracion",
+            "fecha": "2026-11-18",
+            "id": "CS-01-E08",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0398",
+            "destino": "REF-1107",
+            "relacion": "refiere_en_circulo",
+            "es_evidencia": true,
+            "fuente": "Declaracion",
+            "fecha": "2026-11-13",
+            "id": "CS-01-E09",
+            "salto": 2
+          }
+        ]
+      }
+    },
+    {
+      "caso_id": "CS-02",
+      "solicitud_id": "SOL-TRUJ-2026-0101",
+      "titulo": "Madre e hija con puestos contiguos y mismo domicilio (Falso Positivo Evitado)",
+      "request_entrada": {
+        "solicitud_id": "SOL-TRUJ-2026-0101",
+        "fecha_solicitud": "2026-11-18T09:15:00-05:00",
+        "agencia_origen": "Agencia El Porvenir",
+        "asesor_id": "ASE-004",
+        "canal": "CAMPO",
+        "monto_solicitado": 8000.0,
+        "solicitante": {
+          "documento": "PER-1021",
+          "telefonos": [
+            "TEL-944201011"
+          ],
+          "direccion": "Av. Sanchez Carrion 810, El Porvenir",
+          "geo": [
+            -8.081,
+            -79.002
+          ]
+        },
+        "negocio": {
+          "ruc": "10423189012",
+          "giro_ciiu": "1520",
+          "direccion": "Av. Sanchez Carrion 810 Puesto 112, El Porvenir"
+        },
+        "dispositivo": {
+          "fingerprint": "dev:corp-ase004",
+          "tipo": "CORPORATIVO_ASESOR"
+        },
+        "referencias": [
+          {
+            "id": "REF-2010",
+            "telefono": "TEL-944201012",
+            "relacion": "FAMILIAR"
+          }
+        ],
+        "contexto_declarado": [
+          "L-01",
+          "L-04"
+        ],
+        "ventas_declaradas": 7200.0,
+        "compras_comprobadas": 5000.0
+      },
+      "response_analisis": {
+        "solicitud_id": "SOL-TRUJ-2026-0101",
+        "caso_simulado_id": "CS-02",
+        "latencia_ms": 3.2,
+        "hash_integridad_sha256": "a94f8c12e7b3094d1180c5e23f67a819b20c4d5e6f7a8b9c0d1e2f3a4b5c6d7e",
+        "modo": "GRAFO_SEUDONIMIZADO_VPS",
+        "calidad_datos": {
+          "confianza_resolucion": 0.96,
+          "requiere_verificacion_manual": false
+        },
+        "red": {
+          "nodos_subred": 6,
+          "aristas_subred": 7,
+          "comunidad_id": "COM-0012",
+          "tamano_comunidad": 2
+        },
+        "patrones_detectados": [
+          {
+            "codigo": "P-04",
+            "descripcion": "Domicilio compartido entre 2 solicitantes (madre e hija)",
+            "evidencia": [
+              "DIR-SANCHEZ-810",
+              "SOL-TRUJ-2026-0089"
+            ],
+            "peso": 0.2,
+            "rareza": 0.63,
+            "n_entidades_compartidas": 2,
+            "aporte_base_peso_x_rareza": 0.126,
+            "aporte_normalizado_subred": 0.45
+          }
+        ],
+        "contexto_legitimo": [
+          {
+            "codigo": "L-01",
+            "descripcion": "Familia en el mismo domicilio con boletas de compra e inventarios independientes verificados (Delta -2.1%)",
+            "factor": 0.4
+          },
+          {
+            "codigo": "L-04",
+            "descripcion": "Referencia reciproca entre familiares directos declarados (madre-hija)",
+            "factor": 0.6
+          }
+        ],
+        "priorizacion": {
+          "puntaje_red": 18,
+          "componentes": {
+            "patrones": 0.45,
+            "anomalia": 0.42,
+            "comunidad": 0.5
+          },
+          "factor_contexto": 0.4,
+          "nivel": "SIN_ALERTA"
+        },
+        "expediente_agente": {
+          "resumen": "Vinculo familiar legitimo verificado (L-01). Aunque la solicitante comparte domicilio con otra titular activa (madre e hija en Puestos 112 y 113), ambas mantienen RUCs activos, proveedores propios y compras comprobadas por S/ 5,000.00 que sustentan al 100% sus ventas declaradas.",
+          "evidencias_citadas": [
+            "Arista [PER-1021 -> vive_en -> DIR-SANCHEZ-810] atenuada por regla L-01 (Contexto Familiar Verificado).",
+            "Factura F001-0004821 independiente verificada sin duplicidad de hash SHA-256 en el grafo."
+          ],
+          "explicaciones_alternativas": [
+            "Economia familiar de talleres contiguos tradicional en el distrito zapatero de El Porvenir."
+          ],
+          "pasos_sugeridos": [
+            "Continuar flujo normal de aprobacion (Sin Alerta - Falso Positivo evitado)."
+          ],
+          "aristas_evidencia_ids": []
+        },
+        "impacto_financiero_sbs": {
+          "moneda": "PEN",
+          "ventas_declaradas_pen": 7200.0,
+          "compras_comprobadas_pen": 5000.0,
+          "ventas_implicitas_ciiu_pen": 7352.94,
+          "delta_maquillaje_p08": -0.021,
+          "exposicion_total_red_pen": 15500.0,
+          "provision_sbs_evitada_pen": 0.0,
+          "escala_referencial_caja_trujillo": "AAA"
+        },
+        "accion_recomendada": "CONTINUAR",
+        "vista_asesor_plano1": {
+          "estado_tramite": "Continuar",
+          "color": "VERDE",
+          "muestra_puntaje_o_red": false
+        },
+        "control_desembolso": {
+          "retencion_preventiva_activa": false,
+          "desembolso_habilitado": true,
+          "estado_aprobacion_humana": "FLUJO_NORMAL_SIN_ALERTA",
+          "asesor_originador_id": "ASE-004"
+        }
+      },
+      "subred_2_saltos": {
+        "nodos": [
+          {
+            "id": "SOL-TRUJ-2026-0101",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Puesto 112 (Madre) S/ 8,000",
+            "color": "#10B981",
+            "salto": 0
+          },
+          {
+            "id": "SOL-TRUJ-2026-0089",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Puesto 113 (Hija) S/ 7,500",
+            "color": "#10B981",
+            "salto": 2
+          },
+          {
+            "id": "DIR-SANCHEZ-810",
+            "tipo": "DIRECCION",
+            "etiqueta": "Domicilio Familiar (L-01 Verificado)",
+            "color": "#3B82F6",
+            "salto": 1
+          },
+          {
+            "id": "PROV-CURTIEMBRE-01",
+            "tipo": "NEGOCIO",
+            "etiqueta": "Factura Propia F001-4821 (S/ 5,000)",
+            "color": "#10B981",
+            "salto": 1
+          }
+        ],
+        "aristas": [
+          {
+            "origen": "SOL-TRUJ-2026-0101",
+            "destino": "DIR-SANCHEZ-810",
+            "relacion": "vive_en (L-01)",
+            "es_evidencia": false,
+            "fuente": "SUNAT",
+            "fecha": "2026-11-18",
+            "id": "CS-02-E01",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0089",
+            "destino": "DIR-SANCHEZ-810",
+            "relacion": "vive_en (L-01)",
+            "es_evidencia": false,
+            "fuente": "SUNAT",
+            "fecha": "2026-10-20",
+            "id": "CS-02-E02",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0101",
+            "destino": "PROV-CURTIEMBRE-01",
+            "relacion": "compra_comprobada",
+            "es_evidencia": false,
+            "fuente": "Factura",
+            "fecha": "2026-11-04",
+            "id": "CS-02-E03",
+            "salto": 1
+          }
+        ]
+      }
+    },
+    {
+      "caso_id": "CS-03",
+      "solicitud_id": "SOL-TRUJ-2026-0415",
+      "titulo": "40 negocios con la direccion del Mercado La Hermelinda (Rareza baja + L-02)",
+      "request_entrada": {
+        "solicitud_id": "SOL-TRUJ-2026-0415",
+        "fecha_solicitud": "2026-11-18T11:10:00-05:00",
+        "agencia_origen": "Agencia La Hermelinda",
+        "asesor_id": "ASE-009",
+        "canal": "CAMPO",
+        "monto_solicitado": 12000.0,
+        "solicitante": {
+          "documento": "PER-3044",
+          "telefonos": [
+            "TEL-949334455"
+          ],
+          "direccion": "Mercado Mayorista La Hermelinda Sector Abarrotes",
+          "geo": [
+            -8.095,
+            -79.041
+          ]
+        },
+        "negocio": {
+          "ruc": "10489120345",
+          "giro_ciiu": "5211",
+          "direccion": "Mercado Mayorista La Hermelinda (+300 negocios)"
+        },
+        "dispositivo": {
+          "fingerprint": "dev:corp-ase009",
+          "tipo": "CORPORATIVO_ASESOR"
+        },
+        "referencias": [
+          {
+            "id": "REF-3012",
+            "telefono": "TEL-949111222",
+            "relacion": "PROVEEDOR"
+          }
+        ],
+        "contexto_declarado": [
+          "L-02",
+          "L-06"
+        ],
+        "ventas_declaradas": 14200.0,
+        "compras_comprobadas": 6200.0
+      },
+      "response_analisis": {
+        "solicitud_id": "SOL-TRUJ-2026-0415",
+        "caso_simulado_id": "CS-03",
+        "latencia_ms": 3.5,
+        "hash_integridad_sha256": "b72e4d89f1a032c56789d012e34f56a78b90c1d2e3f4a5b6c7d8e9f0a1b2c3d4",
+        "modo": "GRAFO_SEUDONIMIZADO_VPS",
+        "calidad_datos": {
+          "confianza_resolucion": 0.94,
+          "requiere_verificacion_manual": false
+        },
+        "red": {
+          "nodos_subred": 42,
+          "aristas_subred": 45,
+          "comunidad_id": "COM-HERMELINDA-01",
+          "tamano_comunidad": 40
+        },
+        "patrones_detectados": [
+          {
+            "codigo": "P-04",
+            "descripcion": "Direccion compartida en conglomerado comercial Mercado La Hermelinda",
+            "evidencia": [
+              "DIR-HERMELINDA-CENTRAL"
+            ],
+            "peso": 0.2,
+            "rareza": 0.12,
+            "n_entidades_compartidas": 322,
+            "aporte_base_peso_x_rareza": 0.024,
+            "aporte_normalizado_subred": 0.24
+          }
+        ],
+        "contexto_legitimo": [
+          {
+            "codigo": "L-02",
+            "descripcion": "Zona comercial de alta densidad (Mercado La Hermelinda: rareza 0.12 por +300 puestos registrados)",
+            "factor": 0.5
+          },
+          {
+            "codigo": "L-06",
+            "descripcion": "Solicitud ingresada desde tablet corporativa del asesor ASE-009 (anula P-02)",
+            "factor": 0.85
+          }
+        ],
+        "priorizacion": {
+          "puntaje_red": 12,
+          "componentes": {
+            "patrones": 0.24,
+            "anomalia": 0.28,
+            "comunidad": 0.18
+          },
+          "factor_contexto": 0.5,
+          "nivel": "SIN_ALERTA"
+        },
+        "expediente_agente": {
+          "resumen": "Concentracion geografica legitima en el Mercado Mayorista La Hermelinda (L-02). La ponderacion por rareza (0.12) y la ausencia de telefonos o comprobantes reciclados descartan anomalia de red.",
+          "evidencias_citadas": [
+            "Arista [NEG-10489120345 -> opera_en -> DIR-HERMELINDA-CENTRAL] compartida con 40 puestos independientes (Rareza = 0.12).",
+            "Boleta mayorista B002-0019021 por S/ 4,815.00 + Plin S/ 1,385.00 validados sin colision de hash."
+          ],
+          "explicaciones_alternativas": [
+            "Agrupacion natural de comerciantes minoristas dentro del principal mercado de abastos de Trujillo."
+          ],
+          "pasos_sugeridos": [
+            "Continuar flujo normal sin friccion comercial (0 falsos positivos por ubicacion comercial)."
+          ],
+          "aristas_evidencia_ids": []
+        },
+        "impacto_financiero_sbs": {
+          "moneda": "PEN",
+          "ventas_declaradas_pen": 14200.0,
+          "compras_comprobadas_pen": 6200.0,
+          "ventas_implicitas_ciiu_pen": 13609.76,
+          "delta_maquillaje_p08": 0.043,
+          "exposicion_total_red_pen": 12000.0,
+          "provision_sbs_evitada_pen": 0.0,
+          "escala_referencial_caja_trujillo": "AA"
+        },
+        "accion_recomendada": "CONTINUAR",
+        "vista_asesor_plano1": {
+          "estado_tramite": "Continuar",
+          "color": "VERDE",
+          "muestra_puntaje_o_red": false
+        },
+        "control_desembolso": {
+          "retencion_preventiva_activa": false,
+          "desembolso_habilitado": true,
+          "estado_aprobacion_humana": "FLUJO_NORMAL_SIN_ALERTA",
+          "asesor_originador_id": "ASE-009"
+        }
+      },
+      "subred_2_saltos": {
+        "nodos": [
+          {
+            "id": "SOL-TRUJ-2026-0415",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Puesto 245 Abarrotes (S/ 12k)",
+            "color": "#10B981",
+            "salto": 0
+          },
+          {
+            "id": "DIR-HERMELINDA-CENTRAL",
+            "tipo": "DIRECCION",
+            "etiqueta": "Mercado La Hermelinda (+300 puestos | Rareza 0.12)",
+            "color": "#3B82F6",
+            "salto": 1
+          },
+          {
+            "id": "SOL-VECINO-310",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Puesto 310 Vecino (Sin vínculo tel/disp)",
+            "color": "#10B981",
+            "salto": 2
+          },
+          {
+            "id": "SOL-VECINO-118",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Puesto 118 Vecino (Sin vínculo tel/disp)",
+            "color": "#10B981",
+            "salto": 2
+          }
+        ],
+        "aristas": [
+          {
+            "origen": "SOL-TRUJ-2026-0415",
+            "destino": "DIR-HERMELINDA-CENTRAL",
+            "relacion": "opera_en (L-02)",
+            "es_evidencia": false,
+            "fuente": "Geohash",
+            "fecha": "2026-11-18",
+            "id": "CS-03-E01",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-VECINO-310",
+            "destino": "DIR-HERMELINDA-CENTRAL",
+            "relacion": "opera_en (L-02)",
+            "es_evidencia": false,
+            "fuente": "Geohash",
+            "fecha": "2026-11-10",
+            "id": "CS-03-E02",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-VECINO-118",
+            "destino": "DIR-HERMELINDA-CENTRAL",
+            "relacion": "opera_en (L-02)",
+            "es_evidencia": false,
+            "fuente": "Geohash",
+            "fecha": "2026-11-05",
+            "id": "CS-03-E03",
+            "salto": 2
+          }
+        ]
+      }
+    },
+    {
+      "caso_id": "CS-04",
+      "solicitud_id": "SOL-TRUJ-2026-0892",
+      "titulo": "5 RUC recientes en una misma vivienda, 2 NO HABIDO y ventas infladas (P-04, P-06, P-08)",
+      "request_entrada": {
+        "solicitud_id": "SOL-TRUJ-2026-0892",
+        "fecha_solicitud": "2026-11-18T17:55:00-05:00",
+        "agencia_origen": "Agencia La Esperanza",
+        "asesor_id": "ASE-021",
+        "canal": "CAMPO",
+        "monto_solicitado": 18000.0,
+        "solicitante": {
+          "documento": "PER-7712",
+          "telefonos": [
+            "TEL-947665544"
+          ],
+          "direccion": "Mz K Lt 14 Sector Indoamerica, La Esperanza",
+          "geo": [
+            -8.062,
+            -79.048
+          ]
+        },
+        "negocio": {
+          "ruc": "10499887761",
+          "giro_ciiu": "5234",
+          "direccion": "Mz K Lt 14 Sector Indoamerica, La Esperanza"
+        },
+        "dispositivo": {
+          "fingerprint": "dev:99b1c440a2",
+          "tipo": "DISPOSITIVO_CLIENTE"
+        },
+        "referencias": [
+          {
+            "id": "REF-8801",
+            "telefono": "TEL-947000999",
+            "relacion": "SOCIO"
+          }
+        ],
+        "contexto_declarado": [],
+        "ventas_declaradas": 22000.0,
+        "compras_comprobadas": 4500.0
+      },
+      "response_analisis": {
+        "solicitud_id": "SOL-TRUJ-2026-0892",
+        "caso_simulado_id": "CS-04",
+        "latencia_ms": 5.1,
+        "hash_integridad_sha256": "c89a1f23e4d567b890c123d456e789f012a345b678c901d234e567f890a1b2c3",
+        "modo": "GRAFO_SEUDONIMIZADO_VPS",
+        "calidad_datos": {
+          "confianza_resolucion": 0.91,
+          "requiere_verificacion_manual": false
+        },
+        "red": {
+          "nodos_subred": 12,
+          "aristas_subred": 18,
+          "comunidad_id": "COM-0104",
+          "tamano_comunidad": 6
+        },
+        "patrones_detectados": [
+          {
+            "codigo": "P-04",
+            "descripcion": "Concentracion atipica: 5 RUCs declarados en una misma vivienda no comercial",
+            "evidencia": [
+              "DIR-MZ-K-LT14",
+              "RUC-10499887761",
+              "RUC-20609911223",
+              "RUC-10751234987"
+            ],
+            "peso": 0.2,
+            "rareza": 0.43,
+            "n_entidades_compartidas": 4,
+            "aporte_base_peso_x_rareza": 0.086,
+            "aporte_normalizado_subred": 0.22
+          },
+          {
+            "codigo": "P-06",
+            "descripcion": "Subred incluye 2 RUCs en estado NO HABIDO / BAJA DE OFICIO y 3 con antiguedad < 3 meses",
+            "evidencia": [
+              "RUC-10499887761 (NO HABIDO)",
+              "RUC-20609911223 (BAJA DE OFICIO)"
+            ],
+            "peso": 0.15,
+            "rareza": 0.5,
+            "n_entidades_compartidas": 3,
+            "aporte_base_peso_x_rareza": 0.075,
+            "aporte_normalizado_subred": 0.19
+          },
+          {
+            "codigo": "P-08",
+            "descripcion": "Ventas infladas en la red: declara S/ 22,000 vs S/ 6,000.00 de ventas implicitas (Delta +266.7%) y recicla boleta",
+            "evidencia": [
+              "DOC-F004-7712-RECICLADA",
+              "DELTA_FRAUDE_+266%"
+            ],
+            "peso": 0.25,
+            "rareza": 0.63,
+            "n_entidades_compartidas": 2,
+            "aporte_base_peso_x_rareza": 0.158,
+            "aporte_normalizado_subred": 0.41
+          }
+        ],
+        "contexto_legitimo": [],
+        "priorizacion": {
+          "puntaje_red": 78,
+          "componentes": {
+            "patrones": 0.82,
+            "anomalia": 0.78,
+            "comunidad": 0.68
+          },
+          "factor_contexto": 1.0,
+          "nivel": "REVISION_PRIORITARIA"
+        },
+        "expediente_agente": {
+          "resumen": "Concentracion anomala de 5 negocios (CIIU 5234/5211) registrados sobre una misma vivienda residencial en La Esperanza. Dos nodos presentan condicion NO HABIDO / BAJA en SUNAT y la solicitud exhibe una sobreestimacion de ventas del +266.7% (P-08) reutilizando el mismo comprobante mayorista.",
+          "evidencias_citadas": [
+            "Arista [NEG-10499887761 -> opera_en -> DIR-MZ-K-LT14] cohabitada por 5 RUCs sin zonificacion comercial (Fuente: Padron SUNAT, 2026-11-18).",
+            "Alerta Fiscal SUNAT: RUC 10499887761 en condicion NO HABIDO y nodo vecino 20609911223 en BAJA DE OFICIO.",
+            "Triangulacion P-08: Compras de S/ 4,500.00 (margen 25%) solo sustentan S/ 6,000.00 de ventas frente a S/ 22,000.00 declarados."
+          ],
+          "explicaciones_alternativas": [
+            "Subdivision informal de un predio familiar grande sin actualizacion de numeracion municipal."
+          ],
+          "pasos_sugeridos": [
+            "Retener desembolso y programar inspeccion ocular conjunta de los 5 expedientes vinculados al predio Mz K Lt 14.",
+            "Exigir regularizacion de condicion NO HABIDO ante SUNAT antes de reevaluar."
+          ],
+          "aristas_evidencia_ids": [
+            "CS-04-E01",
+            "CS-04-E02",
+            "CS-04-E03",
+            "CS-04-E04",
+            "CS-04-E05"
+          ]
+        },
+        "impacto_financiero_sbs": {
+          "moneda": "PEN",
+          "ventas_declaradas_pen": 22000.0,
+          "compras_comprobadas_pen": 4500.0,
+          "ventas_implicitas_ciiu_pen": 6000.0,
+          "delta_maquillaje_p08": 2.667,
+          "exposicion_total_red_pen": 74000.0,
+          "provision_sbs_evitada_pen": 44400.0,
+          "escala_referencial_caja_trujillo": "C"
+        },
+        "accion_recomendada": "RETENER_HASTA_REVISION",
+        "vista_asesor_plano1": {
+          "estado_tramite": "En revisión por especialista",
+          "color": "ROJO",
+          "muestra_puntaje_o_red": false
+        },
+        "control_desembolso": {
+          "retencion_preventiva_activa": true,
+          "desembolso_habilitado": false,
+          "estado_aprobacion_humana": "PENDIENTE_DECISION_ESPECIALISTA",
+          "asesor_originador_id": "ASE-021"
+        }
+      },
+      "subred_2_saltos": {
+        "nodos": [
+          {
+            "id": "SOL-TRUJ-2026-0892",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Solicitud Actual S/ 18k (Delta +266%)",
+            "color": "#E11D48",
+            "salto": 0
+          },
+          {
+            "id": "DIR-MZ-K-LT14",
+            "tipo": "DIRECCION",
+            "etiqueta": "Vivienda Mz K Lt 14 (5 RUCs concentrados)",
+            "color": "#F59E0B",
+            "salto": 1
+          },
+          {
+            "id": "RUC-10499887761",
+            "tipo": "NEGOCIO",
+            "etiqueta": "RUC 10499887761 (NO HABIDO)",
+            "color": "#E11D48",
+            "salto": 1
+          },
+          {
+            "id": "RUC-20609911223",
+            "tipo": "NEGOCIO",
+            "etiqueta": "RUC 20609911223 (BAJA DE OFICIO)",
+            "color": "#E11D48",
+            "salto": 1
+          },
+          {
+            "id": "RUC-10751234987",
+            "tipo": "NEGOCIO",
+            "etiqueta": "RUC 10751234987 (Alta < 2 meses)",
+            "color": "#F59E0B",
+            "salto": 1
+          },
+          {
+            "id": "DOC-F004-7712",
+            "tipo": "REFERENCIA",
+            "etiqueta": "Factura F004-7712 Reciclada",
+            "color": "#E11D48",
+            "salto": 1
+          }
+        ],
+        "aristas": [
+          {
+            "origen": "SOL-TRUJ-2026-0892",
+            "destino": "DIR-MZ-K-LT14",
+            "relacion": "declara_vivienda",
+            "es_evidencia": true,
+            "fuente": "Campo",
+            "fecha": "2026-11-18",
+            "id": "CS-04-E01",
+            "salto": 1
+          },
+          {
+            "origen": "RUC-10499887761",
+            "destino": "DIR-MZ-K-LT14",
+            "relacion": "domicilio_fiscal",
+            "es_evidencia": true,
+            "fuente": "SUNAT",
+            "fecha": "2026-11-15",
+            "id": "CS-04-E02",
+            "salto": 2
+          },
+          {
+            "origen": "RUC-20609911223",
+            "destino": "DIR-MZ-K-LT14",
+            "relacion": "domicilio_fiscal",
+            "es_evidencia": true,
+            "fuente": "SUNAT",
+            "fecha": "2026-11-15",
+            "id": "CS-04-E03",
+            "salto": 2
+          },
+          {
+            "origen": "RUC-10751234987",
+            "destino": "DIR-MZ-K-LT14",
+            "relacion": "domicilio_fiscal",
+            "es_evidencia": true,
+            "fuente": "SUNAT",
+            "fecha": "2026-09-01",
+            "id": "CS-04-E04",
+            "salto": 2
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0892",
+            "destino": "DOC-F004-7712",
+            "relacion": "adjunta_boleta_duplicada",
+            "es_evidencia": true,
+            "fuente": "OCR_SHA256",
+            "fecha": "2026-11-18",
+            "id": "CS-04-E05",
+            "salto": 1
+          }
+        ]
+      }
+    },
+    {
+      "caso_id": "CS-05",
+      "solicitud_id": "SOL-TRUJ-2026-0650",
+      "titulo": "7 solicitudes de un asesor con referencias cruzadas y 2 telefonos compartidos (P-01, P-07 + L-06)",
+      "request_entrada": {
+        "solicitud_id": "SOL-TRUJ-2026-0650",
+        "fecha_solicitud": "2026-11-18T18:10:00-05:00",
+        "agencia_origen": "Agencia Centro Trujillo",
+        "asesor_id": "ASE-017",
+        "canal": "CAMPO",
+        "monto_solicitado": 11000.0,
+        "solicitante": {
+          "documento": "PER-5510",
+          "telefonos": [
+            "TEL-945887766"
+          ],
+          "direccion": "Jr. Ayacucho 640 Galeria Virrey, Trujillo",
+          "geo": [
+            -8.112,
+            -79.026
+          ]
+        },
+        "negocio": {
+          "ruc": "10491234568",
+          "giro_ciiu": "4771",
+          "direccion": "Jr. Ayacucho 640 Galeria Virrey, Trujillo"
+        },
+        "dispositivo": {
+          "fingerprint": "dev:corp-ase017",
+          "tipo": "CORPORATIVO_ASESOR"
+        },
+        "referencias": [
+          {
+            "id": "REF-5501",
+            "telefono": "TEL-945887766",
+            "relacion": "COMERCIANTE"
+          }
+        ],
+        "contexto_declarado": [
+          "L-06"
+        ],
+        "ventas_declaradas": 12500.0,
+        "compras_comprobadas": 6800.0
+      },
+      "response_analisis": {
+        "solicitud_id": "SOL-TRUJ-2026-0650",
+        "caso_simulado_id": "CS-05",
+        "latencia_ms": 4.1,
+        "hash_integridad_sha256": "e51c6f78a9b012d345e678f901a234b567c890d123e456f789a012b3c4d5e6f7",
+        "modo": "GRAFO_SEUDONIMIZADO_VPS",
+        "calidad_datos": {
+          "confianza_resolucion": 0.92,
+          "requiere_verificacion_manual": false
+        },
+        "red": {
+          "nodos_subred": 10,
+          "aristas_subred": 14,
+          "comunidad_id": "COM-ASE017",
+          "tamano_comunidad": 7
+        },
+        "patrones_detectados": [
+          {
+            "codigo": "P-01",
+            "descripcion": "Dos telefonos de contacto se repiten como referencias cruzadas en 4 de las 7 solicitudes",
+            "evidencia": [
+              "TEL-945887766",
+              "TEL-945112200"
+            ],
+            "peso": 0.3,
+            "rareza": 0.5,
+            "n_entidades_compartidas": 3,
+            "aporte_base_peso_x_rareza": 0.15,
+            "aporte_normalizado_subred": 0.48
+          },
+          {
+            "codigo": "P-07",
+            "descripcion": "Concentracion en asesor: ASE-017 origino las 7 solicitudes conectadas en cierre de semana",
+            "evidencia": [
+              "ASE-017",
+              "SOL-0644..0650"
+            ],
+            "peso": 0.2,
+            "rareza": 0.38,
+            "n_entidades_compartidas": 5,
+            "aporte_base_peso_x_rareza": 0.076,
+            "aporte_normalizado_subred": 0.24
+          }
+        ],
+        "contexto_legitimo": [
+          {
+            "codigo": "L-06",
+            "descripcion": "Dispositivo compartido corresponde a la tablet corporativa asignada al asesor ASE-017 (anula P-02)",
+            "factor": 0.85
+          }
+        ],
+        "priorizacion": {
+          "puntaje_red": 58,
+          "componentes": {
+            "patrones": 0.72,
+            "anomalia": 0.68,
+            "comunidad": 0.59
+          },
+          "factor_contexto": 0.85,
+          "nivel": "OBSERVACION"
+        },
+        "expediente_agente": {
+          "resumen": "Grupo de 7 solicitudes originadas por el asesor ASE-017 durante campaña en Galeria Virrey. Se descarta alerta por dispositivo compartido al aplicarse L-06 (tablet corporativa del asesor), pero persiste señal intermedia por reutilizacion de 2 telefonos de referencia entre clientes.",
+          "evidencias_citadas": [
+            "Arista [ASE-017 -> origina -> 7 solicitudes COM-ASE017] en ventana de 48 horas (Patron P-07).",
+            "Arista [TEL-945887766] listada simultaneamente como telefono de titular y referencia cruzada (Patron P-01)."
+          ],
+          "explicaciones_alternativas": [
+            "Campaña de prospeccion intensiva del asesor dentro de una misma galeria donde los comerciantes se conocen entre si."
+          ],
+          "pasos_sugeridos": [
+            "Verificacion telefonica ligera del titular y validacion de que los teléfonos de referencia no pertenezcan a un tercero vinculante."
+          ],
+          "aristas_evidencia_ids": [
+            "CS-05-E01",
+            "CS-05-E03"
+          ]
+        },
+        "impacto_financiero_sbs": {
+          "moneda": "PEN",
+          "ventas_declaradas_pen": 12500.0,
+          "compras_comprobadas_pen": 6800.0,
+          "ventas_implicitas_ciiu_pen": 12633.33,
+          "delta_maquillaje_p08": -0.011,
+          "exposicion_total_red_pen": 68000.0,
+          "provision_sbs_evitada_pen": 3400.0,
+          "escala_referencial_caja_trujillo": "A"
+        },
+        "accion_recomendada": "MONITOREAR",
+        "vista_asesor_plano1": {
+          "estado_tramite": "Continuar",
+          "color": "AMBAR",
+          "muestra_puntaje_o_red": false
+        },
+        "control_desembolso": {
+          "retencion_preventiva_activa": false,
+          "desembolso_habilitado": true,
+          "estado_aprobacion_humana": "PENDIENTE_DECISION_ESPECIALISTA",
+          "asesor_originador_id": "ASE-017"
+        }
+      },
+      "subred_2_saltos": {
+        "nodos": [
+          {
+            "id": "SOL-TRUJ-2026-0650",
+            "tipo": "SOLICITUD",
+            "etiqueta": "Solicitud Actual S/ 11k (Observación)",
+            "color": "#F59E0B",
+            "salto": 0
+          },
+          {
+            "id": "ASE-017",
+            "tipo": "ASESOR",
+            "etiqueta": "Asesor ASE-017 (7 solicitudes conectadas)",
+            "color": "#3B82F6",
+            "salto": 1
+          },
+          {
+            "id": "DEV-CORP-017",
+            "tipo": "DISPOSITIVO",
+            "etiqueta": "Tablet Corporativa (L-06 Anula P-02)",
+            "color": "#10B981",
+            "salto": 1
+          },
+          {
+            "id": "TEL-945887766",
+            "tipo": "TELEFONO",
+            "etiqueta": "Teléfono Referencia Repetido (P-01)",
+            "color": "#F59E0B",
+            "salto": 1
+          }
+        ],
+        "aristas": [
+          {
+            "origen": "SOL-TRUJ-2026-0650",
+            "destino": "ASE-017",
+            "relacion": "originada_por",
+            "es_evidencia": true,
+            "fuente": "Core",
+            "fecha": "2026-11-18",
+            "id": "CS-05-E01",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0650",
+            "destino": "DEV-CORP-017",
+            "relacion": "tablet_asesor (L-06)",
+            "es_evidencia": false,
+            "fuente": "PWA",
+            "fecha": "2026-11-18",
+            "id": "CS-05-E02",
+            "salto": 1
+          },
+          {
+            "origen": "SOL-TRUJ-2026-0650",
+            "destino": "TEL-945887766",
+            "relacion": "referencia_repetida",
+            "es_evidencia": true,
+            "fuente": "Campo",
+            "fecha": "2026-11-18",
+            "id": "CS-05-E03",
+            "salto": 1
+          }
+        ]
+      }
+    },
+    {
+      "caso_id": "CS-06",
+      "solicitud_id": "SOL-TRUJ-2026-0910",
+      "titulo": "Telefono incompleto, direccion ilegible y nota borrosa (Confianza 0.62 - Poka-Yoke)",
+      "request_entrada": {
+        "solicitud_id": "SOL-TRUJ-2026-0910",
+        "fecha_solicitud": "2026-11-18T16:40:00-05:00",
+        "agencia_origen": "Agencia La Esperanza",
+        "asesor_id": "ASE-012",
+        "canal": "CAMPO",
+        "monto_solicitado": 9000.0,
+        "solicitante": {
+          "documento": "PER-9010",
+          "telefonos": [
+            "948-???"
+          ],
+          "direccion": "Calle S/N Sector ?? [Ilegible]",
+          "geo": [
+            -8.07,
+            -79.04
+          ]
+        },
+        "negocio": {
+          "ruc": "10411298765",
+          "giro_ciiu": "5211",
+          "direccion": "Direccion incompleta sin numeracion"
+        },
+        "dispositivo": {
+          "fingerprint": "dev:corp-ase012",
+          "tipo": "CORPORATIVO_ASESOR"
+        },
+        "referencias": [],
+        "contexto_declarado": [],
+        "ventas_declaradas": 11000.0,
+        "compras_comprobadas": 1400.0,
+        "confianza_resolucion_override": 0.62
+      },
+      "response_analisis": {
+        "solicitud_id": "SOL-TRUJ-2026-0910",
+        "caso_simulado_id": "CS-06",
+        "latencia_ms": 1.9,
+        "hash_integridad_sha256": "d41e5f67a8b901c234d567e890f123a456b789c012d345e678f901a2b3c4d5e6",
+        "modo": "POKA_YOKE_VERIFICACION_DATOS",
+        "calidad_datos": {
+          "confianza_resolucion": 0.62,
+          "requiere_verificacion_manual": true
+        },
+        "red": {
+          "nodos_subred": 2,
+          "aristas_subred": 1,
+          "comunidad_id": null,
+          "tamano_comunidad": 1
+        },
+        "patrones_detectados": [],
+        "contexto_legitimo": [],
+        "priorizacion": {
+          "puntaje_red": null,
+          "componentes": null,
+          "factor_contexto": null,
+          "nivel": "VERIFICAR_DATOS"
+        },
+        "expediente_agente": {
+          "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): La confianza de resolucion de entidades y extraccion documental es de 0.62 (inferior al umbral normativo de 0.85) por telefono truncado, direccion sin numeracion y nota de compra con mancha/tachadura. El sistema se abstiene de calcular puntaje de red para evitar falsas imputaciones.",
+          "evidencias_citadas": [
+            "Calidad de datos: confianza_resolucion = 0.62 < 0.85 (Regla de Negocio RN-05).",
+            "Evidencia DOC-MAN-005 borrosa e incoherente con CIIU 5211."
+          ],
+          "explicaciones_alternativas": [
+            "Error de digitacion o captura fotografica deficiente en zona con baja iluminacion."
+          ],
+          "pasos_sugeridos": [
+            "Solicitar al asesor recaptura nitida del comprobante y validacion del telefono/direccion antes de puntuar la red."
+          ],
+          "aristas_evidencia_ids": [
+            "CS-06-E01"
+          ]
+        },
+        "impacto_financiero_sbs": {
+          "moneda": "PEN",
+          "ventas_declaradas_pen": 11000.0,
+          "compras_comprobadas_pen": 1400.0,
+          "ventas_implicitas_ciiu_pen": 3073.17,
+          "delta_maquillaje_p08": 0.0,
+          "exposicion_total_red_pen": 0.0,
+          "provision_sbs_evitada_pen": 0.0,
+          "escala_referencial_caja_trujillo": "VERIFICAR_DATOS"
+        },
+        "accion_recomendada": "VERIFICAR_DATOS",
+        "vista_asesor_plano1": {
+          "estado_tramite": "Verificar datos",
+          "color": "GRIS",
+          "muestra_puntaje_o_red": false
+        },
+        "control_desembolso": {
+          "retencion_preventiva_activa": true,
+          "desembolso_habilitado": false,
+          "estado_aprobacion_humana": "BLOQUEADO_POKA_YOKE_RN05",
+          "asesor_originador_id": "ASE-012"
+        }
+      },
+      "subred_2_saltos": {
+        "nodos": [
+          {
+            "id": "SOL-TRUJ-2026-0910",
+            "tipo": "SOLICITUD",
+            "etiqueta": "SOL-0910 (Poka-Yoke: Confianza 0.62 < 0.85)",
+            "color": "#64748B",
+            "salto": 0
+          },
+          {
+            "id": "DOC-MAN-005",
+            "tipo": "REFERENCIA",
+            "etiqueta": "Datos Incompletos / Nota Borrosa",
+            "color": "#64748B",
+            "salto": 1
+          }
+        ],
+        "aristas": [
+          {
+            "origen": "SOL-TRUJ-2026-0910",
+            "destino": "DOC-MAN-005",
+            "relacion": "requiere_recaptura_rn05",
+            "es_evidencia": true,
+            "fuente": "Poka-Yoke",
+            "fecha": "2026-11-18",
+            "id": "CS-06-E01",
+            "salto": 1
+          }
+        ]
+      }
+    }
+  ]
+}

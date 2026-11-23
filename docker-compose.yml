@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: wasi_risk_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-wasi_risk_db}
+      POSTGRES_USER: ${POSTGRES_USER:-wasi_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-WasiRisk2026!}
+      TZ: America/Lima
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - wasi_pgdata:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wasi_admin} -d ${POSTGRES_DB:-wasi_risk_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: wasi_risk_api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-wasi_admin}:${POSTGRES_PASSWORD:-WasiRisk2026!}@postgres:5432/${POSTGRES_DB:-wasi_risk_db}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        VITE_API_URL: /api
+    container_name: wasi_risk_web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-8080}:80"
+
+volumes:
+  wasi_pgdata:
+    name: wasi_risk_pgdata

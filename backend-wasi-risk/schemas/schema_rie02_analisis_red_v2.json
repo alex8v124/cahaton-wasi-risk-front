@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wasi-risk.cajatrujillo.pe/schemas/rie02_analisis_red.v2.6.json",
+  "title": "WASI-RISK AI (Nodux Sentinel) — Contrato Response POST /solicitudes/analizar (RIE-02 v2.0)",
+  "description": "Esquema oficial alineado con la Tabla 19 del Documento Tecnico v2.0 de Alexander Miranda + bloque de Impacto Financiero SBS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "solicitud_id",
+    "latencia_ms",
+    "hash_integridad_sha256",
+    "modo",
+    "calidad_datos",
+    "red",
+    "patrones_detectados",
+    "contexto_legitimo",
+    "priorizacion",
+    "expediente_agente",
+    "accion_recomendada"
+  ],
+  "properties": {
+    "solicitud_id": { "type": "string" },
+    "caso_simulado_id": { "type": ["string", "null"] },
+    "latencia_ms": { "type": "number", "minimum": 0 },
+    "hash_integridad_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "modo": { "type": "string" },
+    "calidad_datos": {
+      "type": "object",
+      "required": ["confianza_resolucion", "requiere_verificacion_manual"],
+      "properties": {
+        "confianza_resolucion": { "type": "number", "minimum": 0, "maximum": 1 },
+        "requiere_verificacion_manual": { "type": "boolean" }
+      }
+    },
+    "red": {
+      "type": "object",
+      "required": ["nodos_subred", "aristas_subred", "comunidad_id", "tamano_comunidad"],
+      "properties": {
+        "nodos_subred": { "type": "integer", "minimum": 1 },
+        "aristas_subred": { "type": "integer", "minimum": 0 },
+        "comunidad_id": { "type": ["string", "null"] },
+        "tamano_comunidad": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "patrones_detectados": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["codigo", "descripcion", "evidencia", "peso", "rareza"],
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "enum": ["P-01", "P-02", "P-03", "P-04", "P-05", "P-06", "P-07", "P-08", "P-09"]
+          },
+          "descripcion": { "type": "string" },
+          "evidencia": { "type": "array", "items": { "type": "string" } },
+          "peso": { "type": "number", "minimum": 0, "maximum": 1 },
+          "rareza": { "type": "number", "minimum": 0, "maximum": 1 },
+          "n_entidades_compartidas": { "type": "integer", "minimum": 1 },
+          "aporte_base_peso_x_rareza": { "type": "number", "minimum": 0 },
+          "aporte_normalizado_subred": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "contexto_legitimo": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["codigo", "descripcion", "factor"],
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "enum": ["L-01", "L-02", "L-03", "L-04", "L-05", "L-06"]
+          },
+          "descripcion": { "type": "string" },
+          "factor": { "type": "number", "minimum": 0.30, "maximum": 1.00 }
+        }
+      }
+    },
+    "priorizacion": {
+      "type": "object",
+      "required": ["puntaje_red", "componentes", "factor_contexto", "nivel"],
+      "properties": {
+        "puntaje_red": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
+        "componentes": {
+          "type": ["object", "null"],
+          "properties": {
+            "patrones": { "type": "number", "minimum": 0, "maximum": 1 },
+            "anomalia": { "type": "number", "minimum": 0, "maximum": 1 },
+            "comunidad": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "factor_contexto": { "type": ["number", "null"], "minimum": 0.30, "maximum": 1.00 },
+        "nivel": {
+          "type": "string",
+          "enum": ["SIN_ALERTA", "OBSERVACION", "REVISION_PRIORITARIA", "VERIFICAR_DATOS"]
+        }
+      }
+    },
+    "expediente_agente": {
+      "type": "object",
+      "required": ["resumen", "evidencias_citadas", "explicaciones_alternativas", "pasos_sugeridos"],
+      "properties": {
+        "resumen": { "type": "string" },
+        "evidencias_citadas": { "type": "array", "items": { "type": "string" } },
+        "aristas_evidencia_ids": { "type": "array", "items": { "type": "string" } },
+        "explicaciones_alternativas": { "type": "array", "items": { "type": "string" } },
+        "pasos_sugeridos": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "vista_asesor_plano1": {
+      "type": "object",
+      "required": ["estado_tramite", "color", "muestra_puntaje_o_red"],
+      "properties": {
+        "estado_tramite": {
+          "type": "string",
+          "enum": ["Continuar", "En revisión por especialista", "Verificar datos"]
+        },
+        "color": { "type": "string", "enum": ["VERDE", "AMBAR", "ROJO", "GRIS"] },
+        "muestra_puntaje_o_red": { "type": "boolean", "const": false }
+      }
+    },
+    "control_desembolso": {
+      "type": "object",
+      "required": ["retencion_preventiva_activa", "desembolso_habilitado", "estado_aprobacion_humana"],
+      "properties": {
+        "retencion_preventiva_activa": { "type": "boolean" },
+        "desembolso_habilitado": { "type": "boolean" },
+        "estado_aprobacion_humana": { "type": "string" },
+        "asesor_originador_id": { "type": "string" }
+      }
+    },
+    "impacto_financiero_sbs": {
+      "type": "object",
+      "properties": {
+        "moneda": { "type": "string", "const": "PEN" },
+        "ventas_declaradas_pen": { "type": "number" },
+        "compras_comprobadas_pen": { "type": "number" },
+        "ventas_implicitas_ciiu_pen": { "type": "number" },
+        "delta_maquillaje_p08": { "type": "number" },
+        "exposicion_total_red_pen": { "type": "number" },
+        "provision_sbs_evitada_pen": { "type": "number" },
+        "escala_referencial_caja_trujillo": { "type": "string" }
+      }
+    },
+    "accion_recomendada": {
+      "type": "string",
+      "enum": ["CONTINUAR", "MONITOREAR", "RETENER_HASTA_REVISION", "VERIFICAR_DATOS"]
+    }
+  }
+}

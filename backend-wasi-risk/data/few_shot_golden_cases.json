@@ -1,0 +1,256 @@
+{
+  "metadata_golden_cases": {
+    "descripcion": "4 Casos Testigo Oficiales de WASI-RISK AI para In-Context Learning (Soe), Validacion Cuantitativa (Alejandro), Consola de Riesgos (Alexander) y Deck Ejecutivo (Nicolas).",
+    "version_contrato": "v2.4.0-PRODUCTION-READY",
+    "moneda": "PEN"
+  },
+  "casos_testigo": [
+    {
+      "id_caso": "CASO_1_CALZADO_EL_PORVENIR_AAA",
+      "etiqueta_ui": "Calzado El Porvenir (AAA - Fast Track)",
+      "input_sanitizado_agente": {
+        "token_expediente": "UUID-EXP-0101",
+        "agencia_origen": "Agencia El Porvenir - Av. Sanchez Carrion",
+        "giro_ciiu_declarado": "1520",
+        "ventas_declaradas_asesor_pen": 7200.00,
+        "gastos_operativos_familiares_pen": 410.00,
+        "deuda_sbs_vigente_pen": 214.00,
+        "cuota_solicitada_pen": 980.00,
+        "monto_solicitado_pen": 8000.00,
+        "evidencia_ocr_sanitizada": [
+          "NOTA DE COMPRA #00412 - Curtiembre [PROVEEDOR_SANITIZADO_01] - 180 pies cuero box calf y badana primera -> S/ 2,450.00 (Legibilidad OCR: 0.96)",
+          "BOLETA #B001-8892 - Distribuidora de Suelas Norte - 12 doc (DOCENA) suela expanso + 10 doc plantillas -> S/ 1,680.00 (Legibilidad OCR: 0.95)",
+          "HISTORIAL YAPE VERIFICADO [HASH_WALLET_PROV_02] - Pago 3 gal (GALON) pegamento amarillo + 4 tareas (TAREA) de aparado -> S/ 870.00 (Legibilidad OCR: 0.94)",
+          "ACTA CONTEO INVENTARIO FISICO (Geolocalizado El Porvenir): 14 tareas de calzado escolar y dama en proceso + cuero en estante valorizado en S/ 6,400.00"
+        ]
+      },
+      "output_contrato_json": {
+        "expediente_id": "EXP-TRUJ-2026-0101",
+        "timestamp_auditoria": "2026-11-15T09:14:22-05:00",
+        "agencia_origen": "Agencia El Porvenir",
+        "modo_inferencia": "HIBRIDO_SANITIZADO_VPS_SOE",
+        "hash_integridad_sha256": "a94f8c12e7b3094d1180c5e23f67a819b20c4d5e6f7a8b9c0d1e2f3a4b5c6d7e",
+        "validacion_fiscal": {
+          "ruc": "10423189012",
+          "estado_sunat": "ACTIVO",
+          "condicion_domicilio": "HABIDO",
+          "giro_ciiu": "1520",
+          "nombre_giro": "Fabricacion de Calzado (Polo El Porvenir)",
+          "coherencia_insumos_giro": true,
+          "confianza_extraccion_ia": 0.95
+        },
+        "triangulacion_financiera": {
+          "moneda": "PEN",
+          "ventas_declaradas_asesor": 7200.00,
+          "compras_comprobadas_documentos": 5000.00,
+          "margen_bruto_ciiu": 0.32,
+          "factor_rotacion_mensual": 1.00,
+          "inventario_fisico_estimado": 6400.00,
+          "gastos_operativos_familiares": 410.00,
+          "cuota_deuda_sbs_vigente": 214.00,
+          "ventas_implicitas_calculadas": 7352.94,
+          "delta_desviacion_declarativa": -0.021,
+          "flujo_neto_disponible": 1680.00,
+          "cuota_mensual_propuesta": 980.00,
+          "ratio_cobertura_cuota_rcc": 1.71
+        },
+        "dictamen_riesgos": {
+          "alerta_fraude_maquillaje": false,
+          "requiere_revision_humana": false,
+          "clasificacion_sbs_proyectada": "NORMAL",
+          "tasa_provision_sbs": 0.01,
+          "escala_interna_caja_trujillo": "AAA",
+          "accion_operativa": "FAST_TRACK_DESEMBOLSO_INMEDIATO",
+          "monto_solicitado_original": 8000.00,
+          "monto_maximo_recomendado": 8000.00,
+          "explicacion_agente_sbs": "AUDITORÍA PRE-DESEMBOLSO SBS [CIIU 1520 - Fabricación de Calzado (Polo El Porvenir)]: Evidencia documental con certeza OCR de 95% e insumos 100% coherentes con el giro declarado (cuero, badana, suela, pegamento y tareas de aparado). La triangulación microfinanciera registra compras comprobadas por S/ 5,000.00 (margen estándar 32%, rotación 1.00x), sustentando Ventas Implícitas de S/ 7,352.94 frente a las Ventas Declaradas por el asesor de S/ 7,200.00 (desviación declarativa Delta de -2.1%, sin inflación). Conforme a la Res. SBS N.° 11356-2008 (evaluación de capacidad de pago real deudor MYPE, clasificación proyectada NORMAL con provisión del 1%), el Flujo Neto Disponible conservador de S/ 1,680.00 genera un RCC robusto de 1.71x sobre la cuota de S/ 980.00. Dictamen Escala Caja Trujillo [AAA]: FAST_TRACK_DESEMBOLSO_INMEDIATO, recomendando aprobar el íntegro de S/ 8,000.00 sobre los S/ 8,000.00 solicitados."
+        }
+      }
+    },
+    {
+      "id_caso": "CASO_2_MAYORISTA_HERMELINDA_A_AJUSTE",
+      "etiqueta_ui": "Mayorista La Hermelinda (A - Recorte Automático)",
+      "input_sanitizado_agente": {
+        "token_expediente": "UUID-EXP-0415",
+        "agencia_origen": "Agencia La Hermelinda - Av. Villarreal",
+        "giro_ciiu_declarado": "5211",
+        "ventas_declaradas_asesor_pen": 16500.00,
+        "gastos_operativos_familiares_pen": 889.76,
+        "deuda_sbs_vigente_pen": 380.00,
+        "cuota_solicitada_pen": 1020.00,
+        "monto_solicitado_pen": 12000.00,
+        "evidencia_ocr_sanitizada": [
+          "GUIA/NOTA MAYORISTA #9021 - Molino San Nicolas - 25 saco (SACO_50KG) arroz extra + 12 saco azucar rubia -> S/ 3,420.00 (Legibilidad OCR: 0.91)",
+          "NOTA DE PEDIDO #114 - Distribuidora Norte - 18 cj (CAJA) aceite vegetal + 22 fdo (FARDO) fideos -> S/ 1,980.00 (Legibilidad OCR: 0.92)",
+          "CONSTANCIA PLIN VERIFICADA [HASH_WALLET_PROV_09] - 40 pl (PLANCHA) huevos rosados + 10 bandejas leche -> S/ 800.00 (Legibilidad OCR: 0.90)",
+          "ACTA CONTEO INVENTARIO FISICO (Puesto Sector Abarrotes La Hermelinda): Rumas de arroz, azúcar y aceite valorizadas en S/ 7,900.00"
+        ]
+      },
+      "output_contrato_json": {
+        "expediente_id": "EXP-TRUJ-2026-0415",
+        "timestamp_auditoria": "2026-11-15T11:30:05-05:00",
+        "agencia_origen": "Agencia La Hermelinda",
+        "modo_inferencia": "HIBRIDO_SANITIZADO_VPS_SOE",
+        "hash_integridad_sha256": "b72e4d89f1a032c56789d012e34f56a78b90c1d2e3f4a5b6c7d8e9f0a1b2c3d4",
+        "validacion_fiscal": {
+          "ruc": "10489120345",
+          "estado_sunat": "ACTIVO",
+          "condicion_domicilio": "HABIDO",
+          "giro_ciiu": "5211",
+          "nombre_giro": "Bodegas y Comercio de Abarrotes (Mercado La Hermelinda)",
+          "coherencia_insumos_giro": true,
+          "confianza_extraccion_ia": 0.91
+        },
+        "triangulacion_financiera": {
+          "moneda": "PEN",
+          "ventas_declaradas_asesor": 16500.00,
+          "compras_comprobadas_documentos": 6200.00,
+          "margen_bruto_ciiu": 0.18,
+          "factor_rotacion_mensual": 1.80,
+          "inventario_fisico_estimado": 7900.00,
+          "gastos_operativos_familiares": 889.76,
+          "cuota_deuda_sbs_vigente": 380.00,
+          "ventas_implicitas_calculadas": 13609.76,
+          "delta_desviacion_declarativa": 0.212,
+          "flujo_neto_disponible": 1180.00,
+          "cuota_mensual_propuesta": 1020.00,
+          "ratio_cobertura_cuota_rcc": 1.16
+        },
+        "dictamen_riesgos": {
+          "alerta_fraude_maquillaje": false,
+          "requiere_revision_humana": false,
+          "clasificacion_sbs_proyectada": "CPP",
+          "tasa_provision_sbs": 0.05,
+          "escala_interna_caja_trujillo": "A",
+          "accion_operativa": "APROBACION_CON_RECORTE_AUTOMATICO_DE_MONTO",
+          "monto_solicitado_original": 12000.00,
+          "monto_maximo_recomendado": 8500.00,
+          "explicacion_agente_sbs": "AUDITORÍA PRE-DESEMBOLSO SBS [CIIU 5211 - Bodegas y Comercio de Abarrotes (Mercado La Hermelinda)]: Evidencia documental con certeza OCR de 91% e insumos coherentes con el giro declarado (sacos de arroz, azúcar, cajas de aceite, fardos de fideos y planchas de huevos). La triangulación microfinanciera registra compras comprobadas por S/ 6,200.00 (margen estándar 18%, rotación 1.80x), sustentando Ventas Implícitas de S/ 13,609.76 frente a las Ventas Declaradas por el asesor de S/ 16,500.00 (sobreestimación moderada Delta de +21.2%, inferior al umbral crítico de fraude del 30%). Conforme a la Res. SBS N.° 11356-2008 (prevención de sobreendeudamiento MYPE, clasificación proyectada CPP con provisión del 5%), el Flujo Neto Disponible conservador de S/ 1,180.00 genera un RCC ajustado de 1.16x sobre la cuota original de S/ 1,020.00. Dictamen Escala Caja Trujillo [A]: APROBACION_CON_RECORTE_AUTOMATICO_DE_MONTO, recomendando un tope prudencial de S/ 8,500.00 sobre los S/ 12,000.00 solicitados para restablecer holgura de cobertura."
+        }
+      }
+    },
+    {
+      "id_caso": "CASO_3_EXPEDIENTE_MAQUILLADO_VIERNES_6PM_C",
+      "etiqueta_ui": "Expediente Maquillado Viernes 6pm (C - Alerta Roja)",
+      "input_sanitizado_agente": {
+        "token_expediente": "UUID-EXP-0892",
+        "agencia_origen": "Agencia San Nicolas / El Porvenir",
+        "giro_ciiu_declarado": "1520",
+        "ventas_declaradas_asesor_pen": 18500.00,
+        "gastos_operativos_familiares_pen": 847.06,
+        "deuda_sbs_vigente_pen": 480.00,
+        "cuota_solicitada_pen": 1450.00,
+        "monto_solicitado_pen": 15000.00,
+        "evidencia_ocr_sanitizada": [
+          "NOTA DE COMPRA #00891 (Ingresada Viernes 18:04 hrs) - Almacen Cuero Norte - 190 pies cuero + badana -> S/ 2,950.00 (Legibilidad OCR: 0.92)",
+          "BOLETA #002-1190 - Suelas y Tacos El Porvenir - 14 doc (DOCENA) suela + pegamento -> S/ 2,250.00 (Legibilidad OCR: 0.90)",
+          "NOTA MANUSCRITA RECHAZADA POR POKA-YOKE (PY-02): Apunte en hoja suelta sin membrete 'Ventas varios clientes efectivo S/ 11,000.00' sin sustento de compra de insumos ni movimientos Yape/Plin.",
+          "ACTA CONTEO INVENTARIO FISICO: Stock físico verificado en taller por S/ 6,800.00 (insuficiente para sostener ventas declaradas de S/ 18,500.00)"
+        ]
+      },
+      "output_contrato_json": {
+        "expediente_id": "EXP-TRUJ-2026-0892",
+        "timestamp_auditoria": "2026-11-15T18:06:44-05:00",
+        "agencia_origen": "Agencia San Nicolas / El Porvenir",
+        "modo_inferencia": "HIBRIDO_SANITIZADO_VPS_SOE",
+        "hash_integridad_sha256": "c89a1f23e4d567b890c123d456e789f012a345b678c901d234e567f890a1b2c3",
+        "validacion_fiscal": {
+          "ruc": "10456712390",
+          "estado_sunat": "ACTIVO",
+          "condicion_domicilio": "HABIDO",
+          "giro_ciiu": "1520",
+          "nombre_giro": "Fabricacion de Calzado (Polo El Porvenir)",
+          "coherencia_insumos_giro": true,
+          "confianza_extraccion_ia": 0.91
+        },
+        "triangulacion_financiera": {
+          "moneda": "PEN",
+          "ventas_declaradas_asesor": 18500.00,
+          "compras_comprobadas_documentos": 5200.00,
+          "margen_bruto_ciiu": 0.32,
+          "factor_rotacion_mensual": 1.00,
+          "inventario_fisico_estimado": 6800.00,
+          "gastos_operativos_familiares": 847.06,
+          "cuota_deuda_sbs_vigente": 480.00,
+          "ventas_implicitas_calculadas": 7647.06,
+          "delta_desviacion_declarativa": 1.419,
+          "flujo_neto_disponible": 1120.00,
+          "cuota_mensual_propuesta": 1450.00,
+          "ratio_cobertura_cuota_rcc": 0.77
+        },
+        "dictamen_riesgos": {
+          "alerta_fraude_maquillaje": true,
+          "requiere_revision_humana": true,
+          "clasificacion_sbs_proyectada": "DUDOSO",
+          "tasa_provision_sbs": 0.60,
+          "escala_interna_caja_trujillo": "C",
+          "accion_operativa": "BLOQUEO_PRE_DESEMBOLSO_ALERTA_ROJA_FRAUDE",
+          "monto_solicitado_original": 15000.00,
+          "monto_maximo_recomendado": 6500.00,
+          "explicacion_agente_sbs": "AUDITORÍA PRE-DESEMBOLSO SBS [CIIU 1520 - Fabricación de Calzado (Polo El Porvenir)]: Evidencia documental con certeza OCR de 91% e insumos coherentes con el giro, pero con ALERTA CRÍTICA DE MAQUILLAJE DE VENTAS (Viernes 6:00 p. m.). La triangulación microfinanciera demuestra que las compras comprobadas de S/ 5,200.00 (margen 32%, rotación 1.00x, stock físico S/ 6,800.00) solo sustentan Ventas Implícitas de S/ 7,647.06 frente a las Ventas Declaradas por el asesor de S/ 18,500.00, evidenciando una inflación declarativa Delta de +141.9% (>30% umbral máximo). Conforme a la Res. SBS N.° 11356-2008 (riesgo severo de insolvencia, clasificación proyectada DUDOSO con provisión del 60%), el Flujo Neto Disponible real de S/ 1,120.00 arroja un RCC deficitario de 0.77x frente a la cuota solicitada de S/ 1,450.00. Dictamen Escala Caja Trujillo [C]: BLOQUEO_PRE_DESEMBOLSO_ALERTA_ROJA_FRAUDE, reteniendo el expediente de S/ 15,000.00 (capacidad máxima real S/ 6,500.00 sujeto a auditoría presencial)."
+        }
+      }
+    },
+    {
+      "id_caso": "CASO_4_POKA_YOKE_INCOHERENCIA_GIRO_BAJA_CERTEZA",
+      "etiqueta_ui": "Bodega Incoherente / OCR Borroso (Poka-Yoke Activo)",
+      "input_sanitizado_agente": {
+        "token_expediente": "UUID-EXP-0910",
+        "agencia_origen": "Agencia La Esperanza",
+        "giro_ciiu_declarado": "5211",
+        "ventas_declaradas_asesor_pen": 11000.00,
+        "gastos_operativos_familiares_pen": 650.00,
+        "deuda_sbs_vigente_pen": 310.00,
+        "cuota_solicitada_pen": 890.00,
+        "monto_solicitado_pen": 9000.00,
+        "evidencia_ocr_sanitizada": [
+          "NOTA MANUSCRITA BORROSA #S/N (Mancha de humedad y tachadura en total) - Distribuidora Ferretera Norte - 85 bls (BOLSA) cemento Pacasmayo + 40 varillas fierro 1/2 -> Texto parcialmente ilegible (Legibilidad OCR: 0.74 < 0.85)",
+          "ALERTA POKA-YOKE PY-04: El titular declara CIIU 5211 (Bodega de Abarrotes), pero el 88% de las notas presentadas corresponden a insumos de construcción (CIIU 5234: bolsa cemento, varilla fierro).",
+          "ALERTA POKA-YOKE PY-01: Nivel de confianza de extracción IA = 0.74 (inferior al mínimo normativo de 0.85)."
+        ]
+      },
+      "output_contrato_json": {
+        "expediente_id": "EXP-TRUJ-2026-0910",
+        "timestamp_auditoria": "2026-11-15T16:42:10-05:00",
+        "agencia_origen": "Agencia La Esperanza",
+        "modo_inferencia": "HIBRIDO_SANITIZADO_VPS_SOE",
+        "hash_integridad_sha256": "d41e5f67a8b901c234d567e890f123a456b789c012d345e678f901a2b3c4d5e6",
+        "validacion_fiscal": {
+          "ruc": "10411298765",
+          "estado_sunat": "ACTIVO",
+          "condicion_domicilio": "HABIDO",
+          "giro_ciiu": "5211",
+          "nombre_giro": "Bodegas y Comercio de Abarrotes (Mercado La Hermelinda)",
+          "coherencia_insumos_giro": false,
+          "confianza_extraccion_ia": 0.74
+        },
+        "triangulacion_financiera": {
+          "moneda": "PEN",
+          "ventas_declaradas_asesor": 11000.00,
+          "compras_comprobadas_documentos": 1400.00,
+          "margen_bruto_ciiu": 0.18,
+          "factor_rotacion_mensual": 1.80,
+          "inventario_fisico_estimado": 2100.00,
+          "gastos_operativos_familiares": 650.00,
+          "cuota_deuda_sbs_vigente": 310.00,
+          "ventas_implicitas_calculadas": 3073.17,
+          "delta_desviacion_declarativa": 2.579,
+          "flujo_neto_disponible": 0.00,
+          "cuota_mensual_propuesta": 890.00,
+          "ratio_cobertura_cuota_rcc": 0.00
+        },
+        "dictamen_riesgos": {
+          "alerta_fraude_maquillaje": true,
+          "requiere_revision_humana": true,
+          "clasificacion_sbs_proyectada": "PERDIDA",
+          "tasa_provision_sbs": 1.00,
+          "escala_interna_caja_trujillo": "C",
+          "accion_operativa": "BLOQUEO_POKA_YOKE_DERIVACION_AUDITOR_HUMANO",
+          "monto_solicitado_original": 9000.00,
+          "monto_maximo_recomendado": 0.00,
+          "explicacion_agente_sbs": "AUDITORÍA PRE-DESEMBOLSO SBS [CIIU 5211 - Bodegas y Comercio de Abarrotes]: BLOQUEO PREVENTIVO POKA-YOKE ACTIVADO. Se detecta doble incumplimiento normativo: (1) Certeza de extracción OCR de 74% (<85% umbral mínimo) por notas manuscritas borrosas con tachaduras, y (2) Incoherencia de giro CIIU (coherencia_insumos_giro = false), dado que un RUC de Bodega de Abarrotes presenta boletas de cemento y varillas de fierro (CIIU 5234). En cumplimiento de las reglas de gobernanza WASI-RISK AI y la Res. SBS N.° 11356-2008, el agente NO interpola montos ilegibles ni computa boletas cruzadas, reconociendo solo S/ 1,400.00 válidos (Ventas Implícitas S/ 3,073.17 vs. S/ 11,000.00 declarados). Dictamen Escala Caja Trujillo [C]: BLOQUEO_POKA_YOKE_DERIVACION_AUDITOR_HUMANO, recomendando S/ 0.00 de desembolso automático y derivación inmediata a analista senior de Riesgos."
+        }
+      }
+    }
+  ]
+}

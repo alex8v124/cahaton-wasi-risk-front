@@ -1,0 +1,370 @@
+{
+  "metadata_repositorio": {
+    "sistema": "WASI-RISK AI",
+    "evento": "Cajathon 2026 - Caja Trujillo (Track de Riesgos)",
+    "version": "2.5.0-SOE-INGESTION-KIT",
+    "propietario_negocio": "Nicolas Lopez (Product Owner & P&L Lead)",
+    "propietario_compliance": "Soe Macero (Compliance SBS & IA Agentica VPS)",
+    "propietario_motor": "Alejandro Flores (Scoring Cuantitativo & BPMN 2.0)",
+    "propietario_arquitectura": "Alexander Miranda (CTO & Tech Lead)",
+    "moneda_oficial": "PEN",
+    "simbolo_moneda": "S/",
+    "total_giros_ciiu_parametrizados": 14,
+    "normativa_base": [
+      "Resolucion SBS N.° 11356-2008 (Evaluacion y Clasificacion del Deudor)",
+      "Ley N.° 26702 Art. 140 (Secreto Bancario)",
+      "Resolucion SBS N.° 504-2021 (Seguridad de la Informacion y Ciberseguridad)"
+    ],
+    "umbral_alerta_fraude_delta": 0.30,
+    "umbral_minimo_confianza_ocr": 0.85
+  },
+  "giros_ciiu_trujillo": {
+    "1520": {
+      "codigo_ciiu": "1520",
+      "nombre_giro": "Fabricacion de Calzado (Polo El Porvenir)",
+      "polo_economico_trujillo": "Distrito El Porvenir / Sector Rio Seco",
+      "margen_bruto_estandar": 0.32,
+      "factor_rotacion_mensual": 1.00,
+      "ticket_promedio_mype_pen": 9500.00,
+      "insumos_validos_informales": [
+        "cuero",
+        "badana",
+        "suela",
+        "crupon",
+        "pegamento",
+        "taco",
+        "horma",
+        "plantilla",
+        "tarea de aparado",
+        "forro",
+        "pasador",
+        "hebilla"
+      ]
+    },
+    "5211": {
+      "codigo_ciiu": "5211",
+      "nombre_giro": "Bodegas y Comercio de Abarrotes (Mercado La Hermelinda)",
+      "polo_economico_trujillo": "Mercado Mayorista La Hermelinda / Urb. Palermo",
+      "margen_bruto_estandar": 0.18,
+      "factor_rotacion_mensual": 1.80,
+      "ticket_promedio_mype_pen": 11000.00,
+      "insumos_validos_informales": [
+        "saco arroz",
+        "saco azucar",
+        "caja aceite",
+        "fardo fideos",
+        "plancha huevos",
+        "bandeja",
+        "leche",
+        "gaseosa",
+        "detergente",
+        "atun",
+        "harina",
+        "arroba papa"
+      ]
+    },
+    "5234": {
+      "codigo_ciiu": "5234",
+      "nombre_giro": "Ferreteria y Materiales de Construccion",
+      "polo_economico_trujillo": "Av. Nicolas de Pierola / La Esperanza / Laredo",
+      "margen_bruto_estandar": 0.25,
+      "factor_rotacion_mensual": 1.00,
+      "ticket_promedio_mype_pen": 14000.00,
+      "insumos_validos_informales": [
+        "bolsa cemento",
+        "varilla fierro",
+        "tubo pvc",
+        "codo",
+        "pegamento pvc",
+        "ladrillo",
+        "alambre",
+        "clavo",
+        "pintura",
+        "arena gruesa",
+        "calamina",
+        "llave"
+      ]
+    },
+    "1810": {
+      "codigo_ciiu": "1810",
+      "nombre_giro": "Confeccion de Prendas de Vestir (Gamarrita Nortena)",
+      "polo_economico_trujillo": "Albarracin / Galeria Gamarrita Nortena - Centro",
+      "margen_bruto_estandar": 0.35,
+      "factor_rotacion_mensual": 1.20,
+      "ticket_promedio_mype_pen": 8500.00,
+      "insumos_validos_informales": [
+        "rollo tela",
+        "algodon",
+        "cono hilo",
+        "elástico",
+        "botones",
+        "cierre",
+        "remallado",
+        "dril",
+        "denim",
+        "estampado",
+        "etiqueta",
+        "bolsa polietileno"
+      ]
+    },
+    "5520": {
+      "codigo_ciiu": "5520",
+      "nombre_giro": "Restaurantes, Picanterias y Menus",
+      "polo_economico_trujillo": "Moche / Huanchaco / Centro Historico Trujillo",
+      "margen_bruto_estandar": 0.45,
+      "factor_rotacion_mensual": 2.50,
+      "ticket_promedio_mype_pen": 7000.00,
+      "insumos_validos_informales": [
+        "pollo",
+        "carne",
+        "saco papa",
+        "balon gas",
+        "verduras",
+        "aceite",
+        "descartables",
+        "pescado",
+        "mariscos",
+        "limon",
+        "cebolla",
+        "chicha"
+      ]
+    },
+    "5122": {
+      "codigo_ciiu": "5122",
+      "nombre_giro": "Distribuidora Mayorista Agroalimentaria",
+      "polo_economico_trujillo": "Plataforma Mayorista La Hermelinda / Valle Santa Catalina",
+      "margen_bruto_estandar": 0.14,
+      "factor_rotacion_mensual": 2.80,
+      "ticket_promedio_mype_pen": 18000.00,
+      "insumos_validos_informales": [
+        "tonelada",
+        "saco 50kg",
+        "jaba",
+        "malla cebolla",
+        "fertilizante",
+        "flete",
+        "arroba papa",
+        "quintal maiz",
+        "jaba tomate",
+        "costales",
+        "estiba"
+      ]
+    },
+    "4923": {
+      "codigo_ciiu": "4923",
+      "nombre_giro": "Transporte de Carga por Carretera (Ruta Norte / Mercados)",
+      "polo_economico_trujillo": "Panamericana Norte / Mercado La Hermelinda / Puerto Salaverry",
+      "margen_bruto_estandar": 0.28,
+      "factor_rotacion_mensual": 1.60,
+      "ticket_promedio_mype_pen": 16500.00,
+      "insumos_validos_informales": [
+        "diesel",
+        "petroleo",
+        "peaje",
+        "llanta",
+        "aceite motor",
+        "filtro",
+        "mantenimiento camion",
+        "soat",
+        "flete",
+        "engrase",
+        "bateria"
+      ]
+    },
+    "4922": {
+      "codigo_ciiu": "4922",
+      "nombre_giro": "Transporte Urbano, Colectivos y Furgonetas de Reparto",
+      "polo_economico_trujillo": "Trujillo Metropolitano / Av. America / El Porvenir - Centro",
+      "margen_bruto_estandar": 0.34,
+      "factor_rotacion_mensual": 2.10,
+      "ticket_promedio_mype_pen": 7500.00,
+      "insumos_validos_informales": [
+        "glp",
+        "gnv",
+        "gasolina",
+        "cambio aceite",
+        "llanta",
+        "pastilla freno",
+        "soat",
+        "lavado vehiculo",
+        "repuesto mototaxi",
+        "bujia"
+      ]
+    },
+    "4520": {
+      "codigo_ciiu": "4520",
+      "nombre_giro": "Talleres Mecanicos y Reparacion Automotriz",
+      "polo_economico_trujillo": "Av. America Sur / Av. Villarreal / Mansiche",
+      "margen_bruto_estandar": 0.42,
+      "factor_rotacion_mensual": 1.35,
+      "ticket_promedio_mype_pen": 10500.00,
+      "insumos_validos_informales": [
+        "aceite sintetico",
+        "filtro aceite",
+        "pastilla freno",
+        "empaquetadura",
+        "faja distribucion",
+        "rodamiento",
+        "soldadura",
+        "pintura automotriz",
+        "masilla",
+        "bateria",
+        "amortiguador"
+      ]
+    },
+    "1071": {
+      "codigo_ciiu": "1071",
+      "nombre_giro": "Panaderias, Pastelerias y Hornos Artesanales",
+      "polo_economico_trujillo": "El Porvenir / La Esperanza / Florencia de Mora",
+      "margen_bruto_estandar": 0.38,
+      "factor_rotacion_mensual": 2.40,
+      "ticket_promedio_mype_pen": 8200.00,
+      "insumos_validos_informales": [
+        "saco harina",
+        "manteca",
+        "levadura",
+        "saco azucar",
+        "plancha huevos",
+        "margarina",
+        "balon gas",
+        "esencia vainilla",
+        "bolsa papel",
+        "mejorador masa",
+        "leche evaporada"
+      ]
+    },
+    "4771": {
+      "codigo_ciiu": "4771",
+      "nombre_giro": "Comercio Minorista de Ropa y Calzado (Galerias Centro)",
+      "polo_economico_trujillo": "Jr. Ayacucho / Av. Espana / Centro Comercial Virrey",
+      "margen_bruto_estandar": 0.30,
+      "factor_rotacion_mensual": 1.30,
+      "ticket_promedio_mype_pen": 9800.00,
+      "insumos_validos_informales": [
+        "docena polos",
+        "docena jeans",
+        "pares calzado",
+        "zapatillas",
+        "casacas",
+        "camisas",
+        "bolsas boutique",
+        "colgadores",
+        "ropa ninos",
+        "blusas"
+      ]
+    },
+    "4772": {
+      "codigo_ciiu": "4772",
+      "nombre_giro": "Boticas, Farmacias y Productos de Cuidado Personal",
+      "polo_economico_trujillo": "Distritos Trujillo / Victor Larco / La Esperanza",
+      "margen_bruto_estandar": 0.27,
+      "factor_rotacion_mensual": 1.65,
+      "ticket_promedio_mype_pen": 13500.00,
+      "insumos_validos_informales": [
+        "genericos",
+        "antibioticos",
+        "analgesicos",
+        "panales",
+        "formula lactea",
+        "alcohol",
+        "algodon",
+        "vitaminas",
+        "shampoo",
+        "blister",
+        "jarabe"
+      ]
+    },
+    "3100": {
+      "codigo_ciiu": "3100",
+      "nombre_giro": "Carpinteria y Fabricacion de Muebles de Madera y Melamina",
+      "polo_economico_trujillo": "Parque Industrial de Trujillo / La Esperanza Parte Alta",
+      "margen_bruto_estandar": 0.36,
+      "factor_rotacion_mensual": 0.95,
+      "ticket_promedio_mype_pen": 12000.00,
+      "insumos_validos_informales": [
+        "plancha melamina",
+        "madera tornillo",
+        "triplay",
+        "bisagra",
+        "corredera",
+        "tapacanto",
+        "cola carpintero",
+        "laca",
+        "barniz",
+        "tornillo spax",
+        "esponja",
+        "tela tapiz"
+      ]
+    },
+    "4752": {
+      "codigo_ciiu": "4752",
+      "nombre_giro": "Comercio de Repuestos, Pinturas, Vidrios y Acabados",
+      "polo_economico_trujillo": "Av. Espana / Av. Mansiche / Ovalo Mochica",
+      "margen_bruto_estandar": 0.26,
+      "factor_rotacion_mensual": 1.15,
+      "ticket_promedio_mype_pen": 12500.00,
+      "insumos_validos_informales": [
+        "galon pintura",
+        "thinner",
+        "plancha vidrio",
+        "silicona",
+        "aluminio perfil",
+        "lija",
+        "brocha",
+        "rodillo",
+        "chapa puerta",
+        "esmalte",
+        "temple"
+      ]
+    }
+  },
+  "provisiones_sbs_11356": {
+    "NORMAL": 0.01,
+    "CPP": 0.05,
+    "DEFICIENTE": 0.25,
+    "DUDOSO": 0.60,
+    "PERDIDA": 1.00
+  },
+  "matriz_homologacion_caja_trujillo": {
+    "AAA": {
+      "delta_max": 0.10,
+      "rcc_min": 1.60,
+      "clasificacion_sbs_equivalente": "NORMAL",
+      "tasa_provision_sbs": 0.01,
+      "factor_aprobacion_monto": 1.00,
+      "accion": "FAST_TRACK_DESEMBOLSO_INMEDIATO"
+    },
+    "AA": {
+      "delta_max": 0.15,
+      "rcc_min": 1.35,
+      "clasificacion_sbs_equivalente": "NORMAL",
+      "tasa_provision_sbs": 0.01,
+      "factor_aprobacion_monto": 1.00,
+      "accion": "APROBACION_ESTANDAR_SIN_RECORTE"
+    },
+    "A": {
+      "delta_max": 0.25,
+      "rcc_min": 1.15,
+      "clasificacion_sbs_equivalente": "CPP",
+      "tasa_provision_sbs": 0.05,
+      "factor_aprobacion_monto": 0.71,
+      "accion": "APROBACION_CON_RECORTE_AUTOMATICO_DE_MONTO"
+    },
+    "B": {
+      "delta_max": 0.35,
+      "rcc_min": 1.00,
+      "clasificacion_sbs_equivalente": "DEFICIENTE",
+      "tasa_provision_sbs": 0.25,
+      "factor_aprobacion_monto": 0.55,
+      "accion": "OBSERVADO_RETENCION_EXIGE_GARANTIA"
+    },
+    "C": {
+      "delta_max": 99.0,
+      "rcc_min": 0.00,
+      "clasificacion_sbs_equivalente": "DUDOSO",
+      "tasa_provision_sbs": 0.60,
+      "factor_aprobacion_monto": 0.4333,
+      "accion": "BLOQUEO_PRE_DESEMBOLSO_ALERTA_ROJA_FRAUDE"
+    }
+  }
+}

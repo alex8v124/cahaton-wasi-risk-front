@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wasi-risk.cajatrujillo.pe/schemas/contrato_final_4_bloques.v2.5.json",
+  "title": "WASI-RISK AI — Contrato Inmutable Final de 4 Bloques (Consola de Riesgos Plano 2)",
+  "description": "Esquema oficial publicado a la Consola Central de Riesgos 'Opinion 100%' de Alexander Miranda tras triangulacion matematica (Alejandro) y sustentacion SBS (Soe).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "expediente_id",
+    "timestamp_auditoria",
+    "agencia_origen",
+    "modo_inferencia",
+    "hash_integridad_sha256",
+    "validacion_fiscal",
+    "triangulacion_financiera",
+    "dictamen_riesgos"
+  ],
+  "properties": {
+    "expediente_id": { "type": "string", "pattern": "^EXP-TRUJ-2026-[0-9]{4}$" },
+    "timestamp_auditoria": { "type": "string", "format": "date-time" },
+    "agencia_origen": { "type": "string" },
+    "modo_inferencia": { "type": "string" },
+    "hash_integridad_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "validacion_fiscal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruc",
+        "estado_sunat",
+        "condicion_domicilio",
+        "giro_ciiu",
+        "nombre_giro",
+        "coherencia_insumos_giro",
+        "confianza_extraccion_ia"
+      ],
+      "properties": {
+        "ruc": { "type": "string", "pattern": "^(10|20)[0-9]{9}$" },
+        "estado_sunat": { "type": "string" },
+        "condicion_domicilio": { "type": "string" },
+        "giro_ciiu": { "type": "string" },
+        "nombre_giro": { "type": "string" },
+        "coherencia_insumos_giro": { "type": "boolean" },
+        "confianza_extraccion_ia": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "triangulacion_financiera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "moneda",
+        "ventas_declaradas_asesor",
+        "compras_comprobadas_documentos",
+        "margen_bruto_ciiu",
+        "factor_rotacion_mensual",
+        "inventario_fisico_estimado",
+        "gastos_operativos_familiares",
+        "cuota_deuda_sbs_vigente",
+        "ventas_implicitas_calculadas",
+        "delta_desviacion_declarativa",
+        "flujo_neto_disponible",
+        "cuota_mensual_propuesta",
+        "ratio_cobertura_cuota_rcc"
+      ],
+      "properties": {
+        "moneda": { "type": "string", "const": "PEN" },
+        "ventas_declaradas_asesor": { "type": "number", "minimum": 0 },
+        "compras_comprobadas_documentos": { "type": "number", "minimum": 0 },
+        "margen_bruto_ciiu": { "type": "number", "minimum": 0, "maximum": 0.99 },
+        "factor_rotacion_mensual": { "type": "number", "exclusiveMinimum": 0 },
+        "inventario_fisico_estimado": { "type": "number", "minimum": 0 },
+        "gastos_operativos_familiares": { "type": "number", "minimum": 0 },
+        "cuota_deuda_sbs_vigente": { "type": "number", "minimum": 0 },
+        "ventas_implicitas_calculadas": { "type": "number", "minimum": 0 },
+        "delta_desviacion_declarativa": { "type": "number" },
+        "flujo_neto_disponible": { "type": "number", "minimum": 0 },
+        "cuota_mensual_propuesta": { "type": "number", "exclusiveMinimum": 0 },
+        "ratio_cobertura_cuota_rcc": { "type": "number", "minimum": 0 }
+      }
+    },
+    "dictamen_riesgos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alerta_fraude_maquillaje",
+        "requiere_revision_humana",
+        "clasificacion_sbs_proyectada",
+        "tasa_provision_sbs",
+        "escala_interna_caja_trujillo",
+        "accion_operativa",
+        "monto_solicitado_original",
+        "monto_maximo_recomendado",
+        "explicacion_agente_sbs"
+      ],
+      "properties": {
+        "alerta_fraude_maquillaje": { "type": "boolean" },
+        "requiere_revision_humana": { "type": "boolean" },
+        "clasificacion_sbs_proyectada": {
+          "type": "string",
+          "enum": ["NORMAL", "CPP", "DEFICIENTE", "DUDOSO", "PERDIDA"]
+        },
+        "tasa_provision_sbs": { "type": "number", "enum": [0.01, 0.05, 0.25, 0.60, 1.00] },
+        "escala_interna_caja_trujillo": { "type": "string", "enum": ["AAA", "AA", "A", "B", "C"] },
+        "accion_operativa": { "type": "string" },
+        "monto_solicitado_original": { "type": "number", "minimum": 0 },
+        "monto_maximo_recomendado": { "type": "number", "minimum": 0 },
+        "explicacion_agente_sbs": { "type": "string", "minLength": 40 }
+      }
+    }
+  }
+}

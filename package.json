@@ -1,0 +1,25 @@
+{
+  "name": "wasi-risk-ai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "WASI-RISK AI (Nodux Sentinel) — Auditoría Pre-Desembolso MYPE para Caja Trujillo",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && node scripts/bundle-report.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "preact": "^10.26.4",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^0.21.2",
+    "vitest": "^3.0.9"
+  }
+}

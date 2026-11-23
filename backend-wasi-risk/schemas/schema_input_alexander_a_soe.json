@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wasi-risk.cajatrujillo.pe/schemas/input_alexander_a_soe.v2.5.json",
+  "title": "WASI-RISK AI — Contrato INPUT (Plano 1 PWA Alexander -> VPS Soe Macero)",
+  "description": "Esquema estricto recibido por el endpoint FastAPI de Soe Macero desde Nodux Flow PWA tras sanitizacion PII perimetral.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "expediente_id",
+    "token_expediente_pii",
+    "timestamp_captura",
+    "agencia_origen",
+    "datos_fiscales_prevalidados",
+    "declaracion_asesor",
+    "documentos_adjuntos"
+  ],
+  "properties": {
+    "expediente_id": {
+      "type": "string",
+      "pattern": "^EXP-TRUJ-2026-[0-9]{4}$"
+    },
+    "token_expediente_pii": {
+      "type": "string",
+      "pattern": "^UUID-EXP-[A-Z0-9-]+$"
+    },
+    "timestamp_captura": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "agencia_origen": {
+      "type": "string",
+      "minLength": 3
+    },
+    "geolocalizacion_campo": {
+      "type": "object",
+      "properties": {
+        "lat": { "type": "number", "minimum": -9.0, "maximum": -7.0 },
+        "lng": { "type": "number", "minimum": -80.0, "maximum": -78.0 }
+      }
+    },
+    "datos_fiscales_prevalidados": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "token_ruc_solicitante",
+        "estado_sunat",
+        "condicion_domicilio",
+        "fecha_inicio_actividades",
+        "giro_ciiu_declarado"
+      ],
+      "properties": {
+        "token_ruc_solicitante": { "type": "string" },
+        "estado_sunat": {
+          "type": "string",
+          "enum": ["ACTIVO", "SUSPENSION TEMPORAL", "BAJA DE OFICIO", "BAJA DEFINITIVA"]
+        },
+        "condicion_domicilio": {
+          "type": "string",
+          "enum": ["HABIDO", "NO HABIDO", "NO HALLADO"]
+        },
+        "fecha_inicio_actividades": {
+          "type": "string",
+          "format": "date"
+        },
+        "giro_ciiu_declarado": {
+          "type": "string",
+          "enum": [
+            "1520", "5211", "5234", "1810", "5520", "5122",
+            "4923", "4922", "4520", "1071", "4771", "4772", "3100", "4752"
+          ]
+        }
+      }
+    },
+    "declaracion_asesor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "moneda",
+        "ventas_declaradas_asesor_pen",
+        "inventario_fisico_estimado_pen",
+        "gastos_operativos_familiares_pen",
+        "cuota_deuda_sbs_vigente_pen",
+        "cuota_mensual_propuesta_pen",
+        "monto_solicitado_pen"
+      ],
+      "properties": {
+        "moneda": { "type": "string", "const": "PEN" },
+        "ventas_declaradas_asesor_pen": { "type": "number", "minimum": 0 },
+        "inventario_fisico_estimado_pen": { "type": "number", "minimum": 0 },
+        "gastos_operativos_familiares_pen": { "type": "number", "minimum": 0 },
+        "cuota_deuda_sbs_vigente_pen": { "type": "number", "minimum": 0 },
+        "cuota_mensual_propuesta_pen": { "type": "number", "exclusiveMinimum": 0 },
+        "monto_solicitado_pen": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "documentos_adjuntos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "doc_id",
+          "tipo_documento",
+          "hash_sha256",
+          "texto_ocr_sanitizado"
+        ],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 3 },
+          "tipo_documento": {
+            "type": "string",
+            "enum": [
+              "FACTURA_MAYORISTA",
+              "BOLETA_MAYORISTA",
+              "NOTA_MANUSCRITA",
+              "VOUCHER_YAPE",
+              "VOUCHER_PLIN",
+              "ACTA_INVENTARIO"
+            ]
+          },
+          "hash_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "texto_ocr_sanitizado": { "type": "string", "minLength": 5 }
+        }
+      }
+    }
+  }
+}

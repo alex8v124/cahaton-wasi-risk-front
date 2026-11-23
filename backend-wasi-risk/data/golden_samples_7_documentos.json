@@ -1,0 +1,375 @@
+{
+  "metadata_golden_samples": {
+    "descripcion": "7 Golden Samples Documentales (Few-Shot a nivel documento) para calibracion del Agente Parser de Soe Macero a temperature = 0.0.",
+    "composicion": {
+      "boletas_facturas_mayoristas": 3,
+      "notas_pedido_manuscritas_mostrador": 2,
+      "vouchers_yape_plin": 2
+    },
+    "moneda": "PEN",
+    "version": "1.0.0-SOE-INGESTION-KIT"
+  },
+  "muestras_documentales": [
+    {
+      "sample_id": "DOC-MAY-001",
+      "categoria": "BOLETA_FACTURA_MAYORISTA",
+      "ciiu_expediente_contexto": "1520",
+      "escenario": "Factura mayorista valida de curtiembre en El Porvenir con unidades informales (pies, doc, gal).",
+      "texto_ocr_crudo_sanitizado": "FACTURA ELECTRONICA F001-0004821\nCURTIEMBRE Y PIELES DEL NORTE S.A.C. | RUC: [TOKEN_RUC_PROV_01]\nFecha Emision: 2026-11-04 | Moneda: SOLES\nCliente: [TITULAR_MYPE_VERIFICADO] | RUC: [TOKEN_RUC_EXP_0101]\n--------------------------------------------------\n1) 180 pies Cuero Box Calf Negro 1ra   P.U. 10.50   Subt: 1,890.00\n2) 80 pies Badana Forro Natural        P.U.  7.00   Subt:   560.00\n3) 10 doc Suela Expanso Escolar        P.U. 120.00  Subt: 1,200.00\n4) 2 gal Pegamento Amarillo Contacto   P.U.  95.00  Subt:   190.00\n--------------------------------------------------\nTOTAL IMPORTE (INC. IGV): S/ 3,840.00",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-MAY-001",
+        "tipo_documento": "FACTURA_MAYORISTA",
+        "serie_correlativo": "F001-0004821",
+        "fecha_emision": "2026-11-04",
+        "proveedor_token": "[TOKEN_RUC_PROV_01]",
+        "confianza_extraccion_ia": 0.97,
+        "coherencia_insumos_giro": true,
+        "es_documento_valido_computable": true,
+        "requiere_revision_humana": false,
+        "banderas_detectadas": [],
+        "items_extraidos": [
+          {
+            "descripcion": "Cuero Box Calf Negro 1ra",
+            "cantidad": 180,
+            "unidad_original": "pies",
+            "unidad_normalizada": "PIE_CUADRADO",
+            "precio_unitario_pen": 10.5,
+            "subtotal_pen": 1890.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Badana Forro Natural",
+            "cantidad": 80,
+            "unidad_original": "pies",
+            "unidad_normalizada": "PIE_CUADRADO",
+            "precio_unitario_pen": 7.0,
+            "subtotal_pen": 560.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Suela Expanso Escolar",
+            "cantidad": 10,
+            "unidad_original": "doc",
+            "unidad_normalizada": "DOCENA",
+            "precio_unitario_pen": 120.0,
+            "subtotal_pen": 1200.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Pegamento Amarillo Contacto",
+            "cantidad": 2,
+            "unidad_original": "gal",
+            "unidad_normalizada": "GALON",
+            "precio_unitario_pen": 95.0,
+            "subtotal_pen": 190.0,
+            "insumo_coherente_ciiu": true
+          }
+        ],
+        "monto_declarado_documento_pen": 3840.0,
+        "monto_computable_valido_pen": 3840.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-MAY-001_factura_curtiembre_calzado.png"
+    },
+    {
+      "sample_id": "DOC-MAY-002",
+      "categoria": "BOLETA_FACTURA_MAYORISTA",
+      "ciiu_expediente_contexto": "5211",
+      "escenario": "Boleta mayorista de La Hermelinda con abreviaturas peruanas (saco, arr, cj, pl, fdo).",
+      "texto_ocr_crudo_sanitizado": "BOLETA DE VENTA ELECTRONICA B002-0019021\nMOLINO Y ABARROTES LA HERMELINDA E.I.R.L. | RUC: [TOKEN_RUC_PROV_02]\nFecha: 2026-11-08 | [ZONA_COMERCIAL_TRUJILLO]\nSenor(a): [TITULAR_MYPE_VERIFICADO]\n- 15 saco Arroz Extra Norteno 50kg   @ 165.00 = 2,475.00\n- 20 arr Papa Blanca Seleccionada    @  24.00 =   480.00\n- 10 cj Aceite Vegetal x 12          @  92.00 =   920.00\n- 15 fdo Fideos Tallarin x 20        @  36.00 =   540.00\n- 25 pl Huevos Rosados x 30          @  16.00 =   400.00\nTOTAL A PAGAR S/: 4,815.00",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-MAY-002",
+        "tipo_documento": "BOLETA_MAYORISTA",
+        "serie_correlativo": "B002-0019021",
+        "fecha_emision": "2026-11-08",
+        "proveedor_token": "[TOKEN_RUC_PROV_02]",
+        "confianza_extraccion_ia": 0.95,
+        "coherencia_insumos_giro": true,
+        "es_documento_valido_computable": true,
+        "requiere_revision_humana": false,
+        "banderas_detectadas": [],
+        "items_extraidos": [
+          {
+            "descripcion": "Arroz Extra Norteno 50kg",
+            "cantidad": 15,
+            "unidad_original": "saco",
+            "unidad_normalizada": "SACO_50KG",
+            "precio_unitario_pen": 165.0,
+            "subtotal_pen": 2475.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Papa Blanca Seleccionada",
+            "cantidad": 20,
+            "unidad_original": "arr",
+            "unidad_normalizada": "ARROBA",
+            "precio_unitario_pen": 24.0,
+            "subtotal_pen": 480.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Aceite Vegetal x 12",
+            "cantidad": 10,
+            "unidad_original": "cj",
+            "unidad_normalizada": "CAJA",
+            "precio_unitario_pen": 92.0,
+            "subtotal_pen": 920.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Fideos Tallarin x 20",
+            "cantidad": 15,
+            "unidad_original": "fdo",
+            "unidad_normalizada": "FARDO",
+            "precio_unitario_pen": 36.0,
+            "subtotal_pen": 540.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Huevos Rosados x 30",
+            "cantidad": 25,
+            "unidad_original": "pl",
+            "unidad_normalizada": "PLANCHA",
+            "precio_unitario_pen": 16.0,
+            "subtotal_pen": 400.0,
+            "insumo_coherente_ciiu": true
+          }
+        ],
+        "monto_declarado_documento_pen": 4815.0,
+        "monto_computable_valido_pen": 4815.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-MAY-002_boleta_molino_hermelinda.png"
+    },
+    {
+      "sample_id": "DOC-MAY-003",
+      "categoria": "BOLETA_FACTURA_MAYORISTA",
+      "ciiu_expediente_contexto": "5211",
+      "escenario": "CASO TRAMPA DE INCOHERENCIA DE GIRO: Solicitante declara Bodega (5211) pero adjunta factura ferretera (cemento y fierro).",
+      "texto_ocr_crudo_sanitizado": "FACTURA ELECTRONICA F004-0007712\nDISTRIBUIDORA FERRETERA PACIFICO NORTE S.A.C. | RUC: [TOKEN_RUC_PROV_03]\nFecha: 2026-11-10 | Moneda: PEN\nCliente: [TITULAR_MYPE_VERIFICADO]\n- 60 bls Cemento Pacasmayo Tipo I     P.U. 29.50   Subt: 1,770.00\n- 35 und Varilla Fierro 1/2 Aceros    P.U. 38.00   Subt: 1,330.00\n- 12 und Tubo PVC Desague 4 pulg      P.U. 22.00   Subt:   264.00\nTOTAL: S/ 3,364.00",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-MAY-003",
+        "tipo_documento": "FACTURA_MAYORISTA",
+        "serie_correlativo": "F004-0007712",
+        "fecha_emision": "2026-11-10",
+        "proveedor_token": "[TOKEN_RUC_PROV_03]",
+        "confianza_extraccion_ia": 0.96,
+        "coherencia_insumos_giro": false,
+        "es_documento_valido_computable": false,
+        "requiere_revision_humana": true,
+        "banderas_detectadas": [
+          "FLAG_INCOHERENCIA_GIRO_CIIU"
+        ],
+        "items_extraidos": [
+          {
+            "descripcion": "Cemento Pacasmayo Tipo I",
+            "cantidad": 60,
+            "unidad_original": "bls",
+            "unidad_normalizada": "BOLSA",
+            "precio_unitario_pen": 29.5,
+            "subtotal_pen": 1770.0,
+            "insumo_coherente_ciiu": false
+          },
+          {
+            "descripcion": "Varilla Fierro 1/2 Aceros",
+            "cantidad": 35,
+            "unidad_original": "und",
+            "unidad_normalizada": "UNIDAD",
+            "precio_unitario_pen": 38.0,
+            "subtotal_pen": 1330.0,
+            "insumo_coherente_ciiu": false
+          },
+          {
+            "descripcion": "Tubo PVC Desague 4 pulg",
+            "cantidad": 12,
+            "unidad_original": "und",
+            "unidad_normalizada": "UNIDAD",
+            "precio_unitario_pen": 22.0,
+            "subtotal_pen": 264.0,
+            "insumo_coherente_ciiu": false
+          }
+        ],
+        "monto_declarado_documento_pen": 3364.0,
+        "monto_computable_valido_pen": 0.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-MAY-003_factura_ferreteria_incoherencia.png"
+    },
+    {
+      "sample_id": "DOC-MAN-004",
+      "categoria": "NOTA_PEDIDO_MANUSCRITA_MOSTRADOR",
+      "ciiu_expediente_contexto": "1810",
+      "escenario": "Nota de pedido manuscrita valida de mostrador en Gamarrita Nortena con jerga informal (rll, cto, doc, tira).",
+      "texto_ocr_crudo_sanitizado": "NOTA DE PEDIDO N° 001458 (NO VALIDO COMO COMP. PAGO)\nFecha: 11/11/26 | Galeria Albarracin Puesto 24\nSr(a): [TITULAR_MYPE_VERIFICADO]\n- 3 rll Tela Algodon Jersey 30/1       @ 420.00 = 1,260.00\n- 2 cto Botones camisa nacar           @  18.00 =    36.00\n- 5 doc Cierres metalicos 18cm         @  24.00 =   120.00\n- 12 tira Elastico pretina x rollito   @   9.50 =   114.00\nCancelado efectivo. Total S/ 1,530.00",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-MAN-004",
+        "tipo_documento": "NOTA_MANUSCRITA",
+        "serie_correlativo": "NP-001458",
+        "fecha_emision": "2026-11-11",
+        "proveedor_token": "MOSTRADOR_GALERIA_ALBARRACIN_P24",
+        "confianza_extraccion_ia": 0.91,
+        "coherencia_insumos_giro": true,
+        "es_documento_valido_computable": true,
+        "requiere_revision_humana": false,
+        "banderas_detectadas": [],
+        "items_extraidos": [
+          {
+            "descripcion": "Tela Algodon Jersey 30/1",
+            "cantidad": 3,
+            "unidad_original": "rll",
+            "unidad_normalizada": "ROLLO",
+            "precio_unitario_pen": 420.0,
+            "subtotal_pen": 1260.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Botones camisa nacar",
+            "cantidad": 2,
+            "unidad_original": "cto",
+            "unidad_normalizada": "CIENTO",
+            "precio_unitario_pen": 18.0,
+            "subtotal_pen": 36.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Cierres metalicos 18cm",
+            "cantidad": 5,
+            "unidad_original": "doc",
+            "unidad_normalizada": "DOCENA",
+            "precio_unitario_pen": 24.0,
+            "subtotal_pen": 120.0,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Elastico pretina",
+            "cantidad": 12,
+            "unidad_original": "tira",
+            "unidad_normalizada": "UNIDAD",
+            "precio_unitario_pen": 9.5,
+            "subtotal_pen": 114.0,
+            "insumo_coherente_ciiu": true
+          }
+        ],
+        "monto_declarado_documento_pen": 1530.0,
+        "monto_computable_valido_pen": 1530.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-MAN-004_nota_mostrador_gamarrita_valida.png"
+    },
+    {
+      "sample_id": "DOC-MAN-005",
+      "categoria": "NOTA_PEDIDO_MANUSCRITA_MOSTRADOR",
+      "ciiu_expediente_contexto": "1520",
+      "escenario": "CASO TRAMPA POKA-YOKE: Nota borrosa (OCR 0.73 < 0.85) + monto redondo S/ 5,000 sin desglose de items.",
+      "texto_ocr_crudo_sanitizado": "NOTA S/N - [MANCHA DE HUMEDAD EN FECHA: ??/11/26]\n[TACHADURA EN NOMBRE PROVEEDOR]\nCompras varios materiales calzado taller ..... S/ 5,000.00 [SOBREESCRITO]\nFirma ilegible.",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-MAN-005",
+        "tipo_documento": "NOTA_MANUSCRITA",
+        "serie_correlativo": null,
+        "fecha_emision": null,
+        "proveedor_token": "ILEGIBLE_NO_VERIFICADO",
+        "confianza_extraccion_ia": 0.73,
+        "coherencia_insumos_giro": false,
+        "es_documento_valido_computable": false,
+        "requiere_revision_humana": true,
+        "banderas_detectadas": [
+          "FLAG_BAJA_CONFIANZA_OCR_POKA_YOKE",
+          "FLAG_MONTO_REDONDO_SIN_DESGLOSE"
+        ],
+        "items_extraidos": [],
+        "monto_declarado_documento_pen": 5000.0,
+        "monto_computable_valido_pen": 0.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-MAN-005_nota_borrosa_poka_yoke_5000.png"
+    },
+    {
+      "sample_id": "DOC-WAL-006",
+      "categoria": "VOUCHER_YAPE_PLIN",
+      "ciiu_expediente_contexto": "1520",
+      "escenario": "Captura Yape verificada de pago a taller de aparado y suelas en El Porvenir.",
+      "texto_ocr_crudo_sanitizado": "¡Yapeaste!\nS/ 870.00\nPara: [TITULAR_PROV_SANITIZADO_04]\nCelular destino: [HASH_WALLET_PROV_04]\nFecha y hora: 12 nov. 2026 - 04:18 p. m.\nN° de operacion: 09482716\nMensaje: pago 4 tr aparado + 3 gal pegamento amarillo",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-WAL-006",
+        "tipo_documento": "VOUCHER_YAPE",
+        "serie_correlativo": "YAPE-09482716",
+        "fecha_emision": "2026-11-12",
+        "proveedor_token": "[HASH_WALLET_PROV_04]",
+        "confianza_extraccion_ia": 0.96,
+        "coherencia_insumos_giro": true,
+        "es_documento_valido_computable": true,
+        "requiere_revision_humana": false,
+        "banderas_detectadas": [],
+        "items_extraidos": [
+          {
+            "descripcion": "Servicio tarea de aparado calzado",
+            "cantidad": 4,
+            "unidad_original": "tr",
+            "unidad_normalizada": "TAREA",
+            "precio_unitario_pen": null,
+            "subtotal_pen": null,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Pegamento amarillo calzado",
+            "cantidad": 3,
+            "unidad_original": "gal",
+            "unidad_normalizada": "GALON",
+            "precio_unitario_pen": null,
+            "subtotal_pen": null,
+            "insumo_coherente_ciiu": true
+          }
+        ],
+        "monto_declarado_documento_pen": 870.0,
+        "monto_computable_valido_pen": 870.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-WAL-006_voucher_yape_870.png"
+    },
+    {
+      "sample_id": "DOC-WAL-007",
+      "categoria": "VOUCHER_YAPE_PLIN",
+      "ciiu_expediente_contexto": "5122",
+      "escenario": "Captura Plin verificada de pago a proveedor agroalimentario y transporte en La Hermelinda (usa arr y jaba).",
+      "texto_ocr_crudo_sanitizado": "PLIN - Transferencia Exitosa\nMonto enviado: S/ 1,240.00\nDestinatario: [TITULAR_PROV_SANITIZADO_11] | Tel: [HASH_WALLET_PROV_11]\nBanco destino: Interbank\nFecha: 13/11/2026 06:45 AM\nCodigo operacion: PLN-7782310\nGlosa: 30 arr papa yungay + 15 jaba tomate + 1 flete hermelinda",
+      "json_extraccion_esperado": {
+        "doc_id": "DOC-WAL-007",
+        "tipo_documento": "VOUCHER_PLIN",
+        "serie_correlativo": "PLN-7782310",
+        "fecha_emision": "2026-11-13",
+        "proveedor_token": "[HASH_WALLET_PROV_11]",
+        "confianza_extraccion_ia": 0.94,
+        "coherencia_insumos_giro": true,
+        "es_documento_valido_computable": true,
+        "requiere_revision_humana": false,
+        "banderas_detectadas": [],
+        "items_extraidos": [
+          {
+            "descripcion": "Papa Yungay mayorista",
+            "cantidad": 30,
+            "unidad_original": "arr",
+            "unidad_normalizada": "ARROBA",
+            "precio_unitario_pen": null,
+            "subtotal_pen": null,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Tomate en jaba",
+            "cantidad": 15,
+            "unidad_original": "jaba",
+            "unidad_normalizada": "JABA",
+            "precio_unitario_pen": null,
+            "subtotal_pen": null,
+            "insumo_coherente_ciiu": true
+          },
+          {
+            "descripcion": "Flete carga plataforma La Hermelinda",
+            "cantidad": 1,
+            "unidad_original": "flete",
+            "unidad_normalizada": "VIAJE_FLETE",
+            "precio_unitario_pen": null,
+            "subtotal_pen": null,
+            "insumo_coherente_ciiu": true
+          }
+        ],
+        "monto_declarado_documento_pen": 1240.0,
+        "monto_computable_valido_pen": 1240.0
+      },
+      "archivo_imagen": "imagenes_golden_samples/DOC-WAL-007_voucher_plin_1240.png"
+    }
+  ]
+}
