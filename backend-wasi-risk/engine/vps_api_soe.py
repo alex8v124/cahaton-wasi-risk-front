@@ -262,9 +262,9 @@ class WasiVpsOrchestrator:
                         "nivel": "VERIFICAR_DATOS",
                     },
                     "expediente_agente": {
-                        "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): Confianza de resolucion inferior a 0.85. El sistema no calcula puntaje de red hasta verificacion manual de datos.",
+                        "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): Confianza de resolución inferior a 0.85. El sistema no calcula puntaje de red hasta verificación manual de datos.",
                         "evidencias_citadas": [f"Calidad de datos: confianza_resolucion < 0.85 en {sol_id}."],
-                        "explicaciones_alternativas": ["Captura incompleta o error de digitacion en campo."],
+                        "explicaciones_alternativas": ["Captura incompleta o error de digitación en campo."],
                         "pasos_sugeridos": ["Solicitar recaptura de datos de contacto y comprobante legible."],
                     },
                     "accion_recomendada": "VERIFICAR_DATOS",

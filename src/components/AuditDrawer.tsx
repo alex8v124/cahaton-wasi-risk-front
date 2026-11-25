@@ -965,7 +965,7 @@ export function AuditDrawer({
                 </div>
               </div>
               <div class="stat-tile">
-                <div class="stat-tile-label">Semáforo Nitidez Soe</div>
+                <div class="stat-tile-label">Semáforo de Nitidez Local</div>
                 <div style={{ marginTop: '4px' }}>
                   <span
                     class={`badge ${
@@ -1175,7 +1175,7 @@ export function AuditDrawer({
         <div class="drawer-footer">
           <div style={{ fontSize: '12px', color: 'var(--ink-secondary)' }}>
             {col === 'GRIS' ? (
-              <strong>Estado Gris: Verificar datos (Provisión SBS null)</strong>
+              <strong>Estado Gris: Verificar datos (Excluido de provisión SBS)</strong>
             ) : !disburseAllowed ? (
               <strong style={{ color: 'var(--red-dark)' }}>
                 Retención preventiva activa (RF-22)

@@ -1430,9 +1430,10 @@ textarea {
 }
 
 .tile-body label {
-  font-size: 11.5px;
+  font-size: 12px;
+  line-height: 1.4;
   font-weight: 600;
-  color: var(--ink-muted);
+  color: var(--ink-secondary);
 }
 
 .tile-body input,

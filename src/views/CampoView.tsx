@@ -1683,7 +1683,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
 
                 {lastCycleSeconds !== null && (
                   <div class="cycle-proof-bar">
-                    <span>Tiempo de ciclo Nodux Flow:</span>
+                    <span>Tiempo de ciclo WASI-RISK AI:</span>
                     <strong class="mono">{lastCycleSeconds.toFixed(1)} s</strong>
                     <span style={{ opacity: 0.7 }}>(vs 72h manual AS-IS)</span>
                   </div>

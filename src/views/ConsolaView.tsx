@@ -298,6 +298,7 @@ export default function ConsolaView({
           (item) =>
             /^EXP-TRUJ-2026-010[1234]$/.test(item.expediente_id) ||
             item.response.red?.nodos_subred === 14 ||
+            item.response.dictamen_riesgos.explicacion_agente_sbs.includes('resolucion') ||
             (item.expediente_id === 'SOL-TRUJ-2026-0412' &&
               !item.response.dictamen_riesgos.requiere_revision_humana)
         );

@@ -472,7 +472,7 @@ export const GOLDEN_CASES: GoldenCase[] = [
     etiqueta_escala: 'POKA-YOKE · GRIS',
     puntaje_objetivo: null,
     nivel_esperado: 'VERIFICAR_DATOS',
-    resumen_esperado: 'VERIFICAR DATOS (Gris) · Confianza 62% < 85% + importe 5.0OO.00 · Provisión SBS null (S/ 0)',
+    resumen_esperado: 'VERIFICAR DATOS (Gris) · Confianza 62% < 85% + importe 5.0OO.00 · Excluido de provisión SBS (S/ 0.00)',
     payload: {
       expediente_id: 'EXP-TRUJ-2026-0104',
       ruc: '10411298765',
@@ -1318,7 +1318,7 @@ const CALIBRATED_RESPONSES: Record<string, Omit<AuditarExpedienteResponse, 'hash
       ],
       pasos_sugeridos: [
         'Solicitar al asesor repetir la fotografía del comprobante con buena iluminación (≥ 800 px).',
-        'Verificar teléfono completo (11/9 dígitos) y dirección antes de ejecutar el análisis de red.',
+        'Verificar teléfono completo (9 dígitos) y dirección antes de ejecutar el análisis de red.',
       ],
     },
     accion_recomendada: 'VERIFICAR_DATOS',

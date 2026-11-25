@@ -616,7 +616,7 @@ export async function getGoldenCases(): Promise<GoldenCase[]> {
         titulo: `${cid} · ${String(cs.titulo ?? cid)}`,
         subtitulo:
           subParts.length > 0
-            ? `${subParts.join(' + ')} · Puntaje ${puntaje ?? 'null'}`
+            ? `${subParts.join(' + ')} · Puntaje ${puntaje ?? 'Por verificar'}`
             : `Confianza ${confOverride} · Sin puntaje (Gris)`,
         etiqueta_escala: colorTxt,
         puntaje_objetivo: puntaje,
@@ -639,7 +639,7 @@ export async function getGoldenCases(): Promise<GoldenCase[]> {
           cuota_deuda_sbs_vigente: 220,
           cuota_mensual_propuesta: 1100,
           monto_solicitado_original: Number(reqIn.monto_solicitado ?? 8000),
-          telefono_contacto: String(tels[0] ?? '948112233'),
+          telefono_contacto: String(tels[0] ?? '948112233').replace(/^TEL-/i, ''),
           direccion_negocio: String(neg.direccion ?? sol.direccion ?? 'Trujillo'),
           geolocalizacion:
             Array.isArray(sol.geo) && sol.geo.length === 2
@@ -649,7 +649,7 @@ export async function getGoldenCases(): Promise<GoldenCase[]> {
           dispositivo_tipo:
             String(disp.tipo ?? '').includes('CORPORATIVO') ? 'CORPORATIVO_ASESOR' : 'CLIENTE',
           referencias: refsRaw.map((r) => ({
-            telefono: String(r.telefono ?? '948998877'),
+            telefono: String(r.telefono ?? '948998877').replace(/^TEL-/i, ''),
             relacion: String(r.relacion ?? 'AMIGO'),
             nombre_referencia: String(r.id ?? ''),
           })),

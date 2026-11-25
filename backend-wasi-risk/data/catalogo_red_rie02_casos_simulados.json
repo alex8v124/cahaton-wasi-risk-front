@@ -22,7 +22,7 @@
     "P-03": {
       "codigo": "P-03",
       "nombre": "Referencias circulares",
-      "senal_observada": "Los solicitantes se refieren entre si en cadena cerrada (A->B->C->A).",
+      "senal_observada": "Los solicitantes se refieren entre sí en cadena cerrada (A->B->C->A).",
       "peso_inicial": 0.3
     },
     "P-04": {
@@ -40,7 +40,7 @@
     "P-06": {
       "codigo": "P-06",
       "nombre": "Negocios recientes o irregulares",
-      "senal_observada": "RUC con poca antigüedad (<6 meses), NO HABIDO o BAJA conectados entre si.",
+      "senal_observada": "RUC con poca antigüedad (<6 meses), NO HABIDO o BAJA conectados entre sí.",
       "peso_inicial": 0.15
     },
     "P-07": {
@@ -94,7 +94,7 @@
     "L-05": {
       "codigo": "L-05",
       "contexto": "Asociación de comerciantes",
-      "reconocimiento": "Miembros de una misma asociacion o cooperativa registrada en Trujillo.",
+      "reconocimiento": "Miembros de una misma asociación o cooperativa registrada en Trujillo.",
       "factor_contexto": 0.6,
       "anula_patron": null
     },
@@ -241,7 +241,7 @@
           "evidencias_citadas": [
             "Arista [PER-8841 -> usa -> TEL-948112233] compartida con SOL-TRUJ-2026-0398, 0405 y 0409 (Fuente: Captura Campo, 2026-11-18).",
             "Arista [SOL-TRUJ-2026-0412 -> enviada_desde -> DEV-7A1E] repetida en 4 titulares sin parentesco (Fuente: Telemetría PWA, 2026-11-18).",
-            "Ciclo cerrado de referencias [REF-1102 -> REF-1107 -> REF-1115 -> REF-1121] (Fuente: Declaración Vinculos, 2026-11-12 al 2026-11-18)."
+            "Ciclo cerrado de referencias [REF-1102 -> REF-1107 -> REF-1115 -> REF-1121] (Fuente: Declaración Vínculos, 2026-11-12 al 2026-11-18)."
           ],
           "explicaciones_alternativas": [
             "Posible cooperativa o taller multifamiliar no declarado formalmente en el formulario de campo.",
@@ -448,7 +448,7 @@
           "telefonos": [
             "TEL-944201011"
           ],
-          "direccion": "Av. Sanchez Carrion 810, El Porvenir",
+          "direccion": "Av. Sánchez Carrión 810, El Porvenir",
           "geo": [
             -8.081,
             -79.002
@@ -457,7 +457,7 @@
         "negocio": {
           "ruc": "10423189012",
           "giro_ciiu": "1520",
-          "direccion": "Av. Sanchez Carrion 810 Puesto 112, El Porvenir"
+          "direccion": "Av. Sánchez Carrión 810 Puesto 112, El Porvenir"
         },
         "dispositivo": {
           "fingerprint": "dev:corp-ase004",
@@ -516,7 +516,7 @@
           },
           {
             "codigo": "L-04",
-            "descripcion": "Referencia reciproca entre familiares directos declarados (madre-hija)",
+            "descripcion": "Referencia recíproca entre familiares directos declarados (madre-hija)",
             "factor": 0.6
           }
         ],
@@ -531,16 +531,16 @@
           "nivel": "SIN_ALERTA"
         },
         "expediente_agente": {
-          "resumen": "Vínculo familiar legitimo verificado (L-01). Aunque la solicitante comparte domicilio con otra titular activa (madre e hija en Puestos 112 y 113), ambas mantienen RUCs activos, proveedores propios y compras comprobadas por S/ 5,000.00 que sustentan al 100% sus ventas declaradas.",
+          "resumen": "Vínculo familiar legítimo verificado (L-01). Aunque la solicitante comparte domicilio con otra titular activa (madre e hija en Puestos 112 y 113), ambas mantienen RUCs activos, proveedores propios y compras comprobadas por S/ 5,000.00 que sustentan al 100% sus ventas declaradas.",
           "evidencias_citadas": [
             "Arista [PER-1021 -> vive_en -> DIR-SANCHEZ-810] atenuada por regla L-01 (Contexto Familiar Verificado).",
             "Factura F001-0004821 independiente verificada sin duplicidad de hash SHA-256 en el grafo."
           ],
           "explicaciones_alternativas": [
-            "Economia familiar de talleres contiguos tradicional en el distrito zapatero de El Porvenir."
+            "Economía familiar de talleres contiguos tradicional en el distrito zapatero de El Porvenir."
           ],
           "pasos_sugeridos": [
-            "Continuar flujo normal de aprobacion (Sin Alerta - Falso Positivo evitado)."
+            "Continuar flujo normal de aprobación (Sin Alerta - Falso Positivo evitado)."
           ],
           "aristas_evidencia_ids": []
         },
@@ -730,16 +730,16 @@
           "nivel": "SIN_ALERTA"
         },
         "expediente_agente": {
-          "resumen": "Concentración geografica legitima en el Mercado Mayorista La Hermelinda (L-02). La ponderacion por rareza (0.12) y la ausencia de teléfonos o comprobantes reciclados descartan anomalia de red.",
+          "resumen": "Concentración geográfica legítima en el Mercado Mayorista La Hermelinda (L-02). La ponderación por rareza (0.12) y la ausencia de teléfonos o comprobantes reciclados descartan anomalía de red.",
           "evidencias_citadas": [
             "Arista [NEG-10489120345 -> opera_en -> DIR-HERMELINDA-CENTRAL] compartida con 40 puestos independientes (Rareza = 0.12).",
-            "Boleta mayorista B002-0019021 por S/ 4,815.00 + Plin S/ 1,385.00 validados sin colision de hash."
+            "Boleta mayorista B002-0019021 por S/ 4,815.00 + Plin S/ 1,385.00 validados sin colisión de hash."
           ],
           "explicaciones_alternativas": [
-            "Agrupacion natural de comerciantes minoristas dentro del principal mercado de abastos de Trujillo."
+            "Agrupación natural de comerciantes minoristas dentro del principal mercado de abastos de Trujillo."
           ],
           "pasos_sugeridos": [
-            "Continuar flujo normal sin friccion comercial (0 falsos positivos por ubicacion comercial)."
+            "Continuar flujo normal sin fricción comercial (0 falsos positivos por ubicación comercial)."
           ],
           "aristas_evidencia_ids": []
         },
@@ -920,7 +920,7 @@
           },
           {
             "codigo": "P-08",
-            "descripcion": "Ventas infladas en la red: declara S/ 22,000 vs S/ 6,000.00 de ventas implicitas (Delta +266.7%) y recicla boleta",
+            "descripcion": "Ventas infladas en la red: declara S/ 22,000 vs S/ 6,000.00 de ventas implícitas (Delta +266.7%) y recicla boleta",
             "evidencia": [
               "DOC-F004-7712-RECICLADA",
               "DELTA_FRAUDE_+266%"
@@ -944,18 +944,18 @@
           "nivel": "REVISION_PRIORITARIA"
         },
         "expediente_agente": {
-          "resumen": "Concentración anomala de 5 negocios (CIIU 5234/5211) registrados sobre una misma vivienda residencial en La Esperanza. Dos nodos presentan condicion NO HABIDO / BAJA en SUNAT y la solicitud exhibe una sobreestimacion de ventas del +266.7% (P-08) reutilizando el mismo comprobante mayorista.",
+          "resumen": "Concentración anómala de 5 negocios (CIIU 5234/5211) registrados sobre una misma vivienda residencial en La Esperanza. Dos nodos presentan condición NO HABIDO / BAJA en SUNAT y la solicitud exhibe una sobreestimación de ventas del +266.7% (P-08) reutilizando el mismo comprobante mayorista.",
           "evidencias_citadas": [
-            "Arista [NEG-10499887761 -> opera_en -> DIR-MZ-K-LT14] cohabitada por 5 RUCs sin zonificacion comercial (Fuente: Padron SUNAT, 2026-11-18).",
-            "Alerta Fiscal SUNAT: RUC 10499887761 en condicion NO HABIDO y nodo vecino 20609911223 en BAJA DE OFICIO.",
+            "Arista [NEG-10499887761 -> opera_en -> DIR-MZ-K-LT14] cohabitada por 5 RUCs sin zonificación comercial (Fuente: Padrón SUNAT, 2026-11-18).",
+            "Alerta Fiscal SUNAT: RUC 10499887761 en condición NO HABIDO y nodo vecino 20609911223 en BAJA DE OFICIO.",
             "Triangulación P-08: Compras de S/ 4,500.00 (margen 25%) solo sustentan S/ 6,000.00 de ventas frente a S/ 22,000.00 declarados."
           ],
           "explicaciones_alternativas": [
-            "Subdivision informal de un predio familiar grande sin actualizacion de numeracion municipal."
+            "Subdivisión informal de un predio familiar grande sin actualización de numeración municipal."
           ],
           "pasos_sugeridos": [
-            "Retener desembolso y programar inspeccion ocular conjunta de los 5 expedientes vinculados al predio Mz K Lt 14.",
-            "Exigir regularizacion de condicion NO HABIDO ante SUNAT antes de reevaluar."
+            "Retener desembolso y programar inspección ocular conjunta de los 5 expedientes vinculados al predio Mz K Lt 14.",
+            "Exigir regularización de condición NO HABIDO ante SUNAT antes de reevaluar."
           ],
           "aristas_evidencia_ids": [
             "CS-04-E01",
@@ -1103,7 +1103,7 @@
           "telefonos": [
             "TEL-945887766"
           ],
-          "direccion": "Jr. Ayacucho 640 Galeria Virrey, Trujillo",
+          "direccion": "Jr. Ayacucho 640 Galería Virrey, Trujillo",
           "geo": [
             -8.112,
             -79.026
@@ -1112,7 +1112,7 @@
         "negocio": {
           "ruc": "10491234568",
           "giro_ciiu": "4771",
-          "direccion": "Jr. Ayacucho 640 Galeria Virrey, Trujillo"
+          "direccion": "Jr. Ayacucho 640 Galería Virrey, Trujillo"
         },
         "dispositivo": {
           "fingerprint": "dev:corp-ase017",
@@ -1163,7 +1163,7 @@
           },
           {
             "codigo": "P-07",
-            "descripcion": "Concentración en asesor: ASE-017 origino las 7 solicitudes conectadas en cierre de semana",
+            "descripcion": "Concentración en asesor: ASE-017 originó las 7 solicitudes conectadas en cierre de semana",
             "evidencia": [
               "ASE-017",
               "SOL-0644..0650"
@@ -1193,16 +1193,16 @@
           "nivel": "OBSERVACION"
         },
         "expediente_agente": {
-          "resumen": "Grupo de 7 solicitudes originadas por el asesor ASE-017 durante campaña en Galeria Virrey. Se descarta alerta por dispositivo compartido al aplicarse L-06 (tablet corporativa del asesor), pero persiste señal intermedia por reutilizacion de 2 teléfonos de referencia entre clientes.",
+          "resumen": "Grupo de 7 solicitudes originadas por el asesor ASE-017 durante campaña en Galería Virrey. Se descarta alerta por dispositivo compartido al aplicarse L-06 (tablet corporativa del asesor), pero persiste señal intermedia por reutilización de 2 teléfonos de referencia entre clientes.",
           "evidencias_citadas": [
-            "Arista [ASE-017 -> origina -> 7 solicitudes COM-ASE017] en ventana de 48 horas (Patron P-07).",
-            "Arista [TEL-945887766] listada simultáneamente como teléfono de titular y referencia cruzada (Patron P-01)."
+            "Arista [ASE-017 -> origina -> 7 solicitudes COM-ASE017] en ventana de 48 horas (Patrón P-07).",
+            "Arista [TEL-945887766] listada simultáneamente como teléfono de titular y referencia cruzada (Patrón P-01)."
           ],
           "explicaciones_alternativas": [
-            "Campaña de prospeccion intensiva del asesor dentro de una misma galería donde los comerciantes se conocen entre si."
+            "Campaña de prospección intensiva del asesor dentro de una misma galería donde los comerciantes se conocen entre sí."
           ],
           "pasos_sugeridos": [
-            "Verificacion telefonica ligera del titular y validacion de que los teléfonos de referencia no pertenezcan a un tercero vinculante."
+            "Verificación telefónica ligera del titular y validación de que los teléfonos de referencia no pertenezcan a un tercero vinculante."
           ],
           "aristas_evidencia_ids": [
             "CS-05-E01",
@@ -1322,7 +1322,7 @@
         "negocio": {
           "ruc": "10411298765",
           "giro_ciiu": "5211",
-          "direccion": "Dirección incompleta sin numeracion"
+          "direccion": "Dirección incompleta sin numeración"
         },
         "dispositivo": {
           "fingerprint": "dev:corp-ase012",
@@ -1359,16 +1359,16 @@
           "nivel": "VERIFICAR_DATOS"
         },
         "expediente_agente": {
-          "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): La confianza de resolucion de entidades y extraccion documental es de 0.62 (inferior al umbral normativo de 0.85) por teléfono truncado, dirección sin numeracion y nota de compra con mancha/tachadura. El sistema se abstiene de calcular puntaje de red para evitar falsas imputaciones.",
+          "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): La confianza de resolución de entidades y extracción documental es de 0.62 (inferior al umbral normativo de 0.85) por teléfono truncado, dirección sin numeración y nota de compra con mancha/tachadura. El sistema se abstiene de calcular puntaje de red para evitar falsas imputaciones.",
           "evidencias_citadas": [
             "Calidad de datos: confianza_resolucion = 0.62 < 0.85 (Regla de Negocio RN-05).",
             "Evidencia DOC-MAN-005 borrosa e incoherente con CIIU 5211."
           ],
           "explicaciones_alternativas": [
-            "Error de digitacion o captura fotografica deficiente en zona con baja iluminacion."
+            "Error de digitación o captura fotográfica deficiente en zona con baja iluminación."
           ],
           "pasos_sugeridos": [
-            "Solicitar al asesor recaptura nitida del comprobante y validacion del telefono/dirección antes de puntuar la red."
+            "Solicitar al asesor recaptura nítida del comprobante y validación del teléfono/dirección antes de puntuar la red."
           ],
           "aristas_evidencia_ids": [
             "CS-06-E01"
