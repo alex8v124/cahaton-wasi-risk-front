@@ -37,7 +37,7 @@ export function formatConfidencePct(confidence: number): string {
 }
 
 export function formatProvisionRate(rate: number | null | undefined): string {
-  if (rate === null || rate === undefined) return 'N/A (Poka-Yoke)';
+  if (rate === null || rate === undefined) return 'N/A (Por verificar)';
   const safe = Number.isFinite(rate) ? rate : 0;
   return `${(safe * 100).toFixed(1)}%`;
 }
@@ -61,8 +61,11 @@ export function getKanbanColumn(response: AuditarExpedienteResponse): KanbanColu
   const { alerta_fraude_maquillaje, requiere_revision_humana, escala_interna_caja_trujillo } =
     response.dictamen_riesgos;
 
-  // Acuerdo Soe + Nicolás: requiere_revision_humana (Poka-Yoke < 0.85) va al carril GRIS separado
-  if (requiere_revision_humana && !alerta_fraude_maquillaje) {
+  // Acuerdo Soe + Nicolás: confianza < 0.85 (Poka-Yoke) va al carril GRIS separado
+  if (
+    response.validacion_fiscal.confianza_extraccion_ia < 0.85 ||
+    (requiere_revision_humana && !alerta_fraude_maquillaje)
+  ) {
     return 'GRIS';
   }
   if (alerta_fraude_maquillaje) {
@@ -125,11 +128,11 @@ export function canDisburse(
   const d = response.dictamen_riesgos;
   const col = getKanbanColumn(response);
 
-  if (col === 'GRIS' || d.requiere_revision_humana === true) return false;
+  if (col === 'GRIS') return false;
   if (decision?.accion === 'CONFIRMAR' || decision?.accion === 'ESCALAR') return false;
 
-  if (col === 'ROJO' || d.alerta_fraude_maquillaje === true) {
-    // CP-04 / RF-22: Desembolso deshabilitado hasta que el especialista decida descartar con motivo
+  if (col === 'ROJO' || d.alerta_fraude_maquillaje === true || d.requiere_revision_humana === true) {
+    // CP-04 / RF-22 / RN-02: Desembolso retenido hasta revisión humana donde el especialista decida descartar con motivo
     if (decision?.accion === 'DESCARTAR') return true;
     return false;
   }

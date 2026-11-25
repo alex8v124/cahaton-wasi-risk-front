@@ -279,7 +279,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     perdida_detalle_texto: 0.385,
     contraste: 34,
     semaforo_esperado: 'ROJO',
-    hallazgo_demostrado: 'D10/D12/Sección 7: Rechaza 5.0OO.00, filtra pie CASO TRAMPA y envía a Gris (Provisión null)',
+    hallazgo_demostrado: 'D10/D12/Sección 7: Rechaza 5.0OO.00, filtra pie CASO TRAMPA y envía a Gris (Excluido de provisión SBS)',
   },
 ] as const;
 

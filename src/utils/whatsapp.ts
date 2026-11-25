@@ -44,7 +44,7 @@ export function buildAuditWhatsAppText(record: ExpedienteAuditadoRecord): string
     '',
     `Estado: *${estadoOperativo}*`,
     `Escala Caja Trujillo: *${dr.escala_interna_caja_trujillo}* (SBS ${
-      dr.clasificacion_sbs_proyectada ?? 'VERIFICAR_DATOS'
+      dr.clasificacion_sbs_proyectada ?? 'Por verificar (Excluido SBS)'
     })`,
     '',
     `Ventas Declaradas: ${formatPEN(tf.ventas_declaradas_asesor)}`,
@@ -57,7 +57,7 @@ export function buildAuditWhatsAppText(record: ExpedienteAuditadoRecord): string
       : '',
     '',
     `SHA-256: ${truncateHash(response.hash_integridad_sha256, 12, 8)}`,
-    '_Auditado con WASI-RISK AI (Nodux Sentinel · Art. 140 PII)_',
+    '_Auditado con WASI-RISK AI (Caja Trujillo · Art. 140 PII)_',
   ];
 
   return lines.filter((l, idx, arr) => l !== '' || (idx > 0 && arr[idx - 1] !== '')).join('\n');

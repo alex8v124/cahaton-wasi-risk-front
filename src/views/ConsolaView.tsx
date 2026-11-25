@@ -6,12 +6,14 @@ import {
   getAlertasCola,
   getGoldenCases,
   getMetricasRie02,
+  normalizeCanonicalAgency,
   patchRemoteExpedienteStatus,
   postRemoteAlertDecision,
   type MetricasRie02Live,
 } from '../api/client';
 import { AuditDrawer } from '../components/AuditDrawer';
 import {
+  AGENCIAS_TRUJILLO,
   CONTEXTO_LEGITIMO_CATALOG,
   PATRONES_RIESGO_CATALOG,
 } from '../contracts/catalogs';
@@ -61,7 +63,7 @@ const COLUMNS: {
   {
     id: 'VERDE',
     css: 'verde',
-    pill: '0–29 PTS',
+    pill: '0–39 PTS',
     title: 'Sin Alerta',
     subtitle: 'Aprobación rápida',
     emptyHint: 'Casos sanos o vínculos legítimos',
@@ -69,7 +71,7 @@ const COLUMNS: {
   {
     id: 'AMBAR',
     css: 'ambar',
-    pill: '30–59 PTS',
+    pill: '40–69 PTS',
     title: 'Observación',
     subtitle: 'Ajuste sugerido',
     emptyHint: 'Coincidencias moderadas',
@@ -77,7 +79,7 @@ const COLUMNS: {
   {
     id: 'ROJO',
     css: 'rojo',
-    pill: '60–100 PTS',
+    pill: '70–100 PTS',
     title: 'Prioritaria',
     subtitle: 'Red oculta · Retenido',
     emptyHint: 'Redes de riesgo detectadas',
@@ -229,10 +231,13 @@ export default function ConsolaView({
     }
   };
 
-  const agenciasDisponibles = useMemo(
-    () => ['Todas', ...Array.from(new Set(expedientes.map((e) => e.agencia_origen)))],
-    [expedientes]
-  );
+  const agenciasDisponibles = useMemo(() => {
+    const canonicalSet = new Set<string>(AGENCIAS_TRUJILLO);
+    for (const e of expedientes) {
+      canonicalSet.add(normalizeCanonicalAgency(e.agencia_origen));
+    }
+    return ['Todas', ...Array.from(canonicalSet)];
+  }, [expedientes]);
 
   const indexedExpedientes = useMemo(
     () =>
@@ -242,6 +247,7 @@ export default function ConsolaView({
           item.titulo_caso ?? '',
           item.razon_social ?? '',
           item.agencia_origen,
+          normalizeCanonicalAgency(item.agencia_origen),
           item.response.validacion_fiscal.giro_ciiu,
           item.response.dictamen_riesgos.escala_interna_caja_trujillo,
           item.response.priorizacion?.nivel ?? '',
@@ -257,7 +263,14 @@ export default function ConsolaView({
   const visibleExpedientes = useMemo(() => {
     const matched = searchIndex(indexedExpedientes, debouncedQuery);
     if (agenciaFilter === 'Todas') return matched;
-    return matched.filter((item) => item.agencia_origen === agenciaFilter);
+    const targetCanonical = normalizeCanonicalAgency(agenciaFilter);
+    return matched.filter((item) => {
+      if (normalizeCanonicalAgency(item.agencia_origen) === targetCanonical) return true;
+      if (item.expediente_id === 'SOL-TRUJ-2026-0412' && targetCanonical === 'Agencia Florencia de Mora') {
+        return true;
+      }
+      return false;
+    });
   }, [indexedExpedientes, debouncedQuery, agenciaFilter]);
 
   const loadBoard = async (syncRemote = false) => {
@@ -281,8 +294,12 @@ export default function ConsolaView({
         if (!active) return;
         setGoldenCases(cases);
         const existing = await listExpedientes();
-        const hasLegacySeed = existing.some((item) =>
-          /^EXP-TRUJ-2026-010[1234]$/.test(item.expediente_id)
+        const hasLegacySeed = existing.some(
+          (item) =>
+            /^EXP-TRUJ-2026-010[1234]$/.test(item.expediente_id) ||
+            item.response.red?.nodos_subred === 14 ||
+            (item.expediente_id === 'SOL-TRUJ-2026-0412' &&
+              !item.response.dictamen_riesgos.requiere_revision_humana)
         );
         if ((existing.length === 0 || hasLegacySeed) && !offline && cases.length > 0) {
           if (hasLegacySeed) {
@@ -626,23 +643,23 @@ export default function ConsolaView({
               <span class="badge badge-green">100% Recall · 0 Falsos Positivos · 0 PII</span>
             </div>
             <div class="stat-grid-3">
-              <div class="stat-tile" style={{ background: '#ffffff' }}>
+              <div class="stat-tile" style={{ background: 'var(--bg-surface)' }}>
                 <div class="stat-tile-label">Población Trujillo</div>
                 <div class="mono" style={{ fontWeight: 800, fontSize: '13px', marginTop: '2px' }}>
                   2,000 solic. · 14/14 anillos
                 </div>
               </div>
-              <div class="stat-tile" style={{ background: '#ffffff' }}>
+              <div class="stat-tile" style={{ background: 'var(--bg-surface)' }}>
                 <div class="stat-tile-label">Dataset 50 Expedientes</div>
                 <div class="mono" style={{ fontWeight: 800, fontSize: '13px', marginTop: '2px' }}>
                   35 Verde · 8 Ámbar · 5 Rojo · 2 Gris
                 </div>
               </div>
-              <div class="stat-tile" style={{ background: '#ffffff' }}>
-                <div class="stat-tile-label">Métricas en Vivo (GET /metricas)</div>
+              <div class="stat-tile" style={{ background: 'var(--bg-surface)' }}>
+                <div class="stat-tile-label">Costo OPEX / expediente (GET /metricas)</div>
                 <div class="mono" style={{ fontWeight: 800, fontSize: '13px', marginTop: '2px' }}>
                   {liveMetricas?.impacto_negocio_caja_trujillo?.reduccion_opex_expediente ??
-                    'S/ 160 → S/ 18 (-88.75%)'}
+                    'S/ 160.00 → S/ 18.00 (-88.75%)'}
                 </div>
               </div>
             </div>
@@ -730,10 +747,10 @@ export default function ConsolaView({
             class="search-select"
             aria-label="Filtrar por agencia"
             value={agenciaFilter}
-            onChange={(e) => setAgenciaFilter((e.currentTarget as HTMLSelectElement).value)}
+            onChange={(e) => setAgenciaFilter((e.target as HTMLSelectElement).value)}
           >
             {agenciasDisponibles.map((ag) => (
-              <option key={ag} value={ag}>
+              <option key={ag} value={ag} selected={agenciaFilter === ag}>
                 {ag === 'Todas' ? 'Todas las agencias' : ag}
               </option>
             ))}
@@ -759,7 +776,10 @@ export default function ConsolaView({
               : '4 Carriles'}
           </button>
           <span style={{ fontSize: '12px', color: 'var(--ink-muted)', fontWeight: 700, whiteSpace: 'nowrap' }}>
-            {visibleExpedientes.length}/{expedientes.length}
+            {onlyAlertsQueue
+              ? visibleExpedientes.filter((it) => getKanbanColumn(it.response) !== 'VERDE').length
+              : visibleExpedientes.length}
+            /{expedientes.length}
           </span>
         </div>
       </div>
@@ -875,7 +895,7 @@ export default function ConsolaView({
                         <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                           {col.id === 'GRIS' && (
                             <span class="badge badge-slate" style={{ fontSize: '10.5px', padding: '2px 8px' }}>
-                              Sin puntaje · Provisión null
+                              Por verificar · Excluido SBS
                             </span>
                           )}
                           {col.id !== 'GRIS' &&

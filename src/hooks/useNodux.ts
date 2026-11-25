@@ -24,29 +24,20 @@ export function useNow(active: boolean, ms = 250): number {
   return now;
 }
 
-export type AppTheme = 'light' | 'dark';
+export type AppTheme = 'light';
 
 export function useTheme(): [AppTheme, () => void] {
-  const [theme, setTheme] = useState<AppTheme>(() => {
-    try {
-      const saved = localStorage.getItem('wasi.theme');
-      return saved === 'dark' ? 'dark' : 'light';
-    } catch {
-      return 'light';
-    }
-  });
-
   useEffect(() => {
     try {
-      localStorage.setItem('wasi.theme', theme);
+      localStorage.setItem('wasi.theme', 'light');
     } catch {
       // Ignore storage errors
     }
     if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-theme', 'light');
     }
-  }, [theme]);
+  }, []);
 
-  const toggle = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  return [theme, toggle];
+  const noop = () => {};
+  return ['light', noop];
 }

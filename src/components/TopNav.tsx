@@ -28,8 +28,6 @@ export function TopNav({
   onToggleSimulatedOffline,
   queueCount,
   expedientesCount,
-  theme,
-  onToggleTheme,
   onOpenExecutive,
 }: TopNavProps) {
   const tapRef = useRef({ count: 0, last: 0 });
@@ -107,32 +105,25 @@ export function TopNav({
         <div class="nav-telemetry">
           <span
             class={`status-pill ${offline ? 'offline' : 'online'}`}
-            title={health?.modo_activo ?? 'Verificando VPS Soberano de Soe'}
+            title={health?.modo_activo ?? 'Servidor Soberano WASI-RISK AI'}
           >
             <span class={`pulse-dot ${offline ? 'offline' : ''}`} />
             {offline ? (
-              <span>Offline · El Porvenir</span>
+              <span>Offline · Campo</span>
             ) : (
               <span>
-                VPS Soberano Online
+                VPS Online
                 {health?.latencia_ms !== undefined ? ` · ${health.latencia_ms.toFixed(0)} ms` : ''}
                 {!IS_LIVE_VPS ? ' (Demo)' : ''}
               </span>
             )}
           </span>
 
-          <span
-            class="status-pill sovereign"
-            title="Regla SBS Art. 140: el frontend jamás llama a APIs externas de IA. Todo pasa por el VPS de Soe."
-          >
-            Art. 140 PII
-          </span>
-
           <button
             type="button"
             class={`offline-toggle-btn ${simulatedOffline ? 'active' : ''}`}
             onClick={onToggleSimulatedOffline}
-            title="Simular pérdida de señal móvil en campo (El Porvenir / Hermelinda)"
+            title="Simular pérdida de señal móvil en campo"
           >
             {simulatedOffline ? 'Reconectar señal' : 'Simular sin señal'}
           </button>
@@ -141,19 +132,9 @@ export function TopNav({
             type="button"
             class="offline-toggle-btn"
             onClick={onOpenExecutive}
-            title="Abrir Panel Gerencial Nodux Flow (PIN 1234)"
+            title="Abrir Panel Gerencial WASI-RISK AI (PIN 1234)"
           >
             Gerencia
-          </button>
-
-          <button
-            type="button"
-            class="theme-toggle-btn"
-            onClick={onToggleTheme}
-            aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-            title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
         </div>
       </div>

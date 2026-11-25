@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import { PATRONES_RIESGO_CATALOG } from '../contracts/catalogs';
 import type { AuditarExpedienteRequest, ExpedienteAuditadoRecord } from '../contracts/schemas';
 import { submitExpedienteAudit } from '../services/auditService';
 import { formatPEN, getKanbanColumn } from '../utils/format';
@@ -66,7 +67,7 @@ export default function ExecutiveModal({
       solicitado += dr.monto_solicitado_original;
       recomendado += dr.monto_maximo_recomendado;
       if (dr.alerta_fraude_maquillaje) fraudes++;
-      if (dr.requiere_revision_humana) pokaYoke++;
+      if (item.response.validacion_fiscal.confianza_extraccion_ia < 0.85) pokaYoke++;
       const col = getKanbanColumn(item.response);
       if (col === 'VERDE') fastTrack++;
       else if (col === 'AMBAR') recortes++;
@@ -125,8 +126,31 @@ export default function ExecutiveModal({
   const topFlags = useMemo(() => {
     const counts = new Map<string, number>();
     for (const item of expedientes) {
-      for (const flag of item.response.dictamen_riesgos.banderas_fraude_detectadas) {
-        counts.set(flag, (counts.get(flag) ?? 0) + 1);
+      const seenInItem = new Set<string>();
+      const pats = item.response.patrones_detectados ?? [];
+      if (pats.length > 0) {
+        for (const p of pats) {
+          const cat = PATRONES_RIESGO_CATALOG.find((c) => c.codigo === p.codigo);
+          const key = `${p.codigo} · ${cat?.nombre ?? p.nombre ?? p.codigo}`;
+          if (!seenInItem.has(key)) {
+            seenInItem.add(key);
+            counts.set(key, (counts.get(key) ?? 0) + 1);
+          }
+        }
+      } else {
+        for (const rawFlag of item.response.dictamen_riesgos.banderas_fraude_detectadas) {
+          const codeMatch = rawFlag.match(/^(P-0\d)\b/);
+          let key = rawFlag;
+          if (codeMatch) {
+            const code = codeMatch[1];
+            const cat = PATRONES_RIESGO_CATALOG.find((c) => c.codigo === code);
+            key = `${code} · ${cat?.nombre ?? code}`;
+          }
+          if (!seenInItem.has(key)) {
+            seenInItem.add(key);
+            counts.set(key, (counts.get(key) ?? 0) + 1);
+          }
+        }
       }
     }
     return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
@@ -253,7 +277,7 @@ export default function ExecutiveModal({
         <div class="modal-head">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span class="badge badge-green">Centro de Control · Nodux Flow</span>
+              <span class="badge badge-green">Centro de Control · WASI-RISK AI</span>
               <h2 class="card-h" style={{ fontSize: '18px' }}>Panel Gerencial de Riesgos SBS</h2>
             </div>
             <div class="card-sub">
@@ -559,17 +583,45 @@ export default function ExecutiveModal({
                 <span class="badge badge-green">Zero-Login · Offline-First</span>
               </h3>
               <p style={{ fontSize: '12.5px', color: 'var(--ink-secondary)', marginTop: 0 }}>
-                Escanea este código QR desde cualquier celular en El Porvenir, Hermelinda o la gran final presencial en UPAO Trujillo para abrir el Terminal Móvil Campo PWA al instante.
+                Escanea este código QR desde cualquier celular o tablet de campo en Trujillo para abrir el Terminal Móvil Campo PWA al instante.
               </p>
 
               <div class="qr-box">
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=4&data=${encodeURIComponent(campoQrUrl)}`}
-                  alt="Código QR Terminal Móvil Campo"
+                <svg
+                  viewBox="0 0 21 21"
                   width={144}
                   height={144}
-                  style={{ borderRadius: '14px', background: '#ffffff', padding: '6px', border: '1px solid var(--border-subtle)' }}
-                />
+                  role="img"
+                  aria-label="Código QR Terminal Móvil Campo"
+                  style={{
+                    borderRadius: '14px',
+                    background: '#ffffff',
+                    padding: '8px',
+                    border: '1px solid var(--border-subtle)',
+                    flexShrink: 0,
+                  }}
+                >
+                  <rect width="21" height="21" fill="#ffffff" />
+                  {/* Finder patterns (3 esquinas QR estándar) */}
+                  <path
+                    fill="#111640"
+                    d="M0,0 h7 v7 h-7 z M1,1 v5 h5 v-5 z M2,2 h3 v3 h-3 z
+                       M14,0 h7 v7 h-7 z M15,1 v5 h5 v-5 z M16,2 h3 v3 h-3 z
+                       M0,14 h7 v7 h-7 z M1,15 v5 h5 v-5 z M2,16 h3 v3 h-3 z
+                       M8,0 h1 v1 h-1 z M10,0 h2 v1 h-2 z M8,2 h1 v2 h-1 z M11,2 h2 v1 h-2 z
+                       M9,4 h2 v1 h-2 z M8,6 h1 v1 h-1 z M10,6 h1 v1 h-1 z M12,6 h1 v1 h-1 z
+                       M0,8 h2 v1 h-2 z M3,8 h1 v1 h-1 z M6,8 h1 v1 h-1 z M8,8 h2 v2 h-2 z
+                       M11,8 h1 v2 h-1 z M14,8 h2 v1 h-2 z M18,8 h2 v1 h-2 z
+                       M1,10 h2 v1 h-2 z M4,10 h2 v2 h-2 z M7,10 h1 v1 h-1 z M10,10 h2 v1 h-2 z
+                       M13,10 h1 v2 h-1 z M15,10 h3 v1 h-3 z M19,10 h2 v1 h-2 z
+                       M0,12 h1 v1 h-1 z M2,12 h2 v1 h-2 z M6,12 h3 v1 h-3 z M11,12 h2 v1 h-2 z
+                       M16,12 h2 v2 h-2 z M19,12 h1 v2 h-1 z
+                       M8,14 h2 v1 h-2 z M12,14 h2 v2 h-2 z M15,14 h1 v1 h-1 z M18,14 h3 v1 h-3 z
+                       M9,16 h2 v2 h-2 z M14,16 h3 v1 h-3 z M19,16 h2 v2 h-2 z
+                       M8,18 h1 v2 h-1 z M11,18 h2 v1 h-2 z M15,18 h2 v2 h-2 z M18,19 h2 v2 h-2 z
+                       M10,20 h3 v1 h-3 z M14,20 h1 v1 h-1 z"
+                  />
+                </svg>
                 <div style={{ flex: 1, minWidth: '220px' }}>
                   <div style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--ink-muted)', marginBottom: '6px' }}>
                     Enlace Directo Plano 1 (PWA &lt;150 KB):

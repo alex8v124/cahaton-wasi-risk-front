@@ -9,14 +9,14 @@
   "catalogo_patrones_p01_p09": {
     "P-01": {
       "codigo": "P-01",
-      "nombre": "Telefono compartido",
-      "senal_observada": "El mismo telefono aparece en solicitudes de personas sin vinculo declarado.",
+      "nombre": "Teléfono compartido",
+      "senal_observada": "El mismo teléfono aparece en solicitudes de personas sin vínculo declarado.",
       "peso_inicial": 0.3
     },
     "P-02": {
       "codigo": "P-02",
       "nombre": "Dispositivo compartido",
-      "senal_observada": "El mismo dispositivo de cliente envia solicitudes de varias personas.",
+      "senal_observada": "El mismo dispositivo de cliente envía solicitudes de varias personas.",
       "peso_inicial": 0.35
     },
     "P-03": {
@@ -27,37 +27,37 @@
     },
     "P-04": {
       "codigo": "P-04",
-      "nombre": "Direccion concentrada atipica",
+      "nombre": "Dirección concentrada atípica",
       "senal_observada": "Varias personas o negocios declaran una vivienda que no es zona comercial.",
       "peso_inicial": 0.2
     },
     "P-05": {
       "codigo": "P-05",
-      "nombre": "Rafaga temporal",
+      "nombre": "Ráfaga temporal",
       "senal_observada": "Solicitudes conectadas presentadas en una ventana corta y en agencias distintas.",
       "peso_inicial": 0.2
     },
     "P-06": {
       "codigo": "P-06",
       "nombre": "Negocios recientes o irregulares",
-      "senal_observada": "RUC con poca antiguedad (<6 meses), NO HABIDO o BAJA conectados entre si.",
+      "senal_observada": "RUC con poca antigüedad (<6 meses), NO HABIDO o BAJA conectados entre si.",
       "peso_inicial": 0.15
     },
     "P-07": {
       "codigo": "P-07",
-      "nombre": "Concentracion en asesor",
-      "senal_observada": "Un asesor origina muchas solicitudes de una misma comunidad con vinculos cruzados.",
+      "nombre": "Concentración en asesor",
+      "senal_observada": "Un asesor origina muchas solicitudes de una misma comunidad con vínculos cruzados.",
       "peso_inicial": 0.2
     },
     "P-08": {
       "codigo": "P-08",
-      "nombre": "Ventas infladas en la red (Triangulacion CIIU)",
+      "nombre": "Ventas infladas en la red (Triangulación CIIU)",
       "senal_observada": "Varios nodos de la comunidad declaran ventas muy superiores a sus compras comprobadas (Delta > 30%).",
       "peso_inicial": 0.25
     },
     "P-09": {
       "codigo": "P-09",
-      "nombre": "Vinculo con casos confirmados",
+      "nombre": "Vínculo con casos confirmados",
       "senal_observada": "La subred incluye clientes con fraude confirmado o mora temprana.",
       "peso_inicial": 0.25
     }
@@ -66,34 +66,34 @@
     "L-01": {
       "codigo": "L-01",
       "contexto": "Familia en el mismo domicilio",
-      "reconocimiento": "Vinculo familiar declarado por el asesor o apellidos y domicilio coincidentes con compras reales verificadas.",
+      "reconocimiento": "Vínculo familiar declarado por el asesor o apellidos y domicilio coincidentes con compras reales verificadas.",
       "factor_contexto": 0.4,
       "anula_patron": null
     },
     "L-02": {
       "codigo": "L-02",
-      "contexto": "Mercado o galeria comercial",
-      "reconocimiento": "Direccion catalogada como zona comercial densa (ej. Mercado La Hermelinda +300 puestos).",
+      "contexto": "Mercado o galería comercial",
+      "reconocimiento": "Dirección catalogada como zona comercial densa (ej. Mercado La Hermelinda +300 puestos).",
       "factor_contexto": 0.5,
       "anula_patron": null
     },
     "L-03": {
       "codigo": "L-03",
       "contexto": "Negocio familiar",
-      "reconocimiento": "Telefono del negocio declarado y compartido por sus socios o familiares.",
+      "reconocimiento": "Teléfono del negocio declarado y compartido por sus socios o familiares.",
       "factor_contexto": 0.5,
       "anula_patron": null
     },
     "L-04": {
       "codigo": "L-04",
       "contexto": "Referencias entre familiares",
-      "reconocimiento": "Referencias reciprocas entre familiares directos declarados.",
+      "reconocimiento": "Referencias recíprocas entre familiares directos declarados.",
       "factor_contexto": 0.6,
       "anula_patron": "P-03"
     },
     "L-05": {
       "codigo": "L-05",
-      "contexto": "Asociacion de comerciantes",
+      "contexto": "Asociación de comerciantes",
       "reconocimiento": "Miembros de una misma asociacion o cooperativa registrada en Trujillo.",
       "factor_contexto": 0.6,
       "anula_patron": null
@@ -110,7 +110,7 @@
     {
       "caso_id": "CS-01",
       "solicitud_id": "SOL-TRUJ-2026-0412",
-      "titulo": "Anillo de 4 solicitudes en 4 agencias en 6 dias",
+      "titulo": "Anillo de 4 solicitudes en 4 agencias en 6 días",
       "request_entrada": {
         "solicitud_id": "SOL-TRUJ-2026-0412",
         "fecha_solicitud": "2026-11-18T10:42:00-05:00",
@@ -160,15 +160,15 @@
           "requiere_verificacion_manual": false
         },
         "red": {
-          "nodos_subred": 14,
-          "aristas_subred": 22,
+          "nodos_subred": 7,
+          "aristas_subred": 9,
           "comunidad_id": "COM-0087",
           "tamano_comunidad": 9
         },
         "patrones_detectados": [
           {
             "codigo": "P-01",
-            "descripcion": "Telefono compartido con 3 solicitantes sin vinculo declarado",
+            "descripcion": "Teléfono compartido con 3 solicitantes sin vínculo declarado",
             "evidencia": [
               "SOL-TRUJ-2026-0398",
               "SOL-TRUJ-2026-0405",
@@ -182,7 +182,7 @@
           },
           {
             "codigo": "P-02",
-            "descripcion": "Mismo dispositivo de cliente (dev:7a1e99c2f0) envio 4 solicitudes en 6 dias",
+            "descripcion": "Mismo dispositivo de cliente (dev:7a1e99c2f0) envió 4 solicitudes en 6 días",
             "evidencia": [
               "DEV-7A1E",
               "SOL-TRUJ-2026-0398",
@@ -211,7 +211,7 @@
           },
           {
             "codigo": "P-05",
-            "descripcion": "Rafaga temporal: 4 solicitudes conectadas en 4 agencias distintas en 6 dias",
+            "descripcion": "Ráfaga temporal: 4 solicitudes conectadas en 4 agencias distintas en 6 días",
             "evidencia": [
               "AG-PORVENIR",
               "AG-FLORENCIA",
@@ -237,19 +237,19 @@
           "nivel": "REVISION_PRIORITARIA"
         },
         "expediente_agente": {
-          "resumen": "La solicitud SOL-TRUJ-2026-0412 forma parte de un anillo cerrado de 4 solicitudes ingresadas en 6 dias a traves de 4 agencias distintas (El Porvenir, Florencia, La Esperanza y Huanchaco) por un total acumulado de S/ 58,000.00.",
+          "resumen": "La solicitud SOL-TRUJ-2026-0412 forma parte de un anillo cerrado de 4 solicitudes ingresadas en 6 días a través de 4 agencias distintas (El Porvenir, Florencia, La Esperanza y Huanchaco) por un total acumulado de S/ 58,000.00.",
           "evidencias_citadas": [
             "Arista [PER-8841 -> usa -> TEL-948112233] compartida con SOL-TRUJ-2026-0398, 0405 y 0409 (Fuente: Captura Campo, 2026-11-18).",
-            "Arista [SOL-TRUJ-2026-0412 -> enviada_desde -> DEV-7A1E] repetida en 4 titulares sin parentesco (Fuente: Telemetria PWA, 2026-11-18).",
-            "Ciclo cerrado de referencias [REF-1102 -> REF-1107 -> REF-1115 -> REF-1121] (Fuente: Declaracion Vinculos, 2026-11-12 al 2026-11-18)."
+            "Arista [SOL-TRUJ-2026-0412 -> enviada_desde -> DEV-7A1E] repetida en 4 titulares sin parentesco (Fuente: Telemetría PWA, 2026-11-18).",
+            "Ciclo cerrado de referencias [REF-1102 -> REF-1107 -> REF-1115 -> REF-1121] (Fuente: Declaración Vinculos, 2026-11-12 al 2026-11-18)."
           ],
           "explicaciones_alternativas": [
             "Posible cooperativa o taller multifamiliar no declarado formalmente en el formulario de campo.",
-            "Uso de un tramitador o gestor externo que presta su telefono y equipo a varios comerciantes."
+            "Uso de un tramitador o gestor externo que presta su teléfono y equipo a varios comerciantes."
           ],
           "pasos_sugeridos": [
-            "Llamar simultaneamente a las referencias REF-1107 y REF-1115 para contrastar existencia de talleres independientes.",
-            "Verificar in-situ el inventario fisico en Calle Los Cedros 240 antes de liberar cualquier desembolso de la comunidad COM-0087."
+            "Llamar simultáneamente a las referencias REF-1107 y REF-1115 para contrastar existencia de talleres independientes.",
+            "Verificar in-situ el inventario físico en Calle Los Cedros 240 antes de liberar cualquier desembolso de la comunidad COM-0087."
           ],
           "aristas_evidencia_ids": [
             "CS-01-E01",
@@ -414,7 +414,7 @@
             "destino": "REF-1107",
             "relacion": "refiere_en_circulo",
             "es_evidencia": true,
-            "fuente": "Declaracion",
+            "fuente": "Declaración",
             "fecha": "2026-11-18",
             "id": "CS-01-E08",
             "salto": 1
@@ -424,7 +424,7 @@
             "destino": "REF-1107",
             "relacion": "refiere_en_circulo",
             "es_evidencia": true,
-            "fuente": "Declaracion",
+            "fuente": "Declaración",
             "fecha": "2026-11-13",
             "id": "CS-01-E09",
             "salto": 2
@@ -488,8 +488,8 @@
           "requiere_verificacion_manual": false
         },
         "red": {
-          "nodos_subred": 6,
-          "aristas_subred": 7,
+          "nodos_subred": 4,
+          "aristas_subred": 3,
           "comunidad_id": "COM-0012",
           "tamano_comunidad": 2
         },
@@ -531,7 +531,7 @@
           "nivel": "SIN_ALERTA"
         },
         "expediente_agente": {
-          "resumen": "Vinculo familiar legitimo verificado (L-01). Aunque la solicitante comparte domicilio con otra titular activa (madre e hija en Puestos 112 y 113), ambas mantienen RUCs activos, proveedores propios y compras comprobadas por S/ 5,000.00 que sustentan al 100% sus ventas declaradas.",
+          "resumen": "Vínculo familiar legitimo verificado (L-01). Aunque la solicitante comparte domicilio con otra titular activa (madre e hija en Puestos 112 y 113), ambas mantienen RUCs activos, proveedores propios y compras comprobadas por S/ 5,000.00 que sustentan al 100% sus ventas declaradas.",
           "evidencias_citadas": [
             "Arista [PER-1021 -> vive_en -> DIR-SANCHEZ-810] atenuada por regla L-01 (Contexto Familiar Verificado).",
             "Factura F001-0004821 independiente verificada sin duplicidad de hash SHA-256 en el grafo."
@@ -635,11 +635,11 @@
     {
       "caso_id": "CS-03",
       "solicitud_id": "SOL-TRUJ-2026-0415",
-      "titulo": "40 negocios con la direccion del Mercado La Hermelinda (Rareza baja + L-02)",
+      "titulo": "40 negocios con la dirección del Mercado La Hermelinda (Rareza baja + L-02)",
       "request_entrada": {
         "solicitud_id": "SOL-TRUJ-2026-0415",
         "fecha_solicitud": "2026-11-18T11:10:00-05:00",
-        "agencia_origen": "Agencia La Hermelinda",
+        "agencia_origen": "Agencia Mercado La Hermelinda",
         "asesor_id": "ASE-009",
         "canal": "CAMPO",
         "monto_solicitado": 12000.0,
@@ -688,15 +688,15 @@
           "requiere_verificacion_manual": false
         },
         "red": {
-          "nodos_subred": 42,
-          "aristas_subred": 45,
+          "nodos_subred": 4,
+          "aristas_subred": 3,
           "comunidad_id": "COM-HERMELINDA-01",
           "tamano_comunidad": 40
         },
         "patrones_detectados": [
           {
             "codigo": "P-04",
-            "descripcion": "Direccion compartida en conglomerado comercial Mercado La Hermelinda",
+            "descripcion": "Dirección compartida en conglomerado comercial Mercado La Hermelinda",
             "evidencia": [
               "DIR-HERMELINDA-CENTRAL"
             ],
@@ -730,7 +730,7 @@
           "nivel": "SIN_ALERTA"
         },
         "expediente_agente": {
-          "resumen": "Concentracion geografica legitima en el Mercado Mayorista La Hermelinda (L-02). La ponderacion por rareza (0.12) y la ausencia de telefonos o comprobantes reciclados descartan anomalia de red.",
+          "resumen": "Concentración geografica legitima en el Mercado Mayorista La Hermelinda (L-02). La ponderacion por rareza (0.12) y la ausencia de teléfonos o comprobantes reciclados descartan anomalia de red.",
           "evidencias_citadas": [
             "Arista [NEG-10489120345 -> opera_en -> DIR-HERMELINDA-CENTRAL] compartida con 40 puestos independientes (Rareza = 0.12).",
             "Boleta mayorista B002-0019021 por S/ 4,815.00 + Plin S/ 1,385.00 validados sin colision de hash."
@@ -884,15 +884,15 @@
           "requiere_verificacion_manual": false
         },
         "red": {
-          "nodos_subred": 12,
-          "aristas_subred": 18,
+          "nodos_subred": 6,
+          "aristas_subred": 5,
           "comunidad_id": "COM-0104",
           "tamano_comunidad": 6
         },
         "patrones_detectados": [
           {
             "codigo": "P-04",
-            "descripcion": "Concentracion atipica: 5 RUCs declarados en una misma vivienda no comercial",
+            "descripcion": "Concentración atípica: 5 RUCs declarados en una misma vivienda no comercial",
             "evidencia": [
               "DIR-MZ-K-LT14",
               "RUC-10499887761",
@@ -907,7 +907,7 @@
           },
           {
             "codigo": "P-06",
-            "descripcion": "Subred incluye 2 RUCs en estado NO HABIDO / BAJA DE OFICIO y 3 con antiguedad < 3 meses",
+            "descripcion": "Subred incluye 2 RUCs en estado NO HABIDO / BAJA DE OFICIO y 3 con antigüedad < 3 meses",
             "evidencia": [
               "RUC-10499887761 (NO HABIDO)",
               "RUC-20609911223 (BAJA DE OFICIO)"
@@ -944,11 +944,11 @@
           "nivel": "REVISION_PRIORITARIA"
         },
         "expediente_agente": {
-          "resumen": "Concentracion anomala de 5 negocios (CIIU 5234/5211) registrados sobre una misma vivienda residencial en La Esperanza. Dos nodos presentan condicion NO HABIDO / BAJA en SUNAT y la solicitud exhibe una sobreestimacion de ventas del +266.7% (P-08) reutilizando el mismo comprobante mayorista.",
+          "resumen": "Concentración anomala de 5 negocios (CIIU 5234/5211) registrados sobre una misma vivienda residencial en La Esperanza. Dos nodos presentan condicion NO HABIDO / BAJA en SUNAT y la solicitud exhibe una sobreestimacion de ventas del +266.7% (P-08) reutilizando el mismo comprobante mayorista.",
           "evidencias_citadas": [
             "Arista [NEG-10499887761 -> opera_en -> DIR-MZ-K-LT14] cohabitada por 5 RUCs sin zonificacion comercial (Fuente: Padron SUNAT, 2026-11-18).",
             "Alerta Fiscal SUNAT: RUC 10499887761 en condicion NO HABIDO y nodo vecino 20609911223 en BAJA DE OFICIO.",
-            "Triangulacion P-08: Compras de S/ 4,500.00 (margen 25%) solo sustentan S/ 6,000.00 de ventas frente a S/ 22,000.00 declarados."
+            "Triangulación P-08: Compras de S/ 4,500.00 (margen 25%) solo sustentan S/ 6,000.00 de ventas frente a S/ 22,000.00 declarados."
           ],
           "explicaciones_alternativas": [
             "Subdivision informal de un predio familiar grande sin actualizacion de numeracion municipal."
@@ -1090,11 +1090,11 @@
     {
       "caso_id": "CS-05",
       "solicitud_id": "SOL-TRUJ-2026-0650",
-      "titulo": "7 solicitudes de un asesor con referencias cruzadas y 2 telefonos compartidos (P-01, P-07 + L-06)",
+      "titulo": "7 solicitudes de un asesor con referencias cruzadas y 2 teléfonos compartidos (P-01, P-07 + L-06)",
       "request_entrada": {
         "solicitud_id": "SOL-TRUJ-2026-0650",
         "fecha_solicitud": "2026-11-18T18:10:00-05:00",
-        "agencia_origen": "Agencia Centro Trujillo",
+        "agencia_origen": "Agencia Trujillo Centro",
         "asesor_id": "ASE-017",
         "canal": "CAMPO",
         "monto_solicitado": 11000.0,
@@ -1142,15 +1142,15 @@
           "requiere_verificacion_manual": false
         },
         "red": {
-          "nodos_subred": 10,
-          "aristas_subred": 14,
+          "nodos_subred": 4,
+          "aristas_subred": 3,
           "comunidad_id": "COM-ASE017",
           "tamano_comunidad": 7
         },
         "patrones_detectados": [
           {
             "codigo": "P-01",
-            "descripcion": "Dos telefonos de contacto se repiten como referencias cruzadas en 4 de las 7 solicitudes",
+            "descripcion": "Dos teléfonos de contacto se repiten como referencias cruzadas en 4 de las 7 solicitudes",
             "evidencia": [
               "TEL-945887766",
               "TEL-945112200"
@@ -1163,7 +1163,7 @@
           },
           {
             "codigo": "P-07",
-            "descripcion": "Concentracion en asesor: ASE-017 origino las 7 solicitudes conectadas en cierre de semana",
+            "descripcion": "Concentración en asesor: ASE-017 origino las 7 solicitudes conectadas en cierre de semana",
             "evidencia": [
               "ASE-017",
               "SOL-0644..0650"
@@ -1193,13 +1193,13 @@
           "nivel": "OBSERVACION"
         },
         "expediente_agente": {
-          "resumen": "Grupo de 7 solicitudes originadas por el asesor ASE-017 durante campaña en Galeria Virrey. Se descarta alerta por dispositivo compartido al aplicarse L-06 (tablet corporativa del asesor), pero persiste señal intermedia por reutilizacion de 2 telefonos de referencia entre clientes.",
+          "resumen": "Grupo de 7 solicitudes originadas por el asesor ASE-017 durante campaña en Galeria Virrey. Se descarta alerta por dispositivo compartido al aplicarse L-06 (tablet corporativa del asesor), pero persiste señal intermedia por reutilizacion de 2 teléfonos de referencia entre clientes.",
           "evidencias_citadas": [
             "Arista [ASE-017 -> origina -> 7 solicitudes COM-ASE017] en ventana de 48 horas (Patron P-07).",
-            "Arista [TEL-945887766] listada simultaneamente como telefono de titular y referencia cruzada (Patron P-01)."
+            "Arista [TEL-945887766] listada simultáneamente como teléfono de titular y referencia cruzada (Patron P-01)."
           ],
           "explicaciones_alternativas": [
-            "Campaña de prospeccion intensiva del asesor dentro de una misma galeria donde los comerciantes se conocen entre si."
+            "Campaña de prospeccion intensiva del asesor dentro de una misma galería donde los comerciantes se conocen entre si."
           ],
           "pasos_sugeridos": [
             "Verificacion telefonica ligera del titular y validacion de que los teléfonos de referencia no pertenezcan a un tercero vinculante."
@@ -1300,7 +1300,7 @@
     {
       "caso_id": "CS-06",
       "solicitud_id": "SOL-TRUJ-2026-0910",
-      "titulo": "Telefono incompleto, direccion ilegible y nota borrosa (Confianza 0.62 - Poka-Yoke)",
+      "titulo": "Teléfono incompleto, dirección ilegible y nota borrosa (Confianza 0.62 - Poka-Yoke)",
       "request_entrada": {
         "solicitud_id": "SOL-TRUJ-2026-0910",
         "fecha_solicitud": "2026-11-18T16:40:00-05:00",
@@ -1322,7 +1322,7 @@
         "negocio": {
           "ruc": "10411298765",
           "giro_ciiu": "5211",
-          "direccion": "Direccion incompleta sin numeracion"
+          "direccion": "Dirección incompleta sin numeracion"
         },
         "dispositivo": {
           "fingerprint": "dev:corp-ase012",
@@ -1359,7 +1359,7 @@
           "nivel": "VERIFICAR_DATOS"
         },
         "expediente_agente": {
-          "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): La confianza de resolucion de entidades y extraccion documental es de 0.62 (inferior al umbral normativo de 0.85) por telefono truncado, direccion sin numeracion y nota de compra con mancha/tachadura. El sistema se abstiene de calcular puntaje de red para evitar falsas imputaciones.",
+          "resumen": "CANDADO POKA-YOKE ACTIVADO (RN-05): La confianza de resolucion de entidades y extraccion documental es de 0.62 (inferior al umbral normativo de 0.85) por teléfono truncado, dirección sin numeracion y nota de compra con mancha/tachadura. El sistema se abstiene de calcular puntaje de red para evitar falsas imputaciones.",
           "evidencias_citadas": [
             "Calidad de datos: confianza_resolucion = 0.62 < 0.85 (Regla de Negocio RN-05).",
             "Evidencia DOC-MAN-005 borrosa e incoherente con CIIU 5211."
@@ -1368,7 +1368,7 @@
             "Error de digitacion o captura fotografica deficiente en zona con baja iluminacion."
           ],
           "pasos_sugeridos": [
-            "Solicitar al asesor recaptura nitida del comprobante y validacion del telefono/direccion antes de puntuar la red."
+            "Solicitar al asesor recaptura nitida del comprobante y validacion del telefono/dirección antes de puntuar la red."
           ],
           "aristas_evidencia_ids": [
             "CS-06-E01"

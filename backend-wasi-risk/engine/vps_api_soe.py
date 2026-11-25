@@ -538,8 +538,8 @@ class WasiVpsOrchestrator:
         alerta_actual = self.cola_alertas.get(alerta_id)
         if alerta_actual and especialista.upper() == str(alerta_actual.get("asesor_originador_id", "")).upper():
             raise ValueError(
-                f"RN-08 Violada (Segregacion de funciones): El especialista ({especialista}) "
-                "no puede decidir sobre una solicitud que el mismo origino."
+                f"Bloqueado por Segregación de Funciones (RN-08): El asesor originador ({especialista}) "
+                "no puede aprobar ni descartar su propia alerta de red."
             )
 
         ts = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")

@@ -38,7 +38,6 @@ interface AuditDrawerProps {
 function NetworkGraphViewer({ grafo: initialGrafo }: { grafo: SubredGrafo }) {
   const [activeGrafo, setActiveGrafo] = useState<SubredGrafo>(initialGrafo);
   const [saltos, setSaltos] = useState<1 | 2>(2);
-  const [loadingHops, setLoadingHops] = useState(false);
   const [selectedNode, setSelectedNode] = useState<GrafoNodo | null>(initialGrafo.nodos[0] ?? null);
 
   useEffect(() => {
@@ -47,43 +46,40 @@ function NetworkGraphViewer({ grafo: initialGrafo }: { grafo: SubredGrafo }) {
     setSelectedNode(initialGrafo.nodos[0] ?? null);
   }, [initialGrafo.solicitud_id]);
 
-  const handleSelectSaltos = async (nextSaltos: 1 | 2) => {
-    if (nextSaltos === saltos) return;
+  // Calcular subred de 1 salto (vecinos directos del nodo raíz) de forma 100% determinista e instantánea
+  const rootId = initialGrafo.nodos[0]?.id ?? initialGrafo.solicitud_id;
+  const directEdges = initialGrafo.aristas.filter(
+    (a) => a.source === rootId || a.target === rootId
+  );
+  const hop1Ids = new Set<string>([
+    rootId,
+    ...directEdges.map((a) => a.source),
+    ...directEdges.map((a) => a.target),
+  ]);
+  const hop1Grafo: SubredGrafo = {
+    ...initialGrafo,
+    saltos: 1,
+    nodos: initialGrafo.nodos.filter((n) => hop1Ids.has(n.id)),
+    aristas: directEdges,
+  };
+
+  const handleSelectSaltos = (nextSaltos: 1 | 2) => {
     setSaltos(nextSaltos);
     if (nextSaltos === 2) {
       setActiveGrafo(initialGrafo);
       setSelectedNode(initialGrafo.nodos[0] ?? null);
       return;
     }
-    setLoadingHops(true);
-    try {
-      const sub1 = await getSubredGrafo(initialGrafo.solicitud_id, 1);
-      if (sub1 && sub1.nodos.length > 0 && sub1.nodos.length < initialGrafo.nodos.length) {
-        setActiveGrafo(sub1);
-        setSelectedNode(sub1.nodos[0] ?? null);
-      } else {
-        // Filtrado determinista de 1 salto sobre las aristas directas al nodo raíz
-        const rootId = initialGrafo.nodos[0]?.id ?? initialGrafo.solicitud_id;
-        const directEdges = initialGrafo.aristas.filter(
-          (a) => a.source === rootId || a.target === rootId
-        );
-        const hop1Ids = new Set<string>([
-          rootId,
-          ...directEdges.map((a) => a.source),
-          ...directEdges.map((a) => a.target),
-        ]);
-        const filtered: SubredGrafo = {
-          ...initialGrafo,
-          saltos: 1,
-          nodos: initialGrafo.nodos.filter((n) => hop1Ids.has(n.id)),
-          aristas: directEdges,
-        };
-        setActiveGrafo(filtered);
-        setSelectedNode(filtered.nodos[0] ?? null);
-      }
-    } finally {
-      setLoadingHops(false);
-    }
+    setActiveGrafo(hop1Grafo);
+    setSelectedNode(hop1Grafo.nodos[0] ?? null);
+    // Sincronización en segundo plano con GET /red/{id}?saltos=1 sin bloquear la UI
+    getSubredGrafo(initialGrafo.solicitud_id, 1)
+      .then((sub1) => {
+        if (sub1 && sub1.nodos.length > 0 && sub1.nodos.length < initialGrafo.nodos.length) {
+          setActiveGrafo((prev) => (prev.saltos === 1 ? sub1 : prev));
+        }
+      })
+      .catch(() => {});
   };
 
   const grafo = activeGrafo;
@@ -188,16 +184,14 @@ function NetworkGraphViewer({ grafo: initialGrafo }: { grafo: SubredGrafo }) {
             type="button"
             class={`btn btn-sm ${saltos === 1 ? 'btn-primary' : 'btn-secondary'}`}
             style={{ fontSize: '10.5px', padding: '3px 8px' }}
-            disabled={loadingHops}
             onClick={() => handleSelectSaltos(1)}
           >
-            1 Salto (Directo)
+            1 Salto ({hop1Grafo.nodos.length} nodos)
           </button>
           <button
             type="button"
             class={`btn btn-sm ${saltos === 2 ? 'btn-primary' : 'btn-secondary'}`}
             style={{ fontSize: '10.5px', padding: '3px 8px' }}
-            disabled={loadingHops}
             onClick={() => handleSelectSaltos(2)}
           >
             2 Saltos ({initialGrafo.nodos.length} nodos)
@@ -563,7 +557,7 @@ export function AuditDrawer({
                 </span>
               )}
               <span class="badge badge-slate">
-                SBS: {dr.clasificacion_sbs_proyectada ?? 'NULL (Poka-Yoke)'} ({formatProvisionRate(dr.tasa_provision_sbs)})
+                SBS: {dr.clasificacion_sbs_proyectada ?? 'Por verificar (Excluido SBS)'} ({formatProvisionRate(dr.tasa_provision_sbs)})
               </span>
             </div>
             <h2 style={{ margin: '6px 0 2px', fontSize: '17px', fontWeight: 800 }}>
@@ -665,7 +659,7 @@ export function AuditDrawer({
                 <strong style={{ fontSize: '13.5px' }}>
                   CANDADO POKA-YOKE (&lt;0.85) · ESTADO GRIS VERIFICAR DATOS
                 </strong>
-                <span class="badge badge-slate">Provisión SBS: null (S/ 0.00 en P&amp;L)</span>
+                <span class="badge badge-slate">Por verificar (Excluido SBS · S/ 0.00)</span>
               </div>
               <div style={{ fontSize: '12.5px' }}>
                 Confianza de resolución <strong>{formatConfidencePct(vf.confianza_extraccion_ia)}</strong>.{' '}
@@ -702,7 +696,7 @@ export function AuditDrawer({
                 <span>Grafo Interactivo de Subred (2 Saltos · RF-19)</span>
                 {red && (
                   <span class="badge badge-slate mono">
-                    {red.nodos_subred} nodos · {red.aristas_subred} aristas · {red.comunidad_id}
+                    {grafo.nodos.length} nodos · {grafo.aristas.length} aristas · {red.comunidad_id}
                   </span>
                 )}
               </h3>

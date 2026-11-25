@@ -95,6 +95,16 @@ export class OfflineError extends Error {
   }
 }
 
+export function normalizeCanonicalAgency(raw: string): string {
+  const s = String(raw || '').toLowerCase();
+  if (s.includes('florencia')) return 'Agencia Florencia de Mora';
+  if (s.includes('hermelinda')) return 'Agencia Mercado La Hermelinda';
+  if (s.includes('esperanza')) return 'Agencia La Esperanza';
+  if (s.includes('centro')) return 'Agencia Trujillo Centro';
+  if (s.includes('victor') || s.includes('víctor') || s.includes('larco')) return 'Agencia Víctor Larco';
+  return 'Agencia El Porvenir';
+}
+
 async function fetchJson(path: string, init?: RequestInit): Promise<unknown> {
   if (isOfflineNow()) {
     throw new OfflineError();
@@ -109,7 +119,18 @@ async function fetchJson(path: string, init?: RequestInit): Promise<unknown> {
   });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
-    throw new Error(`Error VPS ${res.status}: ${body || res.statusText}`);
+    let cleanDetail = body || res.statusText;
+    try {
+      const parsed = JSON.parse(body) as { detail?: unknown; message?: unknown };
+      if (typeof parsed.detail === 'string') {
+        cleanDetail = parsed.detail;
+      } else if (typeof parsed.message === 'string') {
+        cleanDetail = parsed.message;
+      }
+    } catch {
+      // Keep plain text
+    }
+    throw new Error(cleanDetail);
   }
   return res.json();
 }
@@ -339,7 +360,7 @@ function adaptVpsRie02Response(
     },
     dictamen_riesgos: {
       alerta_fraude_maquillaje: isPrioritaria,
-      requiere_revision_humana: isPokaYoke,
+      requiere_revision_humana: isPokaYoke || isPrioritaria,
       banderas_fraude_detectadas: rawPatrones.map(
         (p) => `${String(p.codigo)} · ${String(p.descripcion ?? '')}`
       ),
@@ -361,8 +382,8 @@ function adaptVpsRie02Response(
       motor_ocr: 'PADDLEOCR_LATINO_PPOCRV5_OFFLINE',
     },
     red: {
-      nodos_subred: Number(red.nodos_subred ?? subred?.nodos.length ?? 4),
-      aristas_subred: Number(red.aristas_subred ?? subred?.aristas.length ?? 3),
+      nodos_subred: Number(subred?.nodos.length ?? red.nodos_subred ?? 4),
+      aristas_subred: Number(subred?.aristas.length ?? red.aristas_subred ?? 3),
       comunidad_id: String(red.comunidad_id ?? 'COM-TRUJILLO'),
       tamano_comunidad: Number(red.tamano_comunidad ?? 3),
     },
@@ -609,7 +630,7 @@ export async function getGoldenCases(): Promise<GoldenCase[]> {
           expediente_id: sid,
           solicitud_id: sid,
           ruc: String(neg.ruc ?? '10423189012').replace(/\D/g, ''),
-          agencia_origen: String(reqIn.agencia_origen ?? 'Agencia El Porvenir'),
+          agencia_origen: normalizeCanonicalAgency(String(reqIn.agencia_origen ?? 'Agencia El Porvenir')),
           asesor_id: String(reqIn.asesor_id ?? 'ASE-017'),
           giro_ciiu: String(neg.giro_ciiu ?? '1520'),
           ventas_declaradas_asesor: Number(reqIn.ventas_declaradas ?? 7200),

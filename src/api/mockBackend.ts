@@ -662,7 +662,7 @@ const CALIBRATED_RESPONSES: Record<string, Omit<AuditarExpedienteResponse, 'hash
     },
     dictamen_riesgos: {
       alerta_fraude_maquillaje: true,
-      requiere_revision_humana: false,
+      requiere_revision_humana: true,
       banderas_fraude_detectadas: [
         'P-01_TELEFONO_COMPARTIDO_3_SOLICITANTES',
         'P-02_DISPOSITIVO_CLIENTE_COMPARTIDO',
@@ -1019,7 +1019,7 @@ const CALIBRATED_RESPONSES: Record<string, Omit<AuditarExpedienteResponse, 'hash
     },
     dictamen_riesgos: {
       alerta_fraude_maquillaje: true,
-      requiere_revision_humana: false,
+      requiere_revision_humana: true,
       banderas_fraude_detectadas: [
         'P-04_5_RUCS_EN_MISMA_VIVIENDA_RESIDENCIAL',
         'P-06_2_RUCS_NO_HABIDO_CONECTADOS',
@@ -1277,7 +1277,7 @@ const CALIBRATED_RESPONSES: Record<string, Omit<AuditarExpedienteResponse, 'hash
       monto_maximo_recomendado: 0.0,
       provision_sbs_evitada_pen: 0.0,
       explicacion_agente_sbs:
-        'CANDADO POKA-YOKE ACTIVADO [CS-06 · Estado Gris VERIFICAR_DATOS · Sin Puntaje]: (1) Semáforo de nitidez de Soe detecta pérdida de detalle dentro de las cajas de texto de 0.385 (≥ 0.30) y contraste 34 (< 40); (2) El OCR leyó caracteres ambiguos con letras O en vez de ceros ("S/ 5.0OO.00") que el verificador Python rechaza sin adivinar; (3) Confianza de resolución 0.62 < 0.85. Conforme a la Res. SBS 11356-2008, una foto defectuosa NO clasifica al cliente como PÉRDIDA (clasificación y provisión en null; S/ 0 sumados al P&L). Se solicita repetir fotografía o verificación manual.',
+        'CANDADO POKA-YOKE ACTIVADO [CS-06 · Estado Gris VERIFICAR_DATOS · Sin Puntaje]: (1) Semáforo de Nitidez Local detecta pérdida de detalle dentro de las cajas de texto de 0.385 (≥ 0.30) y contraste 34 (< 40); (2) El OCR leyó caracteres ambiguos con letras O en vez de ceros ("S/ 5.0OO.00") que el verificador Python rechaza sin adivinar; (3) Confianza de resolución 0.62 < 0.85. Conforme a la Res. SBS 11356-2008, una foto defectuosa NO clasifica al cliente como PÉRDIDA (excluido de provisión SBS; S/ 0.00 sumados al P&L). Se solicita repetir fotografía o verificación manual.',
     },
     calidad_datos: {
       confianza_resolucion: 0.62,
@@ -1311,7 +1311,7 @@ const CALIBRATED_RESPONSES: Record<string, Omit<AuditarExpedienteResponse, 'hash
       resumen:
         'Caso detenido en puerta de calidad (Candado Poka-Yoke RN-05): confianza de extracción y resolución de 62% (< 85%) e importe con letras "5.0OO.00". No se asigna puntaje de red ni clasificación SBS adversa al cliente.',
       evidencias_citadas: [
-        { arista_id: 'E-61', descripcion: 'Nota borrosa con pérdida de detalle 0.385 e importe "S/ 5.0OO.00" sin ítems que cierren suma', fuente: 'Semáforo Nitidez Soe + Verificador Python', fecha: '2026-11-21' },
+        { arista_id: 'E-61', descripcion: 'Nota borrosa con pérdida de detalle 0.385 e importe "S/ 5.0OO.00" sin ítems que cierren suma', fuente: 'Semáforo de Nitidez Local + Verificador Python', fecha: '2026-11-21' },
       ],
       explicaciones_alternativas: [
         'Fotografía tomada con poca luz (contraste 34) o movimiento involuntario en campo.',
@@ -1727,7 +1727,7 @@ export interface BarridoPoblacionSinteticaReport {
       rojo_c_fraude_real: 5;
       gris_poka_yoke_sin_puntaje: 2;
       nota_seccion_8_soe:
-        'Los 2 expedientes con foto borrosa (<0.85) fueron separados de los 7 C originales al estado Gris VERIFICAR_DATOS (provisión null), evitando contaminar el P&L de S/ 15M.';
+        'Los 2 expedientes con foto borrosa (<0.85) fueron separados de los 7 C originales al estado Gris VERIFICAR_DATOS (excluido de provisión SBS), evitando contaminar el P&L de S/ 15M.';
     };
   };
 }
@@ -1758,7 +1758,7 @@ export function ejecutarBarridoPoblacionSintetica(): BarridoPoblacionSinteticaRe
         rojo_c_fraude_real: 5,
         gris_poka_yoke_sin_puntaje: 2,
         nota_seccion_8_soe:
-          'Los 2 expedientes con foto borrosa (<0.85) fueron separados de los 7 C originales al estado Gris VERIFICAR_DATOS (provisión null), evitando contaminar el P&L de S/ 15M.',
+          'Los 2 expedientes con foto borrosa (<0.85) fueron separados de los 7 C originales al estado Gris VERIFICAR_DATOS (excluido de provisión SBS), evitando contaminar el P&L de S/ 15M.',
       },
     },
   };
@@ -1954,7 +1954,7 @@ export async function mockPostAuditarExpediente(
         monto_maximo_recomendado: 0,
         provision_sbs_evitada_pen: 0,
         explicacion_agente_sbs:
-          'CANDADO POKA-YOKE ACTIVADO [Estado Gris VERIFICAR_DATOS · Sin Puntaje]: Confianza documental inferior a 85% o incoherencia de datos. Clasificación SBS y provisión en null (no suma como pérdida SBS evitada). Repetir captura o verificar documentos físicos.',
+          'CANDADO POKA-YOKE ACTIVADO [Estado Gris VERIFICAR_DATOS · Sin Puntaje]: Confianza documental inferior a 85% o incoherencia de datos. Excluido de provisión SBS (no suma como pérdida SBS evitada). Repetir captura o verificar documentos físicos.',
       },
       calidad_datos: {
         confianza_resolucion: Number(confidence.toFixed(2)),
@@ -2058,7 +2058,7 @@ export async function mockPostAuditarExpediente(
     },
     dictamen_riesgos: {
       alerta_fraude_maquillaje: nivel === 'REVISION_PRIORITARIA',
-      requiere_revision_humana: false,
+      requiere_revision_humana: nivel === 'REVISION_PRIORITARIA',
       banderas_fraude_detectadas: patrones.map((p) => `${p.codigo}_${p.nombre.toUpperCase()}`),
       clasificacion_sbs_proyectada: clasificacionSbs,
       tasa_provision_sbs: tasaProvision,

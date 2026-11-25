@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'pwa-icon.svg'],
       manifest: {
-        name: 'WASI-RISK AI · Nodux Sentinel',
+        name: 'WASI-RISK AI · Caja Trujillo',
         short_name: 'WASI-RISK',
         description:
           'Auditoría pre-desembolso MYPE al 100% para Caja Trujillo — Terminal Móvil Campo y Consola Riesgos SBS',

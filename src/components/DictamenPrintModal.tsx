@@ -22,7 +22,10 @@ export default function DictamenPrintModal({ record, onClose }: DictamenPrintMod
 
   useEffect(() => {
     if (!record) return;
-    if (record.response.dictamen_riesgos.requiere_revision_humana) {
+    if (
+      record.response.validacion_fiscal.confianza_extraccion_ia < 0.85 ||
+      record.response.priorizacion?.nivel === 'VERIFICAR_DATOS'
+    ) {
       setMode('POKA_YOKE');
     } else {
       setMode('ACTA');
@@ -62,10 +65,13 @@ export default function DictamenPrintModal({ record, onClose }: DictamenPrintMod
     window.print();
   };
 
+  const isLowOcr = vf.confianza_extraccion_ia < 0.85;
   const checklistItems = [
     `Verificar comprobantes físicos originales (boletas/facturas) vinculados al RUC ${vf.ruc}.`,
     `Confirmar coherencia física de insumos y stock en local con el giro ${getCiiuLabel(vf.giro_ciiu)}.`,
-    `Recapturar fotografía legible del documento (confianza IA actual: ${formatConfidencePct(vf.confianza_extraccion_ia)}, umbral mínimo: 85%).`,
+    isLowOcr
+      ? `Recapturar fotografía legible del documento (confianza IA actual: ${formatConfidencePct(vf.confianza_extraccion_ia)}, inferior al umbral mínimo de 85%).`
+      : `Calidad fotográfica y OCR verificados (${formatConfidencePct(vf.confianza_extraccion_ia)} ≥ 85% requerido) — no requiere recaptura de imagen.`,
     `Validar inventario físico declarado (${formatPEN(record.request.inventario_fisico_estimado)}) y flujo real de caja en campo.`,
     `Emitir visto bueno o rechazo definitivo de Auditor Senior antes de habilitar desembolso.`,
   ];
@@ -146,7 +152,7 @@ export default function DictamenPrintModal({ record, onClose }: DictamenPrintMod
               <div class="stat-tile-label">Clasificación y Escala</div>
               <div style={{ fontWeight: 800, fontSize: '13.5px', marginTop: '2px' }}>
                 Escala {dr.escala_interna_caja_trujillo} · SBS{' '}
-                {dr.clasificacion_sbs_proyectada ?? 'SIN_CLASIFICACION_POKA_YOKE'} (
+                {dr.clasificacion_sbs_proyectada ?? 'Por verificar (Excluido SBS)'} (
                 {formatProvisionRate(dr.tasa_provision_sbs)})
               </div>
               <div style={{ fontSize: '11.5px', color: 'var(--ink-muted)', marginTop: '2px' }}>

@@ -151,7 +151,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
   const [asesorId, setAsesorId] = useState<string>('ASE-004');
   const [dispositivoFingerprint, setDispositivoFingerprint] = useState<string>('dev:corp-ase004-tab');
   const [contextoDeclarado, setContextoDeclarado] = useState<string[]>([]);
-  const [consentimientoLey29733, setConsentimientoLey29733] = useState<boolean>(true);
+  const [consentimientoLey29733, setConsentimientoLey29733] = useState<boolean>(false);
 
   const [documentos, setDocumentos] = useState<DocumentoAdjunto[]>([
     {
@@ -255,6 +255,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
 
   const handleLoadGoldenCase = async (gc: GoldenCase) => {
     const p = gc.payload;
+    setLastAudit(null);
     setCaptureStartedAt(Date.now());
     setLastCycleSeconds(null);
     setSelectedCaseId(gc.case_id);
@@ -574,7 +575,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
               <span class="badge badge-slate">Terminal Móvil Campo · PWA</span>
               <span class="badge badge-green">0 PII enviados</span>
               {liveSeconds !== null && (
-                <span class="stopwatch-pill mono" title="Cronómetro de captura Nodux Flow">
+                <span class="stopwatch-pill mono" title="Cronómetro de captura WASI-RISK AI">
                   ⏱ {liveSeconds.toFixed(1)} s
                 </span>
               )}
@@ -652,7 +653,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                   </svg>
                 </div>
                 <div>
-                  <h2 class="card-h">Validación RUC</h2>
+                  <h2 class="card-h">1. Identificación y RUC</h2>
                   <div class="card-sub">Consulta en segundos el estado SUNAT del cliente</div>
                 </div>
               </div>
@@ -661,7 +662,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                 {ruc.replace(/\D/g, '').length === 11 && (
                   <span
                     class={`badge ${isValidRucChecksum(ruc) ? 'badge-green' : 'badge-slate'}`}
-                    title="Validación de dígito verificador SUNAT Módulo 11 (Nodux Flow)"
+                    title="Validación de dígito verificador SUNAT Módulo 11 (WASI-RISK AI)"
                   >
                     {isValidRucChecksum(ruc) ? '✓ Mod-11 SUNAT' : 'Padrón Trujillo'}
                   </span>
@@ -708,6 +709,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                     value={ruc}
                     onInput={(e) => {
                       setSelectedCaseId(null);
+                      setLastAudit(null);
                       setRuc((e.currentTarget as HTMLInputElement).value.replace(/\D/g, ''));
                     }}
                     placeholder="10423189012"
@@ -840,7 +842,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                 </div>
                 <div class="tile-body">
                   <label htmlFor="tel-ref">Teléfono de Referencia / Aval</label>
-                  <div style={{ display: 'flex', gap: '6px' }}>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                     <input
                       id="tel-ref"
                       class="mono"
@@ -848,13 +850,13 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                       value={referenciaTelefono}
                       onInput={(e) => setReferenciaTelefono((e.currentTarget as HTMLInputElement).value)}
                       placeholder="948332199"
-                      style={{ flex: 1 }}
+                      style={{ flex: '1 1 120px', minWidth: '115px' }}
                     />
                     <select
                       aria-label="Relación de referencia"
                       value={referenciaRelacion}
                       onChange={(e) => setReferenciaRelacion((e.currentTarget as HTMLSelectElement).value)}
-                      style={{ width: '130px', fontSize: '11.5px' }}
+                      style={{ flex: '1 1 115px', minWidth: '110px', fontSize: '11.5px' }}
                     >
                       {RELACIONES_REFERENCIA.map((rel) => (
                         <option key={rel.value} value={rel.value}>
@@ -1167,19 +1169,26 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
             </div>
           </section>
 
-          {/* TARJETA C: Conteo Táctil de Stock + Evidencia Documental + Semáforo Nitidez Soe */}
+          {/* TARJETA C: 4. Inventario y Evidencia Documental */}
           <section class="campo-card">
-            <div class="form-section-head">
-              <span class="step-badge">
-                <span class="step-num">1</span>
-                <span>Conteo Táctil de Stock Físico</span>
-              </span>
+            <div class="card-title-row" style={{ marginBottom: '12px' }}>
+              <div class="card-title-left">
+                <div class="card-icon-circle" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3L4 7.5V16.5L12 21L20 16.5V7.5L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="card-h">4. Inventario y Evidencia Documental</h2>
+                  <div class="card-sub">Stock físico y comprobantes (Semáforo de Nitidez Local)</div>
+                </div>
+              </div>
               <button
                 type="button"
                 class="btn btn-secondary btn-sm"
                 onClick={handleStockReset}
               >
-                Reiniciar a S/ 0.00 ↻
+                Reiniciar stock ↻
               </button>
             </div>
 
@@ -1255,13 +1264,12 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
 
             <div class="form-section-head">
               <span class="step-badge">
-                <span class="step-num">2</span>
-                <span>Evidencia Documental (Hash SHA-256 + Semáforo de Nitidez Local)</span>
+                <span>Comprobantes y Vouchers (Hash SHA-256 + Semáforo de Nitidez Local)</span>
               </span>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <select
                   class="search-select"
-                  aria-label="Cargar uno de los 7 documentos del kit de Soe"
+                  aria-label="Cargar documento de prueba"
                   style={{ fontSize: '11.5px', padding: '5px 10px' }}
                   onChange={async (e) => {
                     const selectEl = e.currentTarget as HTMLSelectElement;
@@ -1292,7 +1300,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                     onToast(`${sample.label} · ${sample.hallazgo_demostrado}`);
                   }}
                 >
-                  <option value="">+ Cargar 7 Docs Kit Soe…</option>
+                  <option value="">+ Cargar documento de prueba…</option>
                   {SOE_KIT_DOCUMENTS_CATALOG.map((doc) => (
                     <option key={doc.id} value={doc.id}>
                       {doc.label}
@@ -1416,10 +1424,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
             <div class="field-grid" style={{ alignItems: 'end' }}>
               <div class="field">
                 <label htmlFor="doc-type-select">
-                  <span class="step-badge">
-                    <span class="step-num" style={{ width: '20px', height: '20px', fontSize: '11px' }}>3</span>
-                    <span>Tipo de Comprobante</span>
-                  </span>
+                  <span>Tipo de Comprobante</span>
                 </label>
                 <select
                   id="doc-type-select"
@@ -1440,15 +1445,13 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                   type="file"
                   accept="image/*,.pdf"
                   disabled={hashingFile}
+                  style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
                   onChange={handleFileAttach}
                 />
               </div>
               <div class="field full">
                 <label htmlFor="doc-text-input">
-                  <span class="step-badge">
-                    <span class="step-num" style={{ width: '20px', height: '20px', fontSize: '11px' }}>4</span>
-                    <span>Texto OCR / detalle de boleta, nota manuscrita o voucher Yape/Plin</span>
-                  </span>
+                  <span>Texto OCR / detalle de boleta, nota manuscrita o voucher Yape/Plin</span>
                 </label>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <input
@@ -1551,7 +1554,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                 </span>
                 <div style={{ fontSize: '12px', color: '#4c5574', maxWidth: '260px' }}>
                   Selecciona uno de los <strong>6 Casos Simulados RIE-02</strong> arriba o captura
-                  los datos y pulsa <strong>Analizar Solicitud</strong>.
+                  los datos y pulsa <strong>Evaluar Solicitud</strong>.
                 </div>
               </div>
             ) : (
