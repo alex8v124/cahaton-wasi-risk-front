@@ -1319,6 +1319,7 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                     if (!id) return;
                     const sample = SOE_KIT_DOCUMENTS_CATALOG.find((s) => s.id === id);
                     if (!sample) return;
+                    setGiroCiiu(sample.ciiu_contexto);
                     setHashingFile(true);
                     try {
                       const evalRes = await evaluarFotoCalidad({

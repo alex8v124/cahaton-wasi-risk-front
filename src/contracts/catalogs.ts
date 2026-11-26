@@ -182,6 +182,7 @@ export interface SoeKitDocumentSample {
   nombre_archivo: string;
   hash_sha256: string;
   tipo_documento: string;
+  ciiu_contexto: string;
   texto_ocr: string;
   laplaciano_1600px: number;
   perdida_detalle_texto: number;
@@ -198,6 +199,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-MAY-001_factura_curtiembre_calzado.png',
     hash_sha256: '6fe7e7159913704c88ec1b583629395b87e51978d9fca325b05e65f40b67e67b',
     tipo_documento: 'FACTURA_MAYORISTA',
+    ciiu_contexto: '1520',
     texto_ocr:
       '[RAZON_SOCIAL_01] | R.U.C. [RUC_01]\n[DIRECCION_01]\nF001-0004821 | Senor(es): [NOMBRE_01] | R.U.C.: [RUC_02] | 04/11/2026\n180 | pies | Cuero Box Calf Negro 1ra | 10.50 | 1,890.00\n80 | pies | Badana Forro Natural | 7.00 | 560.00\n10 | doc | Suela Expanso Escolar | 120.00 | 1,200.00\n2 | gal | Pegamento Amarillo Contacto | 95.00 | 190.00\nTOTAL: | S/ 3,840.00 (OCR: 0.99)',
     laplaciano_1600px: 914,
@@ -213,6 +215,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-MAY-002_boleta_molino_hermelinda.png',
     hash_sha256: 'e2cb28da1bece859f966984812ee97ddb47dc3e2eefe15dc82db3ee29b657163',
     tipo_documento: 'BOLETA_MAYORISTA',
+    ciiu_contexto: '5211',
     texto_ocr:
       '[RAZON_SOCIAL_01] | R.U.C. [RUC_01] | [DIRECCION_01]\nBOLETA DE VENTA ELECTRONICA | B002-0019021 | Senor(a): [NOMBRE_01] | R.U.C.: [RUC_02] | 08/11/2026\n15 | saco | Arroz Extra Norteno 50kg | 165.00 | 2,475.00\n20 | arr | Papa Blanca Seleccionada | 24.00 | 480.00\n10 | cj | Aceite Vegetal x 12 | 92.00 | 920.00\n15 | fdo | Fideos Tallarin x 20 | 36.00 | 540.00\n25 | pl | Huevos Rosados x 30 | 16.00 | 400.00\nTOTAL: | S/ 4,815.00 (OCR: 0.99)',
     laplaciano_1600px: 1229,
@@ -228,6 +231,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-MAY-003_factura_ferreteria_incoherencia.png',
     hash_sha256: 'df53dc6e8bab98ee9ce0184ffdcb22f3473a8d02547a743173fa60e39c454667',
     tipo_documento: 'FACTURA_MAYORISTA',
+    ciiu_contexto: '5211',
     texto_ocr:
       '[RAZON_SOCIAL_01] | R.U.C. [RUC_01] | [DIRECCION_01]\nFACTURA ELECTRONICA | F004-0007712 | Cliente: [NOMBRE_01] | R.U.C.: [RUC_02] | 10/11/2026\n60 | bls | Cemento Pacasmayo Tipo I | 29.50 | 1,770.00\n35 | und | Varilla Fierro 1/2 Aceros | 38.00 | 1,330.00\n12 | und | Tubo PVC Desague 4 pulg | 22.00 | 264.00\nTOTAL: | S/ 3,364.00 (OCR: 0.99)',
     laplaciano_1600px: 838,
@@ -243,6 +247,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-MAN-004_nota_mostrador_gamarrita_valida.png',
     hash_sha256: '7a23abd2dcd0c56dedf50dd6cc54553723b96c55e4e17ac435a7bfc64b9bec97',
     tipo_documento: 'NOTA_MANUSCRITA',
+    ciiu_contexto: '1810',
     texto_ocr:
       'COMERCIAL TEXTIL | NOTA DE PEDIDO | N° 001458 | 11/11/2026\n[DIRECCION_01] | Sr(a): | [NOMBRE_01]\n3 rll | Tela Algodon Jersey 30/1 | 420.00 | 1,260.00\n2 cto | Botones camisa nacar | 18.00 | 36.00\n5 doc | Cierres metalicos 18cm | 24.00 | 120.00\n12 tira | Elastico | pretina x rollito | 9.50 | 114.00\nCANCELADO | TOTAL S/ | 1,530.00 (OCR: 0.98)',
     laplaciano_1600px: 510,
@@ -258,6 +263,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-MAN-005_nota_borrosa_poka_yoke_5000.png',
     hash_sha256: '990607896f09c2b368daa07292601cb50960ee6a071779481a3f7883e872d632',
     tipo_documento: 'NOTA_MANUSCRITA',
+    ciiu_contexto: '1520',
     texto_ocr:
       'NOTA DE COMPRA S/N | Proveedor: [NOMBRE_01]\nCompras varios materiales calzado taller (sin detalle de unidades) -> TOTAL: S/ 5.0OO.00 (OCR: 0.79)',
     laplaciano_1600px: 28,
@@ -273,6 +279,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-WAL-006_voucher_yape_870.png',
     hash_sha256: '59f7646860618bb269e1d20504f8fb253cd5537398a281f11483259777e3ef88',
     tipo_documento: 'VOUCHER_YAPE',
+    ciiu_contexto: '1520',
     texto_ocr:
       '4:18 p. m. | 4G 84%\nyape | Yapeaste! | S/ 870.00 | [DESTINATARIO_01] | 12 nov. 2026 - 04:18 p. m.\nMensaje del pago: pago 4 tr aparado + 3 gal pegamento amarillo\nCelular destino | [CELULAR_01] | [CELULAR_02] | N° de operación | [NUM_OPERACION_01] | Comisión | S/ 0.00 (Gratis) (OCR: 1.00)',
     laplaciano_1600px: 363,
@@ -288,6 +295,7 @@ export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
     nombre_archivo: 'DOC-WAL-007_voucher_plin_1240.png',
     hash_sha256: 'cbf845c5f7ff6cbea1a5c3fa0a51051ded9889ecff719ecc2ed71b896d822336',
     tipo_documento: 'VOUCHER_PLIN',
+    ciiu_contexto: '0111',
     texto_ocr:
       '06:45 a. m. | PLIN | Transferencia Exitosa | S/ 1,240.00 | [DESTINATARIO_01] | 13/11/2026 06:45 AM\nGlosa: 30 arr papa yungay + 15 jaba tomate + 1 flete hermelinda\nCelular | [CELULAR_01] | Operación | [NUM_OPERACION_01] (OCR: 0.99)',
     laplaciano_1600px: 386,
