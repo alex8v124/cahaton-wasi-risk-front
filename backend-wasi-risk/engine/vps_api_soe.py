@@ -41,8 +41,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 ENGINE_DIR = Path(__file__).resolve().parent
 ROOT_DIR = ENGINE_DIR.parent
-if str(ENGINE_DIR) not in sys.path:
-    sys.path.insert(0, str(ENGINE_DIR))
+for _p in (str(ROOT_DIR), str(ENGINE_DIR)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from motor_scoring_wasi import WasiRiskScoringEngine
 from sanitizador_pii_sbs import SanitizadorPIISBS
@@ -855,14 +856,16 @@ class WasiVpsOrchestrator:
 orchestrator = WasiVpsOrchestrator()
 
 try:
-    from fastapi import FastAPI, HTTPException, Query
+    from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
     from fastapi.middleware.cors import CORSMiddleware
     from fastapi.responses import FileResponse
+    from agente_local import api as agente_local_api
+    from agente_local import candado_red, config as config_local
 
     app = FastAPI(
-        title="WASI-RISK AI (Nodux Sentinel) — VPS Soberano RIE-02",
+        title="WASI-RISK AI — VPS Soberano RIE-02 + Agente Local v0.1.0",
         version="2.6.0-RIE02",
-        description="Plataforma de inteligencia de redes para prevencion de fraude en microcreditos (Cajathon Caja Trujillo 2026).",
+        description="Plataforma de inteligencia de redes + Agente local PaddleOCR + Qwen + Sanitizador v2 (Cajathon Caja Trujillo 2026).",
     )
     app.add_middleware(
         CORSMiddleware,
@@ -874,17 +877,36 @@ try:
 
     @app.get("/health")
     def health() -> Dict[str, Any]:
+        agente_local_api.asegurar_inicializado()
         return {
             "status": "OK",
+            "estado": "OK",
             "desafio": "RIE-02 | Descubrir redes de riesgo ocultas",
             "version": "2.6.0-RIE02",
-            "modo": "GRAFO_SEUDONIMIZADO_DEEPSEEK_VPS" if orchestrator.deepseek_api_key else "GRAFO_SEUDONIMIZADO_DETERMINISTA_VPS",
+            "modo": "ON_PREMISE_LOCAL_CPU · PaddleOCR + Qwen + Sanitizador v2",
+            "modo_inferencia": config_local.MODO_INFERENCIA,
+            "ocr": f"{config_local.OCR_DETECTOR} + {config_local.OCR_RECONOCEDOR}",
+            "modelo": config_local.MODELO_LLM,
+            "modelo_listo": agente_local_api.estado.get("modelo_listo", False),
+            "candado_de_red": candado_red.activo(),
+            "conexiones_externas_bloqueadas": len(candado_red.intentos_bloqueados),
             "ciius_cargados": len(orchestrator.engine.giros_ciiu),
             "padron_sunat_registros": len(orchestrator.padron_by_ruc),
             "patrones_red_p01_p09": len(orchestrator.rie02_data["catalogo_patrones_p01_p09"]),
             "reglas_contexto_l01_l06": len(orchestrator.rie02_data["reglas_contexto_legitimo_l01_l06"]),
             "casos_simulados_cs01_cs06": len(orchestrator.casos_by_id),
         }
+
+    @app.post("/v1/documentos/ocr", dependencies=[Depends(agente_local_api.autorizar)])
+    async def v1_documentos_ocr(request: Request) -> Dict[str, Any]:
+        return await agente_local_api.leer_foto(request)
+
+    @app.post("/v1/expedientes/auditar", dependencies=[Depends(agente_local_api.autorizar)])
+    def v1_expedientes_auditar(
+        entrada: Dict[str, Any],
+        x_ruc_solicitante: Optional[str] = Header(default=None),
+    ) -> Dict[str, Any]:
+        return agente_local_api.procesar_auditoria_expediente(entrada, x_ruc_solicitante)
 
     @app.get("/sunat/{ruc}")
     def lookup_sunat(ruc: str) -> Dict[str, Any]:

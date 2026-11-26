@@ -1,0 +1,613 @@
+[
+ {
+  "id": "DOC-MAY-001",
+  "ok": true,
+  "segundos": 0.2,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.21,
+   "ocr": 0.0,
+   "sanitizado": 0.02,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-MAY-001",
+    "tipo_documento": "FACTURA_MAYORISTA",
+    "serie_correlativo": "F001-0004821",
+    "fecha_emision": "2026-11-04",
+    "proveedor_token": "[RAZON_SOCIAL_01]",
+    "confianza_extraccion_ia": 0.99,
+    "coherencia_insumos_giro": true,
+    "es_documento_valido_computable": true,
+    "requiere_revision_humana": false,
+    "banderas_detectadas": [],
+    "items_extraidos": [
+     {
+      "descripcion": "Cuero Box Calf Negro 1ra",
+      "cantidad": 180.0,
+      "unidad_original": "pies",
+      "unidad_normalizada": "PIE_CUADRADO",
+      "precio_unitario_pen": 10.5,
+      "subtotal_pen": 1890.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Badana Forro Natural",
+      "cantidad": 80.0,
+      "unidad_original": "pies",
+      "unidad_normalizada": "PIE_CUADRADO",
+      "precio_unitario_pen": 7.0,
+      "subtotal_pen": 560.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Suela Expanso Escolar",
+      "cantidad": 10.0,
+      "unidad_original": "doc",
+      "unidad_normalizada": "DOCENA",
+      "precio_unitario_pen": 120.0,
+      "subtotal_pen": 1200.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Pegamento Amarillo Contacto",
+      "cantidad": 2.0,
+      "unidad_original": "gal",
+      "unidad_normalizada": "GALON",
+      "precio_unitario_pen": 95.0,
+      "subtotal_pen": 190.0,
+      "insumo_coherente_ciiu": true
+     }
+    ],
+    "monto_declarado_documento_pen": 3840.0,
+    "monto_computable_valido_pen": 3840.0
+   },
+   "diagnostico": {
+    "semaforo": "VERDE",
+    "motivos_semaforo": [],
+    "alertas": [],
+    "total_leido": "junto a la etiqueta TOTAL",
+    "datos_personales_tapados": {
+     "NOMBRE": 1,
+     "RAZON_SOCIAL": 1,
+     "RUC": 2,
+     "DIRECCION": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "[RAZON_SOCIAL_01] | R.U.C. [RUC_01]\n[DIRECCION_01]\nTRUJILLO - LA LIBERTAD - PERU | FACTURA ELECTRONICA\nSistema de Emision Electronica - SUNAT\nF001-0004821\nSenor(es): [NOMBRE_01]\nR.U.C.: | [RUC_02] | Fecha Emision: 04/11/2026\nMoneda: | SOLES (PEN) | - | Condicion: CONTADO\nCANT. | UNID. | DESCRIPCION DEL INSUMO | P. UNIT. | IMPORTE\n180 | pies | Cuero Box Calf Negro 1ra | 10.50 | 1,890.00\n80 | pies | Badana Forro Natural | 7.00 | 560.00\n10 | doc | Suela Expanso Escolar | 120.00 | 1,200.00\n2 | gal | Pegamento Amarillo Contacto | 95.00 | 190.00\nRepresentacion impresa del comprobante | OP. GRAVADA: | S/ 3,254.24\nelectronico. Valide en www.sunat.gob.pe\nI.G.V. (18%): | S/ 585.76\nTOTAL: | S/ 3,840.00",
+    "tokens_en_texto": 5,
+    "tokens_llm": {
+     "entrada": 612,
+     "salida": 248
+    },
+    "tiempos_seg": {
+     "calidad": 0.21,
+     "ocr": 0.0,
+     "sanitizado": 0.02,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ },
+ {
+  "id": "DOC-MAY-002",
+  "ok": true,
+  "segundos": 0.1,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.1,
+   "ocr": 0.0,
+   "sanitizado": 0.01,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-MAY-002",
+    "tipo_documento": "BOLETA_MAYORISTA",
+    "serie_correlativo": "B002-0019021",
+    "fecha_emision": "2026-11-08",
+    "proveedor_token": "[RAZON_SOCIAL_01]",
+    "confianza_extraccion_ia": 0.99,
+    "coherencia_insumos_giro": true,
+    "es_documento_valido_computable": true,
+    "requiere_revision_humana": false,
+    "banderas_detectadas": [],
+    "items_extraidos": [
+     {
+      "descripcion": "Arroz Extra Norteno 50kg",
+      "cantidad": 15.0,
+      "unidad_original": "saco",
+      "unidad_normalizada": "SACO_50KG",
+      "precio_unitario_pen": 165.0,
+      "subtotal_pen": 2475.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Papa Blanca Seleccionada",
+      "cantidad": 20.0,
+      "unidad_original": "arr",
+      "unidad_normalizada": "ARROBA",
+      "precio_unitario_pen": 24.0,
+      "subtotal_pen": 480.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Aceite Vegetal x 12",
+      "cantidad": 10.0,
+      "unidad_original": "cj",
+      "unidad_normalizada": "CAJA",
+      "precio_unitario_pen": 92.0,
+      "subtotal_pen": 920.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Fideos Tallarin x 20",
+      "cantidad": 15.0,
+      "unidad_original": "fdo",
+      "unidad_normalizada": "FARDO",
+      "precio_unitario_pen": 36.0,
+      "subtotal_pen": 540.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Huevos Rosados x 30",
+      "cantidad": 25.0,
+      "unidad_original": "pl",
+      "unidad_normalizada": "PLANCHA",
+      "precio_unitario_pen": 16.0,
+      "subtotal_pen": 400.0,
+      "insumo_coherente_ciiu": true
+     }
+    ],
+    "monto_declarado_documento_pen": 4815.0,
+    "monto_computable_valido_pen": 4815.0
+   },
+   "diagnostico": {
+    "semaforo": "VERDE",
+    "motivos_semaforo": [],
+    "alertas": [],
+    "total_leido": "junto a la etiqueta TOTAL",
+    "datos_personales_tapados": {
+     "NOMBRE": 1,
+     "RAZON_SOCIAL": 1,
+     "RUC": 2,
+     "DIRECCION": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "[RAZON_SOCIAL_01] | R.U.C. [RUC_01]\n[DIRECCION_01]\nBOLETA DE VENTA ELECTRONICA | B002-0019021\nSenor(a): [NOMBRE_01]\nR.U.C.: | [RUC_02] | Fecha: 08/11/2026\nCANT. | UNID. | DESCRIPCION | P. UNIT. | IMPORTE\n15 | saco | Arroz Extra Norteno 50kg | 165.00 | 2,475.00\n20 | arr | Papa Blanca Seleccionada | 24.00 | 480.00\n10 | cj | Aceite Vegetal x 12 | 92.00 | 920.00\n15 | fdo | Fideos Tallarin x 20 | 36.00 | 540.00\n25 | pl | Huevos Rosados x 30 | 16.00 | 400.00\nTOTAL: | S/ 4,815.00",
+    "tokens_en_texto": 5,
+    "tokens_llm": {
+     "entrada": 612,
+     "salida": 248
+    },
+    "tiempos_seg": {
+     "calidad": 0.1,
+     "ocr": 0.0,
+     "sanitizado": 0.01,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ },
+ {
+  "id": "DOC-MAY-003",
+  "ok": true,
+  "segundos": 0.2,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.16,
+   "ocr": 0.0,
+   "sanitizado": 0.01,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-MAY-003",
+    "tipo_documento": "FACTURA_MAYORISTA",
+    "serie_correlativo": "F004-0007712",
+    "fecha_emision": "2026-11-10",
+    "proveedor_token": "[RAZON_SOCIAL_01]",
+    "confianza_extraccion_ia": 0.99,
+    "coherencia_insumos_giro": false,
+    "es_documento_valido_computable": false,
+    "requiere_revision_humana": true,
+    "banderas_detectadas": [
+     "FLAG_INCOHERENCIA_GIRO_CIIU"
+    ],
+    "items_extraidos": [
+     {
+      "descripcion": "Cemento Pacasmayo Tipo I",
+      "cantidad": 60.0,
+      "unidad_original": "bls",
+      "unidad_normalizada": "BOLSA",
+      "precio_unitario_pen": 29.5,
+      "subtotal_pen": 1770.0,
+      "insumo_coherente_ciiu": false
+     },
+     {
+      "descripcion": "Varilla Fierro 1/2 Aceros",
+      "cantidad": 35.0,
+      "unidad_original": "und",
+      "unidad_normalizada": "UNIDAD",
+      "precio_unitario_pen": 38.0,
+      "subtotal_pen": 1330.0,
+      "insumo_coherente_ciiu": false
+     },
+     {
+      "descripcion": "Tubo PVC Desague 4 pulg",
+      "cantidad": 12.0,
+      "unidad_original": "und",
+      "unidad_normalizada": "UNIDAD",
+      "precio_unitario_pen": 22.0,
+      "subtotal_pen": 264.0,
+      "insumo_coherente_ciiu": false
+     }
+    ],
+    "monto_declarado_documento_pen": 3364.0,
+    "monto_computable_valido_pen": 0.0
+   },
+   "diagnostico": {
+    "semaforo": "VERDE",
+    "motivos_semaforo": [],
+    "alertas": [],
+    "total_leido": "junto a la etiqueta TOTAL",
+    "datos_personales_tapados": {
+     "NOMBRE": 1,
+     "RAZON_SOCIAL": 1,
+     "RUC": 2,
+     "DIRECCION": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "[RAZON_SOCIAL_01] | R.U.C. [RUC_01]\n[DIRECCION_01]\nFACTURA ELECTRONICA | F004-0007712\nCliente: [NOMBRE_01]\nR.U.C.: | [RUC_02] | Fecha: 10/11/2026\nCANT. | UNID. | DESCRIPCION | P. UNIT. | IMPORTE\n60 | bls | Cemento Pacasmayo Tipo I | 29.50 | 1,770.00\n35 | und | Varilla Fierro 1/2 Aceros | 38.00 | 1,330.00\n12 | und | Tubo PVC Desague 4 pulg | 22.00 | 264.00\nTOTAL: | S/ 3,364.00",
+    "tokens_en_texto": 5,
+    "tokens_llm": {
+     "entrada": 612,
+     "salida": 248
+    },
+    "tiempos_seg": {
+     "calidad": 0.16,
+     "ocr": 0.0,
+     "sanitizado": 0.01,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ },
+ {
+  "id": "DOC-MAN-004",
+  "ok": true,
+  "segundos": 0.2,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.19,
+   "ocr": 0.0,
+   "sanitizado": 0.02,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-MAN-004",
+    "tipo_documento": "NOTA_MANUSCRITA",
+    "serie_correlativo": "NP-001458",
+    "fecha_emision": "2026-11-11",
+    "proveedor_token": "[NOMBRE_01]",
+    "confianza_extraccion_ia": 0.98,
+    "coherencia_insumos_giro": true,
+    "es_documento_valido_computable": true,
+    "requiere_revision_humana": false,
+    "banderas_detectadas": [],
+    "items_extraidos": [
+     {
+      "descripcion": "Tela Algodon Jersey 30/1",
+      "cantidad": 3.0,
+      "unidad_original": "rll",
+      "unidad_normalizada": "ROLLO",
+      "precio_unitario_pen": 420.0,
+      "subtotal_pen": 1260.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Botones camisa nacar",
+      "cantidad": 2.0,
+      "unidad_original": "cto",
+      "unidad_normalizada": "CIENTO",
+      "precio_unitario_pen": 18.0,
+      "subtotal_pen": 36.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Cierres metalicos 18cm",
+      "cantidad": 5.0,
+      "unidad_original": "doc",
+      "unidad_normalizada": "DOCENA",
+      "precio_unitario_pen": 24.0,
+      "subtotal_pen": 120.0,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "Elastico pretina x rollito",
+      "cantidad": 12.0,
+      "unidad_original": "tira",
+      "unidad_normalizada": "UNIDAD",
+      "precio_unitario_pen": 9.5,
+      "subtotal_pen": 114.0,
+      "insumo_coherente_ciiu": true
+     }
+    ],
+    "monto_declarado_documento_pen": 1530.0,
+    "monto_computable_valido_pen": 1530.0
+   },
+   "diagnostico": {
+    "semaforo": "VERDE",
+    "motivos_semaforo": [],
+    "alertas": [],
+    "total_leido": "junto a la etiqueta TOTAL",
+    "datos_personales_tapados": {
+     "NOMBRE": 1,
+     "DIRECCION": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "COMERCIAL TEXTIL | NOTA DE PEDIDO\nGAMARRITA NORTENA | N° 001458\nVenta al por mayor de telas, botones, | cierres y avios | 11/11/2026\n[DIRECCION_01]\nSr(a): | [NOMBRE_01] | (Gamarrita Nortena)\nCondicion: | [x] Efectivo | [ ] Yape/Plin | Cancelado | Efectivo\nCANT. | DESCRIPCION | P. UNIT. | IMPORTE\n3 rll | Tela Algodon Jersey 30/1 | 420.00 | 1,260.00\n2 cto | Botones camisa nacar | 18.00 | 36.00\n5 doc | Cierres metalicos 18cm | 24.00 | 120.00\n12 tira | Elastico | pretina x rollito | 9.50 | 114.00\nCANCELADO | TOTAL S/ | 1,530.00\nNO VALIDO COMO | Efectivo",
+    "tokens_en_texto": 2,
+    "tokens_llm": {
+     "entrada": 612,
+     "salida": 248
+    },
+    "tiempos_seg": {
+     "calidad": 0.19,
+     "ocr": 0.0,
+     "sanitizado": 0.02,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ },
+ {
+  "id": "DOC-MAN-005",
+  "ok": true,
+  "segundos": 0.2,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.23,
+   "ocr": 0.0,
+   "sanitizado": 0.01,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-MAN-005",
+    "tipo_documento": "NOTA_MANUSCRITA",
+    "serie_correlativo": null,
+    "fecha_emision": null,
+    "proveedor_token": "[NOMBRE_01]",
+    "confianza_extraccion_ia": 0.79,
+    "coherencia_insumos_giro": false,
+    "es_documento_valido_computable": false,
+    "requiere_revision_humana": true,
+    "banderas_detectadas": [
+     "FLAG_BAJA_CONFIANZA_OCR_POKA_YOKE",
+     "FLAG_MONTO_REDONDO_SIN_DESGLOSE"
+    ],
+    "items_extraidos": [],
+    "monto_declarado_documento_pen": 5000.0,
+    "monto_computable_valido_pen": 0.0
+   },
+   "diagnostico": {
+    "semaforo": "AMARILLO",
+    "motivos_semaforo": [
+     "TEXTO_BORROSO"
+    ],
+    "alertas": [
+     "FECHA_ILEGIBLE",
+     "NO_CUADRA_SUMA_DE_ITEMS_CON_TOTAL"
+    ],
+    "total_leido": "junto a la etiqueta TOTAL",
+    "datos_personales_tapados": {
+     "NOMBRE": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "NOTA DE COMPRA S/N\nProveedor: [NOMBRE_01]\nCompras varios materiales calzado taller\nTOTAL: | S/ 5,000.00",
+    "tokens_en_texto": 1,
+    "tokens_llm": {
+     "entrada": 612,
+     "salida": 248
+    },
+    "tiempos_seg": {
+     "calidad": 0.23,
+     "ocr": 0.0,
+     "sanitizado": 0.01,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ },
+ {
+  "id": "DOC-WAL-006",
+  "ok": true,
+  "segundos": 0.2,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.14,
+   "ocr": 0.0,
+   "sanitizado": 0.01,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-WAL-006",
+    "tipo_documento": "VOUCHER_YAPE",
+    "serie_correlativo": "YAPE-09482716",
+    "fecha_emision": "2026-11-12",
+    "proveedor_token": "[DESTINATARIO_01]",
+    "confianza_extraccion_ia": 1.0,
+    "coherencia_insumos_giro": true,
+    "es_documento_valido_computable": true,
+    "requiere_revision_humana": false,
+    "banderas_detectadas": [],
+    "items_extraidos": [
+     {
+      "descripcion": "aparado",
+      "cantidad": 4.0,
+      "unidad_original": "tr",
+      "unidad_normalizada": "TAREA",
+      "precio_unitario_pen": null,
+      "subtotal_pen": null,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "pegamento amarillo",
+      "cantidad": 3.0,
+      "unidad_original": "gal",
+      "unidad_normalizada": "GALON",
+      "precio_unitario_pen": null,
+      "subtotal_pen": null,
+      "insumo_coherente_ciiu": true
+     }
+    ],
+    "monto_declarado_documento_pen": 870.0,
+    "monto_computable_valido_pen": 870.0
+   },
+   "diagnostico": {
+    "semaforo": "VERDE",
+    "motivos_semaforo": [],
+    "alertas": [],
+    "total_leido": "monto principal del voucher",
+    "datos_personales_tapados": {
+     "NUM_OPERACION": 1,
+     "CELULAR": 2,
+     "DESTINATARIO": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "4:18 p. m. | 4G 84%\nyape\nYapeaste!\nS/ 870.00\n[DESTINATARIO_01]\n12 nov. 2026 - 04:18 p. m.\nMensaje del pago:\npago 4 tr aparado + 3 gal pegamento amarillo\nCelular destino | [CELULAR_01] | [CELULAR_02]\nDestino | Yape\nN° de operación | [NUM_OPERACION_01]\nComisión | S/ 0.00 (Gratis)\nCOMPARTIR CONSTANCIA",
+    "tokens_en_texto": 4,
+    "tokens_llm": {
+     "entrada": 420,
+     "salida": 108
+    },
+    "tiempos_seg": {
+     "calidad": 0.14,
+     "ocr": 0.0,
+     "sanitizado": 0.01,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ },
+ {
+  "id": "DOC-WAL-007",
+  "ok": true,
+  "segundos": 0.1,
+  "fallos": [],
+  "fugas": [],
+  "tiempos": {
+   "calidad": 0.11,
+   "ocr": 0.0,
+   "sanitizado": 0.01,
+   "modelo": 0.0
+  },
+  "resultado": {
+   "documento": {
+    "doc_id": "DOC-WAL-007",
+    "tipo_documento": "VOUCHER_PLIN",
+    "serie_correlativo": "PLN-7782310",
+    "fecha_emision": "2026-11-13",
+    "proveedor_token": "[DESTINATARIO_01]",
+    "confianza_extraccion_ia": 1.0,
+    "coherencia_insumos_giro": true,
+    "es_documento_valido_computable": true,
+    "requiere_revision_humana": false,
+    "banderas_detectadas": [],
+    "items_extraidos": [
+     {
+      "descripcion": "papa yungay",
+      "cantidad": 30.0,
+      "unidad_original": "arr",
+      "unidad_normalizada": "ARROBA",
+      "precio_unitario_pen": null,
+      "subtotal_pen": null,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "tomate",
+      "cantidad": 15.0,
+      "unidad_original": "jaba",
+      "unidad_normalizada": "JABA",
+      "precio_unitario_pen": null,
+      "subtotal_pen": null,
+      "insumo_coherente_ciiu": true
+     },
+     {
+      "descripcion": "hermelinda",
+      "cantidad": 1.0,
+      "unidad_original": "flete",
+      "unidad_normalizada": "VIAJE_FLETE",
+      "precio_unitario_pen": null,
+      "subtotal_pen": null,
+      "insumo_coherente_ciiu": true
+     }
+    ],
+    "monto_declarado_documento_pen": 1240.0,
+    "monto_computable_valido_pen": 1240.0
+   },
+   "diagnostico": {
+    "semaforo": "VERDE",
+    "motivos_semaforo": [],
+    "alertas": [],
+    "total_leido": "monto principal del voucher",
+    "datos_personales_tapados": {
+     "NUM_OPERACION": 1,
+     "CELULAR": 1,
+     "DESTINATARIO": 1
+    },
+    "guardia_de_salida": {
+     "aprobado": true,
+     "hallazgos": []
+    },
+    "texto_enviado_al_modelo": "06:45 a. m. | PLIN\nTransferencia Exitosa\nS/ 1,240.00\n[DESTINATARIO_01]\n13/11/2026 06:45 AM\nGlosa:\n30 arr papa yungay + 15 jaba tomate + 1 flete hermelinda\nCelular | [CELULAR_01]\nOperación | [NUM_OPERACION_01]",
+    "tokens_en_texto": 3,
+    "tokens_llm": {
+     "entrada": 420,
+     "salida": 108
+    },
+    "tiempos_seg": {
+     "calidad": 0.11,
+     "ocr": 0.0,
+     "sanitizado": 0.01,
+     "modelo": 0.0
+    },
+    "conexiones_externas_bloqueadas": 0
+   }
+  }
+ }
+]

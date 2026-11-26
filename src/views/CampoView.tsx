@@ -337,51 +337,74 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
     const trimmed = newDocText.trim();
     if (!trimmed) return;
     const evalRes = await evaluarFotoCalidad({
-      nombre_archivo: 'captura_ocr_campo.jpg',
+      nombre_archivo: 'captura_ocr_campo.txt',
       texto_ocr: trimmed,
     });
-    setFotoEval(evalRes);
+    setFotoEval({
+      ...evalRes,
+      semaforo_nitidez: 'AMARILLO',
+      motivos: ['FOTO_NO_VERIFICADA'],
+      motivo:
+        'FOTO_NO_VERIFICADA (Amarillo): Texto ingresado sin imagen original en POST /v1/documentos/ocr. Se re-sanitiza con Sanitizador v2.',
+    });
     const hash = await sha256Hex(`${newDocType}|${trimmed}`);
     const nextDoc: DocumentoAdjunto = {
       doc_id: `DOC-${documentos.length + 1}`,
       tipo_documento: newDocType,
-      texto_ocr: trimmed,
+      texto_ocr: evalRes.texto_sanitizado || trimmed,
       hash_sha256: hash,
-      semaforo_nitidez: evalRes.semaforo_nitidez,
+      semaforo_nitidez: 'AMARILLO',
+      motivos_semaforo: ['FOTO_NO_VERIFICADA'],
       perdida_detalle_texto: evalRes.perdida_detalle_texto,
-      requiere_nueva_foto: evalRes.requiere_nueva_foto,
+      requiere_nueva_foto: false,
       contiene_importe_ambiguo_letras: evalRes.contiene_importe_ambiguo_letras,
+      foto_verificada_v1: false,
     };
     setDocumentos((prev) => [...prev, nextDoc]);
     setNewDocText('');
     onToast(
-      `Evidencia sellada · Nitidez ${evalRes.semaforo_nitidez} · 0 PII enviados`
+      'Texto agregado como FOTO_NO_VERIFICADA (Amarillo) · Re-sanitizado con 0 PII enviados'
     );
   };
 
   const handleTestBlurryNote = async () => {
     const sample =
       'Nota manuscrita borrosa con sombra: Venta semanal S/ 5.0OO.00 (letras O en vez de ceros, OCR: 0.62)';
-    const evalRes = await evaluarFotoCalidad({
-      nombre_archivo: 'DOC-MAN-005_nota_borrosa_poka_yoke_5000.png',
-      texto_ocr: sample,
-    });
-    setFotoEval(evalRes);
-    const hash = await sha256Hex(`NOTA_MANUSCRITA|${sample}`);
-    setDocumentos([
-      {
-        doc_id: 'DOC-POKA-1',
-        tipo_documento: 'NOTA_MANUSCRITA',
-        texto_ocr: sample,
-        hash_sha256: hash,
+    setHashingFile(true);
+    try {
+      const evalRes = await evaluarFotoCalidad({
         nombre_archivo: 'DOC-MAN-005_nota_borrosa_poka_yoke_5000.png',
-        semaforo_nitidez: evalRes.semaforo_nitidez,
-        perdida_detalle_texto: evalRes.perdida_detalle_texto,
-        requiere_nueva_foto: evalRes.requiere_nueva_foto,
-        contiene_importe_ambiguo_letras: evalRes.contiene_importe_ambiguo_letras,
-      },
-    ]);
-    onToast('Semáforo ROJO activado: monto con letras 5.0OO.00 detectado (Poka-Yoke Gris).');
+        texto_ocr: sample,
+        expediente_id: expedienteId,
+        doc_id: 'DOC-MAN-005',
+        nombre_titular: sunatInfo?.razon_social,
+      });
+      setFotoEval(evalRes);
+      const hash = evalRes.hash_sha256 ?? (await sha256Hex(`NOTA_MANUSCRITA|${sample}`));
+      setDocumentos([
+        {
+          doc_id: 'DOC-MAN-005',
+          tipo_documento: evalRes.tipo_documento_detectado || 'NOTA_MANUSCRITA',
+          texto_ocr: evalRes.texto_sanitizado || sample,
+          hash_sha256: hash,
+          nombre_archivo: 'DOC-MAN-005_nota_borrosa_poka_yoke_5000.png',
+          semaforo_nitidez: evalRes.semaforo_nitidez,
+          motivos_semaforo: evalRes.motivos,
+          perdida_detalle_texto: evalRes.perdida_detalle_texto,
+          requiere_nueva_foto: evalRes.requiere_nueva_foto,
+          contiene_importe_ambiguo_letras: true,
+          confianza_ocr: evalRes.confianza_ocr,
+          guardia_aprobado: evalRes.guardia_de_salida?.aprobado ?? true,
+          guardia_hallazgos: evalRes.guardia_de_salida?.hallazgos ?? [],
+          datos_personales_tapados: evalRes.datos_personales_tapados,
+          segundos_ocr: evalRes.segundos,
+          foto_verificada_v1: true,
+        },
+      ]);
+      onToast('Nota borrosa evaluada en Agente Local: Poka-Yoke activado (Verificar datos).');
+    } finally {
+      setHashingFile(false);
+    }
   };
 
   const handleFileAttach = async (e: Event) => {
@@ -391,32 +414,50 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
 
     setHashingFile(true);
     try {
+      const nextDocId = `DOC-${documentos.length + 1}`;
       const buffer = await file.arrayBuffer();
-      const hash = await sha256Hex(buffer);
-      const docText =
+      const rawHash = await sha256Hex(buffer);
+      const docTextFallback =
         newDocText.trim() ||
         `Foto adjunta (${file.name}, ${Math.max(1, Math.round(file.size / 1024))} KB) -> Evidencia verificada (OCR: 0.94)`;
       const evalRes = await evaluarFotoCalidad({
         nombre_archivo: file.name,
         size_bytes: file.size,
-        texto_ocr: docText,
+        texto_ocr: docTextFallback,
+        blob: file,
+        expediente_id: expedienteId,
+        doc_id: nextDocId,
+        nombre_titular: sunatInfo?.razon_social,
       });
       setFotoEval(evalRes);
+      const hash = evalRes.hash_sha256 ?? rawHash;
       const nextDoc: DocumentoAdjunto = {
-        doc_id: `DOC-${documentos.length + 1}`,
-        tipo_documento: newDocType,
-        texto_ocr: docText,
+        doc_id: nextDocId,
+        tipo_documento: evalRes.tipo_documento_detectado || newDocType,
+        texto_ocr:
+          evalRes.guardia_de_salida?.aprobado === false
+            ? ''
+            : evalRes.texto_sanitizado || docTextFallback,
         hash_sha256: hash,
         nombre_archivo: file.name,
         semaforo_nitidez: evalRes.semaforo_nitidez,
+        motivos_semaforo: evalRes.motivos,
         perdida_detalle_texto: evalRes.perdida_detalle_texto,
         requiere_nueva_foto: evalRes.requiere_nueva_foto,
         contiene_importe_ambiguo_letras: evalRes.contiene_importe_ambiguo_letras,
+        confianza_ocr: evalRes.confianza_ocr,
+        guardia_aprobado: evalRes.guardia_de_salida?.aprobado ?? true,
+        guardia_hallazgos: evalRes.guardia_de_salida?.hallazgos ?? [],
+        datos_personales_tapados: evalRes.datos_personales_tapados,
+        segundos_ocr: evalRes.segundos,
+        foto_verificada_v1: true,
       };
       setDocumentos((prev) => [...prev, nextDoc]);
       setNewDocText('');
       onToast(
-        `Archivo sellado SHA-256 (${truncateHash(hash, 8, 4)}) · Nitidez ${evalRes.semaforo_nitidez}`
+        evalRes.requiere_nueva_foto
+          ? `⚠️ Semáforo ROJO (${(evalRes.motivos || []).join(', ')}): Repetir foto en el momento`
+          : `POST /v1/documentos/ocr OK · SHA-256 (${truncateHash(hash, 8, 4)}) · Semáforo ${evalRes.semaforo_nitidez}`
       );
     } finally {
       setHashingFile(false);
@@ -1278,26 +1319,41 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                     if (!id) return;
                     const sample = SOE_KIT_DOCUMENTS_CATALOG.find((s) => s.id === id);
                     if (!sample) return;
-                    const evalRes = await evaluarFotoCalidad({
-                      nombre_archivo: sample.nombre_archivo,
-                      texto_ocr: sample.texto_ocr,
-                    });
-                    setFotoEval(evalRes);
-                    const hash = await sha256Hex(`${sample.tipo_documento}|${sample.texto_ocr}`);
-                    setDocumentos([
-                      {
-                        doc_id: sample.id,
-                        tipo_documento: sample.tipo_documento,
-                        texto_ocr: evalRes.texto_sanitizado,
-                        hash_sha256: hash,
+                    setHashingFile(true);
+                    try {
+                      const evalRes = await evaluarFotoCalidad({
                         nombre_archivo: sample.nombre_archivo,
-                        semaforo_nitidez: evalRes.semaforo_nitidez,
-                        perdida_detalle_texto: evalRes.perdida_detalle_texto,
-                        requiere_nueva_foto: evalRes.requiere_nueva_foto,
-                        contiene_importe_ambiguo_letras: evalRes.contiene_importe_ambiguo_letras,
-                      },
-                    ]);
-                    onToast(`${sample.label} · ${sample.hallazgo_demostrado}`);
+                        texto_ocr: sample.texto_ocr,
+                        expediente_id: expedienteId,
+                        doc_id: sample.id,
+                        nombre_titular: sunatInfo?.razon_social,
+                      });
+                      setFotoEval(evalRes);
+                      const hash = evalRes.hash_sha256 ?? sample.hash_sha256;
+                      setDocumentos([
+                        {
+                          doc_id: sample.id,
+                          tipo_documento: evalRes.tipo_documento_detectado || sample.tipo_documento,
+                          texto_ocr: evalRes.texto_sanitizado || sample.texto_ocr,
+                          hash_sha256: hash,
+                          nombre_archivo: sample.nombre_archivo,
+                          semaforo_nitidez: evalRes.semaforo_nitidez,
+                          motivos_semaforo: evalRes.motivos,
+                          perdida_detalle_texto: evalRes.perdida_detalle_texto,
+                          requiere_nueva_foto: evalRes.requiere_nueva_foto,
+                          contiene_importe_ambiguo_letras: evalRes.contiene_importe_ambiguo_letras,
+                          confianza_ocr: evalRes.confianza_ocr,
+                          guardia_aprobado: evalRes.guardia_de_salida?.aprobado ?? true,
+                          guardia_hallazgos: evalRes.guardia_de_salida?.hallazgos ?? [],
+                          datos_personales_tapados: evalRes.datos_personales_tapados,
+                          segundos_ocr: evalRes.segundos,
+                          foto_verificada_v1: true,
+                        },
+                      ]);
+                      onToast(`${sample.label} · ${sample.hallazgo_demostrado}`);
+                    } finally {
+                      setHashingFile(false);
+                    }
                   }}
                 >
                   <option value="">+ Cargar documento de prueba…</option>
@@ -1319,7 +1375,17 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
               </div>
             </div>
 
-            {/* Semáforo de Nitidez de Soe (Sección 7) */}
+            {/* Indicador de Fase 1 en curso (POST /v1/documentos/ocr) */}
+            {hashingFile && (
+              <div class="alert-banner warn" style={{ marginBottom: '12px', padding: '10px 12px' }}>
+                <strong>⏳ Procesando Fase 1 en Agente Local (POST /v1/documentos/ocr)…</strong>
+                <span style={{ fontSize: '12px' }}>
+                  Verificando SHA-256 de la imagen → Puerta de Calidad → PaddleOCR Latino → Sanitizador v2 (7 capas) → Guardia de Salida.
+                </span>
+              </div>
+            )}
+
+            {/* Semáforo de Nitidez Local + Guardia de Salida (POST /v1/documentos/ocr) */}
             {fotoEval && (
               <div
                 class={`alert-banner ${
@@ -1333,15 +1399,43 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   <strong>
-                    Semáforo de Nitidez Local: {fotoEval.semaforo_nitidez} (Pérdida:{' '}
-                    {(fotoEval.perdida_detalle_texto * 100).toFixed(1)}%)
+                    Semáforo de Nitidez Local: {fotoEval.semaforo_nitidez}
+                    {fotoEval.motivos && fotoEval.motivos.length > 0
+                      ? ` (${fotoEval.motivos.join(', ')})`
+                      : ` (Pérdida: ${(fotoEval.perdida_detalle_texto * 100).toFixed(1)}%)`}
                   </strong>
-                  <span class="badge badge-green">0 datos personales enviados</span>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    {fotoEval.guardia_de_salida && (
+                      <span
+                        class={`badge ${
+                          fotoEval.guardia_de_salida.aprobado ? 'badge-green' : 'badge-red-solid'
+                        }`}
+                      >
+                        Guardia: {fotoEval.guardia_de_salida.aprobado ? 'APROBADO' : 'BLOQUEADO'}
+                      </span>
+                    )}
+                    <span class="badge badge-green">0 datos personales enviados</span>
+                  </div>
                 </div>
                 <span style={{ fontSize: '12px' }}>{fotoEval.motivo}</span>
+                {fotoEval.datos_personales_tapados &&
+                  Object.keys(fotoEval.datos_personales_tapados).length > 0 && (
+                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginTop: '4px' }}>
+                      {Object.entries(fotoEval.datos_personales_tapados).map(([k, v]) => (
+                        <span key={k} class="badge badge-slate mono" style={{ fontSize: '10.5px' }}>
+                          {v} {k}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                {fotoEval.requiere_nueva_foto && (
+                  <div class="mono" style={{ fontSize: '11.5px', fontWeight: 800, color: '#be123c' }}>
+                    ⚠️ REPETIR FOTO EN EL MOMENTO: Esta imagen está en ROJO ({(fotoEval.motivos || ['BAJA_CALIDAD']).join(', ')}) y no debe enviarse al Paso 2 sin recaptura.
+                  </div>
+                )}
                 {fotoEval.contiene_importe_ambiguo_letras && (
                   <span class="mono" style={{ fontSize: '11.5px', fontWeight: 800 }}>
-                    Poka-Yoke OCR: Monto con letras ambiguas detectado (5.0OO.00 — prohibido adivinar dígitos)
+                    Poka-Yoke OCR: Monto con letras ambiguas o texto borroso detectado (prohibido adivinar dígitos)
                   </span>
                 )}
               </div>
@@ -1371,7 +1465,18 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
                                   : 'badge-red-solid'
                             }`}
                           >
-                            Nitidez {doc.semaforo_nitidez}
+                            Semáforo {doc.semaforo_nitidez}
+                          </span>
+                        )}
+                        {doc.requiere_nueva_foto && (
+                          <span class="badge badge-red-solid">⚠️ REPETIR FOTO</span>
+                        )}
+                        {doc.foto_verificada_v1 === false && (
+                          <span class="badge badge-amber">⚠️ FOTO_NO_VERIFICADA</span>
+                        )}
+                        {doc.guardia_aprobado !== undefined && (
+                          <span class={`badge ${doc.guardia_aprobado ? 'badge-green' : 'badge-red-solid'}`}>
+                            Guardia: {doc.guardia_aprobado ? 'APROBADO' : 'BLOQUEADO'}
                           </span>
                         )}
                         {doc.nombre_archivo && (
@@ -1477,6 +1582,18 @@ export default function CampoView({ offline, onOpenConsola, onToast }: CampoView
               <div class="alert-banner fraud" style={{ marginTop: '14px' }}>
                 <strong>Validación:</strong>
                 <span>{formError}</span>
+              </div>
+            )}
+
+            {submitting && (
+              <div class="alert-banner warn" style={{ marginTop: '14px', padding: '12px 14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <strong>⏳ Procesando en Agente Local (Fase 2: qwen2.5:7b en Ollama + Verificador Python)…</strong>
+                  <span class="badge badge-slate mono">Timeout 5 min · X-RUC-Solicitante</span>
+                </div>
+                <span style={{ fontSize: '12px' }}>
+                  El modelo local extrae los ítems sobre texto 100% sanitizado (0 PII), el verificador en Python comprueba sumas, unidades y coherencia CIIU, y el motor calcula la evaluación. En una laptop esta fase puede tardar entre 15 y 40 segundos por documento.
+                </span>
               </div>
             )}
 

@@ -1,0 +1,21 @@
+{
+  "expediente_id": "EXP-TRUJ-2026-0101",
+  "doc_id": "DOC-2",
+  "hash_sha256": "59f7646860618bb269e1d20504f8fb253cd5537398a281f11483259777e3ef88",
+  "semaforo": "VERDE",
+  "requiere_nueva_foto": false,
+  "motivos": [],
+  "tipo_documento_detectado": "VOUCHER_YAPE",
+  "texto_ocr_sanitizado": "4:18 p. m. | 4G 84%\nyape\nYapeaste!\nS/ 870.00\n[DESTINATARIO_01]\n12 nov. 2026 - 04:18 p. m.\nMensaje del pago:\npago 4 tr aparado + 3 gal pegamento amarillo\nCelular destino | [CELULAR_01] | [CELULAR_02]\nDestino | Yape\nN° de operación | [NUM_OPERACION_01]\nComisión | S/ 0.00 (Gratis)\nCOMPARTIR CONSTANCIA",
+  "confianza_ocr": 1.0,
+  "guardia_de_salida": {
+    "aprobado": true,
+    "hallazgos": []
+  },
+  "datos_personales_tapados": {
+    "NUM_OPERACION": 1,
+    "CELULAR": 2,
+    "DESTINATARIO": 1
+  },
+  "segundos": 4.79
+}

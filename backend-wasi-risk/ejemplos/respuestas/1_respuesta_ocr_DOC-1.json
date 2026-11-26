@@ -1,0 +1,22 @@
+{
+  "expediente_id": "EXP-TRUJ-2026-0101",
+  "doc_id": "DOC-1",
+  "hash_sha256": "6fe7e7159913704c88ec1b583629395b87e51978d9fca325b05e65f40b67e67b",
+  "semaforo": "VERDE",
+  "requiere_nueva_foto": false,
+  "motivos": [],
+  "tipo_documento_detectado": "FACTURA_MAYORISTA",
+  "texto_ocr_sanitizado": "[RAZON_SOCIAL_01] | R.U.C. [RUC_01]\n[DIRECCION_01]\nTRUJILLO - LA LIBERTAD - PERU | FACTURA ELECTRONICA\nSistema de Emision Electronica - SUNAT\nF001-0004821\nSenor(es): [NOMBRE_01]\nR.U.C.: | [RUC_02] | Fecha Emision: 04/11/2026\nMoneda: | SOLES (PEN) | - | Condicion: CONTADO\nCANT. | UNID. | DESCRIPCION DEL INSUMO | P. UNIT. | IMPORTE\n180 | pies | Cuero Box Calf Negro 1ra | 10.50 | 1,890.00\n80 | pies | Badana Forro Natural | 7.00 | 560.00\n10 | doc | Suela Expanso Escolar | 120.00 | 1,200.00\n2 | gal | Pegamento Amarillo Contacto | 95.00 | 190.00\nRepresentacion impresa del comprobante | OP. GRAVADA: | S/ 3,254.24\nelectronico. Valide en www.sunat.gob.pe\nI.G.V. (18%): | S/ 585.76\nTOTAL: | S/ 3,840.00",
+  "confianza_ocr": 0.993,
+  "guardia_de_salida": {
+    "aprobado": true,
+    "hallazgos": []
+  },
+  "datos_personales_tapados": {
+    "NOMBRE": 1,
+    "RAZON_SOCIAL": 1,
+    "RUC": 2,
+    "DIRECCION": 1
+  },
+  "segundos": 10.65
+}

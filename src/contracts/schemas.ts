@@ -10,15 +10,22 @@ export const SemaforoNitidezSchema = z.enum(['VERDE', 'AMARILLO', 'ROJO']);
 export const DocumentoAdjuntoSchema = z.object({
   doc_id: z.string().min(1),
   tipo_documento: z.string().min(1),
-  texto_ocr: z.string().min(1),
+  texto_ocr: z.string(),
   hash_sha256: z.string().optional(),
   nombre_archivo: z.string().optional(),
   semaforo_nitidez: SemaforoNitidezSchema.optional(),
+  motivos_semaforo: z.array(z.string()).optional(),
   perdida_detalle_texto: z.number().min(0).max(1).optional(),
   contraste: z.number().nonnegative().optional(),
   resolucion_lado_mayor_px: z.number().nonnegative().optional(),
   requiere_nueva_foto: z.boolean().optional(),
   contiene_importe_ambiguo_letras: z.boolean().optional(),
+  confianza_ocr: z.number().min(0).max(1).optional(),
+  guardia_aprobado: z.boolean().optional(),
+  guardia_hallazgos: z.array(z.string()).optional(),
+  datos_personales_tapados: z.record(z.string(), z.number()).optional(),
+  segundos_ocr: z.number().nonnegative().optional(),
+  foto_verificada_v1: z.boolean().optional(),
 });
 
 export const ReferenciaVinculoSchema = z.object({
@@ -219,6 +226,67 @@ export const SubredGrafoSchema = z.object({
   aristas: z.array(GrafoAristaSchema),
 });
 
+export const ItemExtraidoAgenteLocalSchema = z.object({
+  descripcion: z.string(),
+  cantidad: z.number(),
+  unidad_original: z.string(),
+  unidad_normalizada: z.string(),
+  precio_unitario_pen: z.number().nullable(),
+  subtotal_pen: z.number().nullable(),
+  insumo_coherente_ciiu: z.boolean(),
+});
+
+export const DocumentoProcesadoV1Schema = z.object({
+  doc_id: z.string(),
+  tipo_documento: z.string(),
+  serie_correlativo: z.string().nullable(),
+  fecha_emision: z.string().nullable(),
+  proveedor_token: z.string(),
+  confianza_extraccion_ia: z.number(),
+  coherencia_insumos_giro: z.boolean(),
+  es_documento_valido_computable: z.boolean(),
+  requiere_revision_humana: z.boolean(),
+  banderas_detectadas: z.array(z.string()),
+  items_extraidos: z.array(ItemExtraidoAgenteLocalSchema),
+  monto_declarado_documento_pen: z.number(),
+  monto_computable_valido_pen: z.number(),
+});
+
+export const DiagnosticoDocumentoV1Schema = z.object({
+  semaforo: SemaforoNitidezSchema,
+  motivos_semaforo: z.array(z.string()).optional(),
+  alertas: z.array(z.string()).optional(),
+  total_leido: z.string().optional(),
+  datos_personales_tapados: z.record(z.string(), z.number()).optional(),
+  guardia_de_salida: z
+    .object({
+      aprobado: z.boolean(),
+      hallazgos: z.array(z.string()),
+    })
+    .optional(),
+  texto_enviado_al_modelo: z.string().nullable().optional(),
+  tokens_en_texto: z.number().optional(),
+  tokens_llm: z
+    .object({
+      entrada: z.number().nullable().optional(),
+      salida: z.number().nullable().optional(),
+    })
+    .optional(),
+  tiempos_seg: z.record(z.string(), z.number()).optional(),
+  conexiones_externas_bloqueadas: z.number().optional(),
+  avisos: z.array(z.string()).optional(),
+});
+
+export const AgenteLocalV1BlockSchema = z.object({
+  documentos_procesados: z.array(DocumentoProcesadoV1Schema),
+  diagnostico_documentos: z.record(z.string(), DiagnosticoDocumentoV1Schema),
+  banderas_para_consola: z.array(z.string()),
+  compras_comprobadas_validas_pen: z.number(),
+  compras_rechazadas_pen: z.number(),
+  contrato_final_pendiente_por: z.string().nullable().optional(),
+  validacion_schemas_ok: z.boolean().optional(),
+});
+
 export const AuditarExpedienteResponseSchema = z.object({
   expediente_id: z.string().min(1),
   solicitud_id: z.string().optional(),
@@ -238,6 +306,7 @@ export const AuditarExpedienteResponseSchema = z.object({
   accion_recomendada: AccionRecomendadaSchema.optional(),
   impacto_financiero_sbs: ImpactoFinancieroSbsSchema.optional(),
   subred_grafo: SubredGrafoSchema.optional(),
+  agente_local_v1: AgenteLocalV1BlockSchema.optional(),
 });
 
 export const HealthResponseSchema = z.object({
@@ -297,6 +366,17 @@ export const EvaluacionFotoResponseSchema = z.object({
   texto_sanitizado: z.string(),
   motor_ocr: z.string(),
   motivo: z.string(),
+  motivos: z.array(z.string()).optional(),
+  tipo_documento_detectado: z.string().nullable().optional(),
+  guardia_de_salida: z
+    .object({
+      aprobado: z.boolean(),
+      hallazgos: z.array(z.string()),
+    })
+    .optional(),
+  datos_personales_tapados: z.record(z.string(), z.number()).optional(),
+  segundos: z.number().optional(),
+  hash_sha256: z.string().optional(),
 });
 
 export type SemaforoNitidez = z.infer<typeof SemaforoNitidezSchema>;

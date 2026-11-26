@@ -180,106 +180,122 @@ export interface SoeKitDocumentSample {
   id: string;
   label: string;
   nombre_archivo: string;
+  hash_sha256: string;
   tipo_documento: string;
   texto_ocr: string;
   laplaciano_1600px: number;
   perdida_detalle_texto: number;
   contraste: number;
   semaforo_esperado: 'VERDE' | 'AMARILLO' | 'ROJO';
+  datos_tapados_resumen: string;
   hallazgo_demostrado: string;
 }
 
 export const SOE_KIT_DOCUMENTS_CATALOG: readonly SoeKitDocumentSample[] = [
   {
-    id: 'DOC-SOE-1',
-    label: '1. Boleta Hermelinda (S/ 4,815 · 5 ítems)',
-    nombre_archivo: 'DOC-MAY-002_boleta_molino_hermelinda.png',
-    tipo_documento: 'BOLETA_COMPRA',
-    texto_ocr:
-      '20 arr Papa Blanca S/ 480.00 + 10 cj Aceite Vegetal S/ 920.00 + 15 fdo Fideos S/ 540.00 + 25 pl Huevos S/ 725.00 + 15 saco Arroz S/ 2,150.00 -> TOTAL S/ 4,815.00 (OCR: 0.96)',
-    laplaciano_1600px: 1229,
-    perdida_detalle_texto: 0.017,
-    contraste: 82,
-    semaforo_esperado: 'VERDE',
-    hallazgo_demostrado: '5 unidades normalizadas (arr, cj, fdo, pl, saco) y suma exacta S/ 4,815.00',
-  },
-  {
-    id: 'DOC-SOE-2',
-    label: '2. Factura Curtiembre (S/ 5,000 · IGV 1.18)',
+    id: 'DOC-MAY-001',
+    label: '1. Factura Curtiembre (S/ 3,840 · 4 ítems · VERDE)',
     nombre_archivo: 'DOC-MAY-001_factura_curtiembre_calzado.png',
+    hash_sha256: '6fe7e7159913704c88ec1b583629395b87e51978d9fca325b05e65f40b67e67b',
     tipo_documento: 'FACTURA_MAYORISTA',
     texto_ocr:
-      'Señor(a): ROJAS VALDERRAMA LUIS · RUC10423189012 · 180 pies cuero + suela (Base Gravada S/ 4,237.29 × 1.18 IGV) -> TOTAL S/ 5,000.00 (OCR: 0.95)',
+      '[RAZON_SOCIAL_01] | R.U.C. [RUC_01]\n[DIRECCION_01]\nF001-0004821 | Senor(es): [NOMBRE_01] | R.U.C.: [RUC_02] | 04/11/2026\n180 | pies | Cuero Box Calf Negro 1ra | 10.50 | 1,890.00\n80 | pies | Badana Forro Natural | 7.00 | 560.00\n10 | doc | Suela Expanso Escolar | 120.00 | 1,200.00\n2 | gal | Pegamento Amarillo Contacto | 95.00 | 190.00\nTOTAL: | S/ 3,840.00 (OCR: 0.99)',
     laplaciano_1600px: 914,
     perdida_detalle_texto: 0.019,
     contraste: 76,
     semaforo_esperado: 'VERDE',
-    hallazgo_demostrado: 'Verificador Python: Base gravada × 1.18 = Total + Sanitizador RUC pegado',
+    datos_tapados_resumen: '5 tapados (1 nombre, 1 razón social, 2 RUC, 1 dirección)',
+    hallazgo_demostrado: 'Computable S/ 3,840.00 · 4 ítems (pies, doc, gal) + 5 datos personales tapados',
   },
   {
-    id: 'DOC-SOE-3',
-    label: '3. Factura Ferretera (S/ 2,400 · PAREDESGOMEZROSAURA)',
+    id: 'DOC-MAY-002',
+    label: '2. Boleta Hermelinda (S/ 4,815 · 5 ítems · VERDE)',
+    nombre_archivo: 'DOC-MAY-002_boleta_molino_hermelinda.png',
+    hash_sha256: 'e2cb28da1bece859f966984812ee97ddb47dc3e2eefe15dc82db3ee29b657163',
+    tipo_documento: 'BOLETA_MAYORISTA',
+    texto_ocr:
+      '[RAZON_SOCIAL_01] | R.U.C. [RUC_01] | [DIRECCION_01]\nBOLETA DE VENTA ELECTRONICA | B002-0019021 | Senor(a): [NOMBRE_01] | R.U.C.: [RUC_02] | 08/11/2026\n15 | saco | Arroz Extra Norteno 50kg | 165.00 | 2,475.00\n20 | arr | Papa Blanca Seleccionada | 24.00 | 480.00\n10 | cj | Aceite Vegetal x 12 | 92.00 | 920.00\n15 | fdo | Fideos Tallarin x 20 | 36.00 | 540.00\n25 | pl | Huevos Rosados x 30 | 16.00 | 400.00\nTOTAL: | S/ 4,815.00 (OCR: 0.99)',
+    laplaciano_1600px: 1229,
+    perdida_detalle_texto: 0.017,
+    contraste: 82,
+    semaforo_esperado: 'VERDE',
+    datos_tapados_resumen: '5 tapados (1 nombre, 1 razón social, 2 RUC, 1 dirección)',
+    hallazgo_demostrado: '5 unidades normalizadas (saco, arr, cj, fdo, pl) y suma exacta S/ 4,815.00',
+  },
+  {
+    id: 'DOC-MAY-003',
+    label: '3. Factura Ferretera (Trampa de Giro · Computable S/ 0.00)',
     nombre_archivo: 'DOC-MAY-003_factura_ferreteria_incoherencia.png',
+    hash_sha256: 'df53dc6e8bab98ee9ce0184ffdcb22f3473a8d02547a743173fa60e39c454667',
     tipo_documento: 'FACTURA_MAYORISTA',
     texto_ocr:
-      'Cliente: PAREDESGOMEZROSAURA · 45 bolsa cemento Sol + 20 varilla fierro 1/2 -> TOTAL S/ 2,400.00 (OCR: 0.94)',
+      '[RAZON_SOCIAL_01] | R.U.C. [RUC_01] | [DIRECCION_01]\nFACTURA ELECTRONICA | F004-0007712 | Cliente: [NOMBRE_01] | R.U.C.: [RUC_02] | 10/11/2026\n60 | bls | Cemento Pacasmayo Tipo I | 29.50 | 1,770.00\n35 | und | Varilla Fierro 1/2 Aceros | 38.00 | 1,330.00\n12 | und | Tubo PVC Desague 4 pulg | 22.00 | 264.00\nTOTAL: | S/ 3,364.00 (OCR: 0.99)',
     laplaciano_1600px: 838,
     perdida_detalle_texto: 0.022,
     contraste: 71,
     semaforo_esperado: 'VERDE',
-    hallazgo_demostrado: 'D5/D11: Tapa nombre pegado sin espacios (PAREDESGOMEZROSAURA) + D7 giro',
+    datos_tapados_resumen: '5 tapados (1 nombre, 1 razón social, 2 RUC, 1 dirección)',
+    hallazgo_demostrado: 'FLAG_INCOHERENCIA_GIRO_CIIU: computable S/ 0.00 (cemento/fierro en bodega)',
   },
   {
-    id: 'DOC-SOE-4',
-    label: '4. Nota Gamarrita (S/ 5,200 · Cuero sintético)',
+    id: 'DOC-MAN-004',
+    label: '4. Nota Gamarrita (S/ 1,530 · 4 ítems · Video Modo Avión)',
     nombre_archivo: 'DOC-MAN-004_nota_mostrador_gamarrita_valida.png',
+    hash_sha256: '7a23abd2dcd0c56dedf50dd6cc54553723b96c55e4e17ac435a7bfc64b9bec97',
     tipo_documento: 'NOTA_MANUSCRITA',
     texto_ocr:
-      '190 pie cuero sintético + 12 gal pegamento calzado -> TOTAL S/ 5,200.00 (OCR: 0.91)',
+      'COMERCIAL TEXTIL | NOTA DE PEDIDO | N° 001458 | 11/11/2026\n[DIRECCION_01] | Sr(a): | [NOMBRE_01]\n3 rll | Tela Algodon Jersey 30/1 | 420.00 | 1,260.00\n2 cto | Botones camisa nacar | 18.00 | 36.00\n5 doc | Cierres metalicos 18cm | 24.00 | 120.00\n12 tira | Elastico | pretina x rollito | 9.50 | 114.00\nCANCELADO | TOTAL S/ | 1,530.00 (OCR: 0.98)',
     laplaciano_1600px: 510,
-    perdida_detalle_texto: 0.031,
+    perdida_detalle_texto: 0.024,
     contraste: 64,
     semaforo_esperado: 'VERDE',
-    hallazgo_demostrado: 'Triangulación P-08: sustenta S/ 7,647.06 frente a S/ 18,500 declarados (+141.9%)',
+    datos_tapados_resumen: '3 tapados (1 nombre, 2 dirección)',
+    hallazgo_demostrado: 'Computable S/ 1,530.00 · 4 ítems (ROLLO, CIENTO, DOCENA, UNIDAD) verificado en Python',
   },
   {
-    id: 'DOC-SOE-5',
-    label: '5. Voucher Plin (S/ 1,240 · CAMPOS ALVA RICARDO)',
-    nombre_archivo: 'DOC-WAL-007_voucher_plin_1240.png',
-    tipo_documento: 'VOUCHER_YAPE_PLIN',
-    texto_ocr:
-      'Enviaste Plin S/ 1,240.00 · Destinatario: CAMPOS ALVA RICARDO · Cel +51 948332190 · Compra insumos cuero (OCR: 0.96)',
-    laplaciano_1600px: 386,
-    perdida_detalle_texto: 0.028,
-    contraste: 69,
-    semaforo_esperado: 'VERDE',
-    hallazgo_demostrado: 'D5/Sección 7: Laplaciano 386 (<400) pero pérdida 0.028 (VERDE) y tapa proveedor Plin',
-  },
-  {
-    id: 'DOC-SOE-6',
-    label: '6. Voucher Yape (S/ 870 · Op 09482716 + Comisión S/ 0.00)',
-    nombre_archivo: 'DOC-WAL-006_voucher_yape_870.png',
-    tipo_documento: 'VOUCHER_YAPE_PLIN',
-    texto_ocr:
-      '¡Yapeaste! S/ 870.00 · Para: QUISPE ALFARO MARIA · pago 4 tr aparado + 3 gal pegamento amarillo · Comisión S/ 0.00 (Gratis) · N° op 09482716 (OCR: 0.97)',
-    laplaciano_1600px: 363,
-    perdida_detalle_texto: 0.035,
-    contraste: 68,
-    semaforo_esperado: 'VERDE',
-    hallazgo_demostrado: 'D3/D4/D8: Computa S/ 870.00 (ignora Comisión S/ 0.00) y preserva N° op 09482716',
-  },
-  {
-    id: 'DOC-SOE-7',
-    label: '7. Nota Borrosa (S/ 5.0OO.00 · Pérdida 0.385 · Poka-Yoke)',
+    id: 'DOC-MAN-005',
+    label: '5. Nota Borrosa (Trampa Poka-Yoke · Computable S/ 0.00)',
     nombre_archivo: 'DOC-MAN-005_nota_borrosa_poka_yoke_5000.png',
+    hash_sha256: '990607896f09c2b368daa07292601cb50960ee6a071779481a3f7883e872d632',
     tipo_documento: 'NOTA_MANUSCRITA',
     texto_ocr:
-      'Compras varios materiales calzado taller (sin detalle de unidades) -> TOTAL: S/ 5.0OO.00 (OCR: 0.62) CASO TRAMPA POKA-YOKE',
+      'NOTA DE COMPRA S/N | Proveedor: [NOMBRE_01]\nCompras varios materiales calzado taller (sin detalle de unidades) -> TOTAL: S/ 5.0OO.00 (OCR: 0.79)',
     laplaciano_1600px: 28,
     perdida_detalle_texto: 0.385,
     contraste: 34,
-    semaforo_esperado: 'ROJO',
-    hallazgo_demostrado: 'D10/D12/Sección 7: Rechaza 5.0OO.00, filtra pie CASO TRAMPA y envía a Gris (Excluido de provisión SBS)',
+    semaforo_esperado: 'AMARILLO',
+    datos_tapados_resumen: '1 tapado (1 proveedor)',
+    hallazgo_demostrado: 'FLAG_BAJA_CONFIANZA_OCR_POKA_YOKE + FLAG_MONTO_REDONDO_SIN_DESGLOSE (Excluido de provisión SBS)',
+  },
+  {
+    id: 'DOC-WAL-006',
+    label: '6. Voucher Yape (S/ 870 · Op tapada + Comisión S/ 0.00)',
+    nombre_archivo: 'DOC-WAL-006_voucher_yape_870.png',
+    hash_sha256: '59f7646860618bb269e1d20504f8fb253cd5537398a281f11483259777e3ef88',
+    tipo_documento: 'VOUCHER_YAPE',
+    texto_ocr:
+      '4:18 p. m. | 4G 84%\nyape | Yapeaste! | S/ 870.00 | [DESTINATARIO_01] | 12 nov. 2026 - 04:18 p. m.\nMensaje del pago: pago 4 tr aparado + 3 gal pegamento amarillo\nCelular destino | [CELULAR_01] | [CELULAR_02] | N° de operación | [NUM_OPERACION_01] | Comisión | S/ 0.00 (Gratis) (OCR: 1.00)',
+    laplaciano_1600px: 363,
+    perdida_detalle_texto: 0.022,
+    contraste: 68,
+    semaforo_esperado: 'VERDE',
+    datos_tapados_resumen: '4 tapados (1 destinatario, 2 celular, 1 N° operación)',
+    hallazgo_demostrado: 'Computa S/ 870.00 (ignora Comisión S/ 0.00) y extrae 2 ítems de la glosa (TAREA + GALON)',
+  },
+  {
+    id: 'DOC-WAL-007',
+    label: '7. Voucher Plin (S/ 1,240 · 3 ítems en glosa · VERDE)',
+    nombre_archivo: 'DOC-WAL-007_voucher_plin_1240.png',
+    hash_sha256: 'cbf845c5f7ff6cbea1a5c3fa0a51051ded9889ecff719ecc2ed71b896d822336',
+    tipo_documento: 'VOUCHER_PLIN',
+    texto_ocr:
+      '06:45 a. m. | PLIN | Transferencia Exitosa | S/ 1,240.00 | [DESTINATARIO_01] | 13/11/2026 06:45 AM\nGlosa: 30 arr papa yungay + 15 jaba tomate + 1 flete hermelinda\nCelular | [CELULAR_01] | Operación | [NUM_OPERACION_01] (OCR: 0.99)',
+    laplaciano_1600px: 386,
+    perdida_detalle_texto: 0.024,
+    contraste: 69,
+    semaforo_esperado: 'VERDE',
+    datos_tapados_resumen: '3 tapados (1 destinatario, 1 celular, 1 operación)',
+    hallazgo_demostrado: 'Computa S/ 1,240.00 y extrae 3 ítems de la glosa (ARROBA, JABA, VIAJE_FLETE)',
   },
 ] as const;
 

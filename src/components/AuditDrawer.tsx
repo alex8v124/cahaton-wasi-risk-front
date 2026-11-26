@@ -946,11 +946,13 @@ export function AuditDrawer({
             </div>
           </section>
 
-          {/* 5. VALIDACIÓN FISCAL SUNAT + SEMÁFORO DE NITIDEZ SOE */}
+          {/* 5. VALIDACIÓN FISCAL SUNAT + AGENTE LOCAL (SEMÁFORO, GUARDIA DE SALIDA, DIAGNÓSTICO E ÍTEMS) */}
           <section class="section-box">
             <h3 class="section-title">
-              <span>Validación SUNAT, Semáforo de Nitidez &amp; Sanitizador v2</span>
-              <span class="mono">{vf.ruc}</span>
+              <span>Validación SUNAT, Semáforo de Nitidez Local &amp; Agente v0.1.0</span>
+              <span class="mono" title="RUC enviado por cabecera interna X-RUC-Solicitante">
+                X-RUC: {vf.ruc}
+              </span>
             </h3>
             <div class="stat-grid-3" style={{ marginBottom: '10px' }}>
               <div class="stat-tile">
@@ -966,7 +968,7 @@ export function AuditDrawer({
               </div>
               <div class="stat-tile">
                 <div class="stat-tile-label">Semáforo de Nitidez Local</div>
-                <div style={{ marginTop: '4px' }}>
+                <div style={{ marginTop: '4px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                   <span
                     class={`badge ${
                       cal?.semaforo_nitidez === 'ROJO'
@@ -978,13 +980,23 @@ export function AuditDrawer({
                   >
                     {cal?.semaforo_nitidez ?? 'VERDE'} (pérdida {(cal?.perdida_detalle_texto ?? 0.02).toFixed(3)})
                   </span>
+                  {(cal?.requiere_nueva_foto ||
+                    record.request.documentos_adjuntos.some((d) => d.requiere_nueva_foto)) && (
+                    <span class="badge badge-red-solid">⚠️ REPETIR FOTO</span>
+                  )}
+                  {record.request.documentos_adjuntos.some((d) => d.foto_verificada_v1 === false) && (
+                    <span class="badge badge-amber">⚠️ FOTO_NO_VERIFICADA</span>
+                  )}
                 </div>
               </div>
               <div class="stat-tile">
-                <div class="stat-tile-label">Guardia Salida PII</div>
-                <div style={{ marginTop: '4px' }}>
+                <div class="stat-tile-label">Guardia Salida &amp; Candado Red</div>
+                <div style={{ marginTop: '4px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                   <span class="badge badge-green mono">
                     {cal?.pii_enviados_contador ?? 0} PII enviados
+                  </span>
+                  <span class="badge badge-slate mono" style={{ fontSize: '10px' }}>
+                    0 conex. ext.
                   </span>
                 </div>
               </div>
@@ -994,6 +1006,150 @@ export function AuditDrawer({
               <strong>Giro:</strong> {getCiiuLabel(vf.giro_ciiu)} · <strong>Confianza OCR/Resolución:</strong>{' '}
               <strong class="mono">{confidencePct}%</strong> (Umbral Poka-Yoke: 85%)
             </div>
+
+            {/* Diagnóstico por documento e ítems extraídos por Agente Local v0.1.0 (PaddleOCR + Qwen + Verificador Python) */}
+            {response.agente_local_v1 && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  paddingTop: '10px',
+                  borderTop: '1px dashed var(--border-subtle)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                  <strong style={{ fontSize: '12px', color: 'var(--ink-primary)' }}>
+                    Extracción Local Verificada en Python (POST /v1/documentos/ocr + /v1/expedientes/auditar)
+                  </strong>
+                  <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                    <span class="badge badge-green mono" style={{ fontSize: '10.5px' }}>
+                      Computable: {formatPEN(response.agente_local_v1.compras_comprobadas_validas_pen)}
+                    </span>
+                    {response.agente_local_v1.compras_rechazadas_pen > 0 && (
+                      <span class="badge badge-red mono" style={{ fontSize: '10.5px' }}>
+                        Rechazado: {formatPEN(response.agente_local_v1.compras_rechazadas_pen)}
+                      </span>
+                    )}
+                    {response.agente_local_v1.validacion_schemas_ok && (
+                      <span class="badge badge-slate mono" style={{ fontSize: '10.5px' }}>
+                        Schemas Draft-07: OK
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {response.agente_local_v1.documentos_procesados.map((docProc) => {
+                  const diag = response.agente_local_v1?.diagnostico_documentos?.[docProc.doc_id];
+                  const avisos = diag?.avisos ?? [];
+                  const tapados = diag?.datos_personales_tapados ?? {};
+                  return (
+                    <div
+                      key={docProc.doc_id}
+                      style={{
+                        padding: '10px 12px',
+                        borderRadius: '12px',
+                        background: 'var(--bg-subtle)',
+                        border: '1px solid var(--border-subtle)',
+                        fontSize: '11.5px',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px', marginBottom: '6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                          <strong class="mono">{docProc.doc_id}</strong>
+                          <span class="badge badge-slate">{docProc.tipo_documento}</span>
+                          {docProc.serie_correlativo && (
+                            <span class="mono" style={{ color: 'var(--ink-secondary)' }}>
+                              {docProc.serie_correlativo}
+                            </span>
+                          )}
+                          {diag?.semaforo && (
+                            <span
+                              class={`badge ${
+                                diag.semaforo === 'VERDE'
+                                  ? 'badge-green'
+                                  : diag.semaforo === 'AMARILLO'
+                                    ? 'badge-amber'
+                                    : 'badge-red-solid'
+                              }`}
+                            >
+                              Semáforo {diag.semaforo}
+                            </span>
+                          )}
+                          {diag?.guardia_de_salida && (
+                            <span
+                              class={`badge ${
+                                diag.guardia_de_salida.aprobado ? 'badge-green' : 'badge-red-solid'
+                              }`}
+                            >
+                              Guardia: {diag.guardia_de_salida.aprobado ? 'APROBADO' : 'BLOQUEADO'}
+                            </span>
+                          )}
+                        </div>
+                        <span class="mono" style={{ fontWeight: 800 }}>
+                          {formatPEN(docProc.monto_computable_valido_pen)} / {formatPEN(docProc.monto_declarado_documento_pen)}
+                        </span>
+                      </div>
+
+                      {Object.keys(tapados).length > 0 && (
+                        <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                          <span style={{ color: 'var(--ink-secondary)', fontWeight: 700 }}>Tapados antes del modelo:</span>
+                          {Object.entries(tapados).map(([k, v]) => (
+                            <span key={k} class="badge badge-slate mono" style={{ fontSize: '10px', padding: '1px 6px' }}>
+                              {v} {k}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {avisos.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '6px' }}>
+                          {avisos.map((av) => (
+                            <div key={av} class="badge badge-amber" style={{ alignSelf: 'flex-start', whiteSpace: 'normal', textAlign: 'left' }}>
+                              ⚠️ {av}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {docProc.items_extraidos.length > 0 && (
+                        <div style={{ overflowX: 'auto', marginTop: '4px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
+                            <thead>
+                              <tr style={{ borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: 'var(--ink-secondary)' }}>
+                                <th style={{ padding: '4px 6px' }}>Cant.</th>
+                                <th style={{ padding: '4px 6px' }}>Descripción</th>
+                                <th style={{ padding: '4px 6px' }}>Unidad</th>
+                                <th style={{ padding: '4px 6px', textAlign: 'right' }}>Subtotal</th>
+                                <th style={{ padding: '4px 6px', textAlign: 'center' }}>Giro</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {docProc.items_extraidos.map((it, idx) => (
+                                <tr key={`${it.descripcion}-${idx}`} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                                  <td class="mono" style={{ padding: '4px 6px' }}>
+                                    {it.cantidad} {it.unidad_original}
+                                  </td>
+                                  <td style={{ padding: '4px 6px' }}>{it.descripcion}</td>
+                                  <td class="mono" style={{ padding: '4px 6px' }}>{it.unidad_normalizada}</td>
+                                  <td class="mono" style={{ padding: '4px 6px', textAlign: 'right' }}>
+                                    {it.subtotal_pen !== null ? formatPEN(it.subtotal_pen) : 'En glosa'}
+                                  </td>
+                                  <td style={{ padding: '4px 6px', textAlign: 'center' }}>
+                                    {it.insumo_coherente_ciiu ? '✓' : '✗'}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
           {/* 6. DECISIÓN DEL ESPECIALISTA (Human-in-the-Loop — RF-17 / RF-21 / RN-02 / RN-07 / RN-08) */}
