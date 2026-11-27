@@ -105,14 +105,14 @@ export function TopNav({
         <div class="nav-telemetry">
           <span
             class={`status-pill ${offline ? 'offline' : 'online'}`}
-            title={health?.modo_activo ?? 'Servidor Soberano WASI-RISK AI'}
+            title={health?.modo_activo ?? 'Motor Local WASI-RISK AI'}
           >
             <span class={`pulse-dot ${offline ? 'offline' : ''}`} />
             {offline ? (
               <span>Offline · Campo</span>
             ) : (
               <span>
-                VPS Online
+                Motor Local
                 {health?.latencia_ms !== undefined ? ` · ${health.latencia_ms.toFixed(0)} ms` : ''}
                 {!IS_LIVE_VPS ? ' (Demo)' : ''}
               </span>
